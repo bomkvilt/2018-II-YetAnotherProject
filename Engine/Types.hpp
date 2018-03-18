@@ -4,8 +4,7 @@
 #include <assert.h>
 #include <functional>
 
-#include "btBulletDynamicsCommon.h"
-
+#include "Core/Math.hpp"
 
 class Object;
 

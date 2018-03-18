@@ -6,41 +6,41 @@
 ActorComponent::ActorComponent()
 	: owner(ThreadContextSingleton::Get().TopInitialiser()->owner)
 	, parent(nullptr)
-	, relativeTarnsform(btTransform::getIdentity())
-	, worldTransform   (btTransform::getIdentity())
+	, relativeTarnsform(Transform::getIdentity())
+	, worldTransform   (Transform::getIdentity())
 {}
 
-void ActorComponent::AddForce(const btVector3& force, ESpaceType space)
+void ActorComponent::AddForce(const Vector3f& force, ESpaceType space)
 {
 	//TODO:
 }
 
-void ActorComponent::AddTorque(const btVector3& torue, ESpaceType space)
+void ActorComponent::AddTorque(const Vector3f& torue, ESpaceType space)
 {
 	//TODO:
 }
 
-void ActorComponent::SetComponentTransform(btTransform newTransform)
+void ActorComponent::SetComponentTransform(Transform newTransform)
 {
 	//TODO:
 }
 
-void ActorComponent::SetRelativeTransform(btTransform newTransform)
+void ActorComponent::SetRelativeTransform(Transform newTransform)
 {
 	relativeTarnsform = newTransform;
 }
 
-void ActorComponent::AddTransform(btTransform delta, ESpaceType space)
+void ActorComponent::AddTransform(Transform delta, ESpaceType space)
 {
 	bool bWorld = space == ESpaceType::eWorld;
 	bool bLocal = space == ESpaceType::eLocal;
 
-	btTransform local = relativeTarnsform;
-	btTransform world = worldTransform;
+	Transform local = relativeTarnsform;
+	Transform world = worldTransform;
 	
-	btTransform delta_P = parent ? parent->GetComponentTransform() : btTransform::getIdentity();
-	btTransform delta_W = bWorld ? delta : delta_P			 * delta;
-	btTransform delta_R = bLocal ? delta : delta_P.inverse() * delta;
+	Transform delta_P = parent ? parent->GetComponentTransform() : Transform::getIdentity();
+	Transform delta_W = bWorld ? delta : delta_P			 * delta;
+	Transform delta_R = bLocal ? delta : delta_P.inverse() * delta;
 
 	relativeTarnsform = delta_R * local;
 	worldTransform    = delta_W * world;
@@ -56,14 +56,14 @@ void ActorComponent::AddTransform(btTransform delta, ESpaceType space)
 	}
 }
 
-void ActorComponent::AddComponentLocation(btVector3 delta, ESpaceType space)
+void ActorComponent::AddComponentLocation(Vector3f delta, ESpaceType space)
 {
-	AddTransform(btTransform(btQuaternion::getIdentity(), delta), space);
+	AddTransform(Transform(Quatf::getIdentity(), delta), space);
 }
 
-void ActorComponent::AddComponentRotation(btQuaternion delta, ESpaceType space)
+void ActorComponent::AddComponentRotation(Quatf delta, ESpaceType space)
 {
-	AddTransform(btTransform(delta, btVector3(0,0,0)), space);
+	AddTransform(Transform(delta, Vector3f(0,0,0)), space);
 }
 
 const PlayerController* ActorComponent::GetPlayerController() const
@@ -156,23 +156,23 @@ void ActorComponent::Internal_GetSubcomponents(std::vector<const ActorComponent*
 
 void ActorComponent::UpdateFacade()
 {
-	btVector3 newVec = relativeTarnsform.getOrigin();
+	Vector3f newVec = relativeTarnsform.getOrigin();
 
 	osg::Vec3 newPos = osg::Vec3(
-		static_cast<float>(newVec.x()),
-		static_cast<float>(newVec.y()),
-		static_cast<float>(newVec.z())
+		static_cast<float>(newVec.x),
+		static_cast<float>(newVec.y),
+		static_cast<float>(newVec.z)
 		);
 
 	facade.GetRoot()->setPosition(newPos);
-
-	btQuaternion newQuat = relativeTarnsform.getRotation();
+	
+	Quatf newQuat = relativeTarnsform.getRotation();
 
 	osg::Quat newRot = osg::Quat(
-		static_cast<float>(newQuat.x()),
-		static_cast<float>(newQuat.y()),
-		static_cast<float>(newQuat.z()),
-		static_cast<float>(newQuat.w())
+		static_cast<float>(newQuat.v.x),
+		static_cast<float>(newQuat.v.y),
+		static_cast<float>(newQuat.v.z),
+		static_cast<float>(newQuat.w)
 		);
 
 	facade.GetRoot()->setAttitude(newRot);
@@ -180,8 +180,8 @@ void ActorComponent::UpdateFacade()
 
 void ActorComponent::UpdateWoldTransform()
 {
-	btTransform P = parent ? parent->GetComponentTransform() : btTransform::getIdentity();
-	btTransform L = GetRelativeTransform();
+	Transform P = parent ? parent->GetComponentTransform() : Transform::getIdentity();
+	Transform L = GetRelativeTransform();
 
 	worldTransform = P * L;
 

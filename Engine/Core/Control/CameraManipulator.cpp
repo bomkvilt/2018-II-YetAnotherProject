@@ -46,15 +46,15 @@ bool CameraManipulator::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActio
 
 		osg::Matrixd mr, mt;
 		mr.makeRotate(osg::Quat(
-			static_cast<float>(rotation.x()),
-			static_cast<float>(rotation.y()),
-			static_cast<float>(rotation.z()),
-			static_cast<float>(rotation.w())
+			static_cast<float>(rotation.v.x),
+			static_cast<float>(rotation.v.y),
+			static_cast<float>(rotation.v.z),
+			static_cast<float>(rotation.w)
 			));
 		mt.makeTranslate(osg::Vec3(
-			static_cast<float>(location.x()),
-			static_cast<float>(location.y()),
-			static_cast<float>(location.z())
+			static_cast<float>(location.x),
+			static_cast<float>(location.y),
+			static_cast<float>(location.z)
 			));
 
 

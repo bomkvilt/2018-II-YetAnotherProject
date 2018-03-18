@@ -6,10 +6,10 @@ Actor::Actor() : rootComponent(nullptr)
 Actor::~Actor()
 {}
 
-void Actor::AddForce(const btVector3 & force, ESpaceType space)
+void Actor::AddForce(const Vector3f & force, ESpaceType space)
 {
 }
 
-void Actor::AddTorque(const btVector3 & torue, ESpaceType space)
+void Actor::AddTorque(const Vector3f & torue, ESpaceType space)
 {
 }

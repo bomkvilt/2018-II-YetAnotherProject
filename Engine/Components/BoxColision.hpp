@@ -17,12 +17,12 @@ public:
 
 public:
 
-	btVector3 GetExtends() const	{ return extends; }
-	void SetExtends(btVector3 newExtends);
+	Vector3f GetExtends() const	{ return extends; }
+	void SetExtends(Vector3f newExtends);
 
 protected:
 
 	/// >> 
-	btVector3 extends;
+	Vector3f extends;
 	///
 };

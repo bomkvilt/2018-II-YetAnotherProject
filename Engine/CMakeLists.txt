@@ -4,6 +4,13 @@ project(Engine
 	VERSION 0.1
 	LANGUAGES CXX)
 
+set(3rdParty "../3rdParty")
+
+include("../Cmake/DefaultSetup.cmake")
+include("../Cmake/VMath.cmake")
+SetupEvniroment()
+DefineVMath()
+	
 find_package(Bullet 		REQUIRED)
 find_package(OpenGL			REQUIRED)
 find_package(OpenSceneGraph REQUIRED
@@ -26,6 +33,7 @@ include_directories(${HEADERS}
 	${OPENSCENEGRAPH_INCLUDE_DIRS}
 	${OPENGL_INCLUDE_DIRS} 
 	${BULLET_INCLUDE_DIRS}
+	${VMATH_INCLUDE_DIRS}
 	)
 
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})

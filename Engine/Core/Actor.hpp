@@ -3,7 +3,6 @@
 #include <vector>
 #include <memory>
 
-#include "btBulletDynamicsCommon.h"
 
 #include "ActorComponent.hpp"
 #include "Object.hpp"
@@ -25,8 +24,8 @@ public:
 
 public: //~~~~~~~~~~~~~~| Physics -> to root component
 
-	void AddForce (const btVector3& force, ESpaceType space);
-	void AddTorque(const btVector3& torue, ESpaceType space);
+	void AddForce (const Vector3f& force, ESpaceType space);
+	void AddTorque(const Vector3f& torue, ESpaceType space);
 
 protected:
 

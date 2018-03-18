@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "btBulletDynamicsCommon.h"
 
 #include "../Types.hpp"
 #include "../Misc.hpp"
@@ -97,7 +96,7 @@ protected:
 	/// << 
 
 	/// >> physics
-	UNIQUE(btDiscreteDynamicsWorld) PxWorld;
+	
 	/// << 
 
 	/// >> graphic

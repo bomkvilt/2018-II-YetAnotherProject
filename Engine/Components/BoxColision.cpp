@@ -26,7 +26,7 @@ void BoxColision::Tick(float DeltaTime, ETickType type)
 	Super::Tick(DeltaTime, type);
 }
 
-void BoxColision::SetExtends(btVector3 newExtends)
+void BoxColision::SetExtends(Vector3f newExtends)
 {
 	auto* node  = facade.mesh->getChild(0);
 
@@ -35,9 +35,9 @@ void BoxColision::SetExtends(btVector3 newExtends)
 		if (auto* box = dynamic_cast<osg::Box*>(shape->getShape()))
 		{
 			box->setHalfLengths(osg::Vec3(
-				newExtends.x(),
-				newExtends.y(),
-				newExtends.z()
+				newExtends.x,
+				newExtends.y,
+				newExtends.z
 			));
 		}
 	}

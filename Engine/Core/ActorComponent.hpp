@@ -34,34 +34,34 @@ public:
 
 public: //~~~~~~~~~~~~~~| Physics
 
-	void AddForce (const btVector3& force, ESpaceType space);
-	void AddTorque(const btVector3& torue, ESpaceType space);
+	void AddForce (const Vector3f& force, ESpaceType space);
+	void AddTorque(const Vector3f& torue, ESpaceType space);
 
 public: //~~~~~~~~~~~~~~| Position
 
 	/// transform
 
-	void SetComponentTransform(btTransform newTransform);
-	void SetRelativeTransform (btTransform newTransform);
+	void SetComponentTransform(Transform newTransform);
+	void SetRelativeTransform (Transform newTransform);
 
-	btTransform GetComponentTransform() const { return worldTransform;	  }
-	btTransform GetRelativeTransform () const { return relativeTarnsform; }
+	Transform GetComponentTransform() const { return worldTransform;	  }
+	Transform GetRelativeTransform () const { return relativeTarnsform; }
 
 	/// location
 
-	btVector3  GetComponentLocation() const { return worldTransform   .getOrigin(); }
-	btVector3  GetRelativeLocation () const { return relativeTarnsform.getOrigin(); }
+	Vector3f  GetComponentLocation() const { return worldTransform   .getOrigin(); }
+	Vector3f  GetRelativeLocation () const { return relativeTarnsform.getOrigin(); }
 
 	/// rotation
 
-	btQuaternion GetComponentRotation() const { return worldTransform   .getRotation(); }
-	btQuaternion GetRelativeRotation () const { return relativeTarnsform.getRotation(); }
+	Quatf GetComponentRotation() const { return worldTransform   .getRotation(); }
+	Quatf GetRelativeRotation () const { return relativeTarnsform.getRotation(); }
 
 	/// add
 
-	void AddTransform		 (btTransform  delta, ESpaceType space = ESpaceType::eWorld);
-	void AddComponentLocation(btVector3	   delta, ESpaceType space = ESpaceType::eWorld);
-	void AddComponentRotation(btQuaternion delta, ESpaceType space = ESpaceType::eWorld);
+	void AddTransform		 (Transform delta, ESpaceType space = ESpaceType::eWorld);
+	void AddComponentLocation(Vector3f	delta, ESpaceType space = ESpaceType::eWorld);
+	void AddComponentRotation(Quatf     delta, ESpaceType space = ESpaceType::eWorld);
 
 public: //~~~~~~~~~~~~~~| Chain
 
@@ -114,8 +114,8 @@ protected:
 	///
 
 	/// >> position
-	btTransform relativeTarnsform;
-	btTransform worldTransform;
+	Transform relativeTarnsform;
+	Transform worldTransform;
 	/// <<
 
 	/// >> tree elements

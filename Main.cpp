@@ -5,7 +5,6 @@
 
 #include "btBulletDynamicsCommon.h"
 
-
 int Px() {
 	
 	///-----initialization_start-----

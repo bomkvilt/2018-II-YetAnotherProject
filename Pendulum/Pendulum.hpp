@@ -4,6 +4,7 @@
 #include "Components/BoxColision.hpp"
 #include "Components/CameraComponent.hpp"
 
+#include "btBulletDynamicsCommon.h"
 
 class Pendulum : public Avatar
 {
@@ -22,11 +23,7 @@ public:
 		cam1->AttachTo(box2);
 		cam1->SetAutoregister(true);
 
-		box2->SetExtends({
-			btScalar(1), 
-			btScalar(1), 
-			btScalar(1)
-			});
+		box2->SetExtends({ 1, 1, 1 });
 		auto* node1 = box2->GetFacade().mesh->getChild(0);
 		if (auto* shape = dynamic_cast<osg::ShapeDrawable*>(node1))
 		{
@@ -35,11 +32,7 @@ public:
 			));
 		}
 
-		base->SetExtends({
-			btScalar(2), 
-			btScalar(2), 
-			btScalar(0.01)
-			});
+		base->SetExtends({ 2, 2, 0.01f });
 		auto* node2 = base->GetFacade().mesh->getChild(0);
 		if (auto* shape = dynamic_cast<osg::ShapeDrawable*>(node2))
 		{
@@ -48,9 +41,9 @@ public:
 			));
 		}
 
-		btScalar pi4 = osg::PI/4;
+		float pi4 = osg::PI/4;
 		//box1->AddComponentLocation({ 1 , 0 , 0}, eWorld);
-		//box1->AddComponentRotation({pi4, 0, 0}, eWorld);
+		box1->AddComponentRotation({pi4, 0, 0}, eWorld);
 		box2->AddComponentLocation({ 0 , 0, 2}, eLocal);
 		cam1->AddComponentLocation({ 0 , 0, 3}, eLocal);
 	}

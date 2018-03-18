@@ -4,8 +4,12 @@ project(PendulumEngine
 	VERSION 0.1
 	LANGUAGES CXX)
 	
+set(3rdParty "3rdParty")
+
 include("Cmake/DefaultSetup.cmake")
+include("Cmake/VMath.cmake")
 SetupEvniroment()
+DefineVMath()
 	
 add_subdirectory(Engine)
 add_subdirectory(Pendulum)
@@ -25,6 +29,7 @@ include_directories(
 	${OPENSCENEGRAPH_INCLUDE_DIRS}
 	${OPENGL_INCLUDE_DIRS} 
 	${BULLET_INCLUDE_DIRS}
+	${VMATH_INCLUDE_DIRS}
 	Engine/
 	Pendulum/
 	)
