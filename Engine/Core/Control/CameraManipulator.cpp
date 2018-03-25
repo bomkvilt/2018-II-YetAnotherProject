@@ -17,7 +17,7 @@ void CameraManipulator::setByMatrix(const osg::Matrixd& matrix)
 
 void CameraManipulator::setByInverseMatrix(const osg::Matrixd& matrix)
 {
-	setByInverseMatrix(osg::Matrix::inverse(matrix));
+	// Do Nothing - we can update location from an engine only!
 }
 
 osg::Matrixd CameraManipulator::getMatrix() const
@@ -44,20 +44,21 @@ bool CameraManipulator::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActio
 		auto rotation = worldTransform.getRotation();
 		auto location = worldTransform.getOrigin();
 
+		auto v_rm = rotation.rotMatrix();
+
 		osg::Matrixd mr, mt;
+
 		mr.makeRotate(osg::Quat(
-			static_cast<float>(rotation.v.x),
-			static_cast<float>(rotation.v.y),
-			static_cast<float>(rotation.v.z),
-			static_cast<float>(rotation.w)
+			rotation.v.x,
+			rotation.v.y,
+			rotation.v.z,
+			rotation.w
 			));
-		mt.makeTranslate(osg::Vec3(
-			static_cast<float>(location.x),
-			static_cast<float>(location.y),
-			static_cast<float>(location.z)
-			));
-
-
+		mt.makeTranslate(
+			location.x,
+			location.y,
+			location.z
+			);
 		lastMatrix = mr * mt;
 	}
 	return true;

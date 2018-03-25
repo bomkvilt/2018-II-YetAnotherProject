@@ -59,7 +59,7 @@ PlayerController::PlayerController()
 	
 	//if (!viewer.getCameraManipulator()&& viewer.getCamera()->getAllowEventFocus())
 	//{
-	viewer.setCameraManipulator(new osgGA::TrackballManipulator());
+	//viewer.setCameraManipulator(new osgGA::TrackballManipulator());
 	//}
 	
 	window->resizeAllWindows();

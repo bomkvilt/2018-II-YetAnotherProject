@@ -102,6 +102,10 @@ protected:
 	void UpdateFacade();
 
 	void UpdateWoldTransform();
+	void UpdateRelativeTransform();
+	void UpdateChainTransforms();
+
+	Transform GetParentTransform() const;
 
 protected:
 

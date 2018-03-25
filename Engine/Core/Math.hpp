@@ -7,10 +7,14 @@
 
 class Transform
 {
+public:
+
 	Vector3f origin; // center position
 	Quatf  rotation; // rotation around the center
 
 public:
+
+	Transform() = default;
 
 	explicit Transform(const Quatf& q, const Vector3f& v)
 		: origin	(v)
@@ -76,7 +80,7 @@ public: //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
 
 	Transform& operator*=(const Transform& r)
 	{
-		origin	 += (*this) * r.origin;
+		origin = *this * r.origin;
 		rotation *= r.rotation;
 		return *this;
 	}
@@ -85,6 +89,30 @@ public: //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
 	{
 		Transform tmp = *this;
 		return (tmp *= r);
+	}
+
+	Transform& operator+=(const Transform& r)
+	{
+		rotation = r.rotation * rotation;
+		origin   = r.origin   + origin  ;
+		return *this;
+	}
+
+	Transform& operator+=(const Quatf& r)
+	{
+		rotation = r * rotation;
+		return *this;
+	}
+
+	Transform& operator+=(const Vector3f& r)
+	{
+		origin += r;
+		return *this;
+	}
+
+	Transform operator~() const
+	{
+		return inverse();
 	}
 
 	Transform inverse() const
@@ -103,6 +131,10 @@ public: //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~| Get && Set
 };
 
 
+inline Transform operator*(const Quatf& q, const Transform& t)
+{
+	return Transform(q * t.rotation, q * t.origin);
+}
 
 
 #endif // !MATH_HPP

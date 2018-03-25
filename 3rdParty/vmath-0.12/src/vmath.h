@@ -3525,7 +3525,7 @@ typedef Quaternion<double> Quatd;
 template<typename T, typename Q>
 Vector3<T> operator*(const Quaternion<Q>& q, const Vector3<T> v)
 {
-	return (q * Quaternion<T>(0, v.x, v.y, v.z)).v;
+	return (q * Quaternion<T>(0, v.x, v.y, v.z) * ~q).v;
 }
 
 

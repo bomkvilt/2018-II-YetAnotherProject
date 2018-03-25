@@ -25,6 +25,11 @@ public:
 				{KEY_R,  1},
 				{KEY_F, -1}
 			});
+		eventManager.AddAxis("Move", 
+			{
+				{KEY_B,  1},
+				{KEY_N, -1}
+			});
 		eventManager.AddAction("Push",	  KEY_X);
 		eventManager.AddAction("Click_L", KEY_MOUSE_L);
 		eventManager.AddAction("Click_R", KEY_MOUSE_R);
