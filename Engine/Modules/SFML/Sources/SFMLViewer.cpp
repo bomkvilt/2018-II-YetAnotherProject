@@ -1,8 +1,6 @@
-#include "OSGViewer.hpp"
+#include "SFMLViewer.hpp"
 
-#include <osgViewer/ViewerEventHandlers>
-#include <osgWidget/ViewerEventHandlers>
-#include <osg/ShapeDrawable>
+
 
 
 #include "World.hpp"
