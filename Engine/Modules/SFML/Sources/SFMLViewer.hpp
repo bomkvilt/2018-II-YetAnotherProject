@@ -30,7 +30,7 @@ protected:
 
 	/// >> window
 	//osgViewer::Viewer				 viewer;
-	UNIQUE(osgWidget::WindowManager) window;
+	UNIQUE(sf::RenderWindow) window;
 	///
 };
 

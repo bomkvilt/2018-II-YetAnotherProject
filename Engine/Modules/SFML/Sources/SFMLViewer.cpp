@@ -23,13 +23,13 @@ Viewer::Viewer(PlayerController* controller)
 {
 	// setup windows
 
-	window.reset(new osgWidget::WindowManager(
+	/*window.reset(new osgWidget::WindowManager(
 		&viewer, 
 		1280.0f, 
 		1024.0f, 
 		MASK_2D, 
 		osgWidget::WindowManager::WM_PICK_DEBUG));
-	window->setPointerFocusMode(osgWidget::WindowManager::PFM_SLOPPY);
+	window->setPointerFocusMode(osgWidget::WindowManager::PFM_SLOPPY);*/
 
 	viewer.setUpViewInWindow(350, 150,
 		static_cast<int>(window->getWidth()),
@@ -39,10 +39,10 @@ Viewer::Viewer(PlayerController* controller)
 	// setup scene
 
 	Facade* facade  = GetRootFacade();
-	osg::Group* root = new osg::Group();
-	osg::Camera* camera = window->createParentOrthoCamera();
+	//osg::Group* root = new osg::Group();
+	//osg::Camera* camera = window->createParentOrthoCamera();
 
-	draw = osg::ref_ptr<osg::Group>(new osg::Group());
+	//draw = osg::ref_ptr<osg::Group>(new osg::Group());
 
 
 	root->addChild(draw);
@@ -55,9 +55,9 @@ Viewer::Viewer(PlayerController* controller)
 	viewer.addEventHandler     (new MouseHandler	 (*GetEventCollector()) );
 	viewer.setCameraManipulator(new CameraManipulator(*GetCameraManager ()) );
 
-	viewer.addEventHandler(new osgWidget::ResizeHandler			(window.get(), camera));
-	viewer.addEventHandler(new osgWidget::CameraSwitchHandler	(window.get(), camera));
-	viewer.addEventHandler(new osgViewer::WindowSizeHandler		(					 ));
+	//viewer.addEventHandler(new osgWidget::ResizeHandler			(window.get(), camera));
+	//viewer.addEventHandler(new osgWidget::CameraSwitchHandler	(window.get(), camera));
+	//viewer.addEventHandler(new osgViewer::WindowSizeHandler		(					 ));
 
 	// update window
 
@@ -74,12 +74,50 @@ Viewer::Viewer(PlayerController* controller)
 void Viewer::Render()
 {
 	ClearDraw();
-	Visualisate();
+	World& world = *GetWorld();
+	for (auto& component : world)
+	{
+		ComponentVisualisers::Visualise(&component, this);
+		auto* tmp = dynamic_cast<Facade*>(<ActorComponent*>.GetFacade());
+		window.draw(tmp->sprite;);
+
+		
+	}
 	viewer.frame();
+
 }
 
 void Viewer::DrawShape(FShape shape, FTransform transform, FColor color)
 {
+
+	//** create radius-vectors to the shape projection's vertices (Oxy)
+	FVector extends = shape.extends;
+	FVector vertices[4];
+
+	// the sequence could be another.
+	vertices[0] = { extends.X, extends.Y, 0 };
+	vertices[1] = { extends.X, -extends.Y, 0 };
+	vertices[2] = { -extends.X, -extends.Y, 0 };
+	vertices[3] = { -extends.X, extends.Y, 0 };
+	sf::RenderWindow window;
+	for (auto& vert : vertices)
+	{
+		vert = transform * vert;
+	}
+
+	sf::Sprite sprite;
+	sprite.setTexture(texture);
+	sf::Texture texture;
+	texture.update(image);
+	sprite.setTextureRect(sf::IntRect(vertices[2].X, vertices[3].Y, vertices[2].X, vertices[1].X*2, vertices[0].Y * 2));
+	
+	
+	window.Draw(sprite);
+	//** here we need to crate a sfml sprite and place the vertices into the one (X and Y components)
+
+	//** here u must place a default texture into the sprite
+
+	//** and here - call another function to draw the sprite on a canvas
 	/*using LBase  = osg::ref_ptr<osg::PositionAttitudeTransform>;
 	using LShape = osg::ref_ptr<osg::ShapeDrawable>;
 	auto MakeLShape = [](auto* shape) {
@@ -131,7 +169,7 @@ Facade* Viewer::GetRootFacade()
 {
 	auto* sceneRoot = GetWorld()->GetSceneRoot();
 	auto* ifacade   = sceneRoot->GetFacade();
-	return static_cast<Facade*>(ifacade);
+	return dynamic_cast<Facade*>(ifacade);
 }
 
 void Viewer::ClearDraw()
