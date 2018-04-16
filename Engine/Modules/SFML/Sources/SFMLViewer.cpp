@@ -80,7 +80,7 @@ void Viewer::Render()
 
 void Viewer::DrawShape(FShape shape, FTransform transform, FColor color)
 {
-	using LBase  = osg::ref_ptr<osg::PositionAttitudeTransform>;
+	/*using LBase  = osg::ref_ptr<osg::PositionAttitudeTransform>;
 	using LShape = osg::ref_ptr<osg::ShapeDrawable>;
 	auto MakeLShape = [](auto* shape) {
 		return LShape(new osg::ShapeDrawable(shape));
@@ -124,7 +124,7 @@ void Viewer::DrawShape(FShape shape, FTransform transform, FColor color)
 		mesh->setColor(clr);
 		base->addChild(mesh);
 		draw->addChild(base);
-	}
+	}*/
 }
 
 Facade* Viewer::GetRootFacade()
