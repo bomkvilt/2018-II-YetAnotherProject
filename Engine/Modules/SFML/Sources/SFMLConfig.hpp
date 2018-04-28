@@ -1,5 +1,5 @@
-#ifndef SFML_CONFIG_HPP
-#define SFML_CONFIG_HPP
+#ifndef SFML_MODULE_CONFIG_HPP
+#define SFML_MODULE_CONFIG_HPP
 
 #include "Configs/FrontendConfig.hpp"
 
@@ -20,4 +20,4 @@ struct SFMLConfig : public FFrontendConfig
 };
 
 
-#endif // !OSG_CONFIG_HPP
+#endif // !SFML_MODULE_CONFIG_HPP

@@ -6,7 +6,9 @@
 #include "Interfaces/IViewer.hpp"
 #include "Misc.hpp"
 #include <memory>
-
+#include "SFML/Graphics.hpp"
+#include "SFML/System.hpp"
+#include "SFML/Window.hpp"
 #include "SFMLFacade.hpp"
 
 class Viewer : public IViewer
@@ -20,18 +22,8 @@ public:
 
 protected:
 	Facade* GetRootFacade();
-	
-	void ClearDraw();
-	void Visualisate();
 
-	/// >> layers
-	//osg::ref_ptr<osg::Group> draw;
-	/// << 
-
-	/// >> window
-	//osgViewer::Viewer				 viewer;
-	UNIQUE(sf::RenderWindow) window;
-	///
+	sf::RenderWindow window;
 };
 
 
