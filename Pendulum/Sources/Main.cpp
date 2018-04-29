@@ -1,7 +1,7 @@
 #include <memory>
 
 #include "Engine.hpp"
-#include "OSGConfig.hpp"
+#include "SFMLConfig.hpp"
 #include "Modules/ModuleManager.hpp"
 
 #include "PDGameMode.hpp"
@@ -15,7 +15,7 @@ using PDSimulationConfig = TSimulationModeConfig<PDPlayerController, PDGameMode>
 
 int main()
 {
-	ModuleManager::SetFrontendConfig(new OSGConfig());
+	ModuleManager::SetFrontendConfig(new SFMLConfig());
 
 	auto* config = new PDSimulationConfig();
 	auto mode = SimulationMode::Get(config);
