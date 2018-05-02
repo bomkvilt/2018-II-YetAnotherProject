@@ -1,0 +1,6 @@
+DEFINE_UNIT(Pendulum)
+SET(CODE		"Sources"	)
+SET(TEST    	"Tests" 	)
+SET(CATEGORY	"Project"	)
+SET(MODULES 	 Misc Engine Core Components OSG ComponentVisualisers)
+MAKE_APP()

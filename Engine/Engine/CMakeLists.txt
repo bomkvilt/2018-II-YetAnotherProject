@@ -1,0 +1,6 @@
+DEFINE_UNIT(Engine)
+SET(CODE		"Sources"	)
+SET(TEST    	"Tests" 	)
+SET(CATEGORY	"Engine"	)
+SET(MODULES 	 Misc Core ComponentVisualisers	Components OSG Box2D)
+MAKE_MODULE()
