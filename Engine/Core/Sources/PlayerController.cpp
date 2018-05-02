@@ -6,18 +6,23 @@
 #include "World.hpp"
 #include "Avatar.hpp"
 
-#include "Modules/ModuleManager.hpp"
-
-
-const unsigned int MASK_2D = 0xF0000000;
-const unsigned int MASK_3D = 0x0F000000;
-
+#include "Injection/DependencyInjectionManager.hpp"
 
 
 PlayerController::PlayerController()
 	: cameraManager()
-	, viewer(ModuleManager::MakeViewer(this))
-{}
+{
+	if (auto init = ThreadContext::TopInitialiser())
+	if (auto config = init->config)
+	{
+		viewer = DependencyInjectionManager::MakeViewer(this, config);
+		
+		return;
+	}
+
+	throw std::runtime_error("config must not be nulled");
+}
+
 
 PlayerController::~PlayerController()
 {}

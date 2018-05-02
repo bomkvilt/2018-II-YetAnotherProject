@@ -17,8 +17,6 @@ void KeyHandler_base::SetKeyMode(const osgGA::GUIEventAdapter& ega, KeyEvent& ev
 	switch (ega.getModKeyMask()) {
 	case osgGA::GUIEventAdapter::MODKEY_ALT			:	event.modifier = EKeyModifier::eAlt;	break;
 	case osgGA::GUIEventAdapter::MODKEY_CTRL		:	event.modifier = EKeyModifier::eCtrl;	break;
-	case osgGA::GUIEventAdapter::MODKEY_LEFT_SHIFT	:
-	case osgGA::GUIEventAdapter::MODKEY_RIGHT_SHIFT	:
 	case osgGA::GUIEventAdapter::MODKEY_SHIFT		:	event.modifier = EKeyModifier::eShift;	break;
 	}
 }
@@ -55,11 +53,11 @@ bool MouseHandler::handle(const osgGA::GUIEventAdapter& ega, osgGA::GUIActionAda
 	case osgGA::GUIEventAdapter::PUSH				:	event.action = BA_Pressed;		break;
 	case osgGA::GUIEventAdapter::RELEASE			:	event.action = BA_Released;		break;
 	case osgGA::GUIEventAdapter::DOUBLECLICK		:	event.action = BA_DoubleClick;	break;
-
-	case osgGA::GUIEventAdapter::DRAG				:	SetMousePos(ega);				return false; //TODO:
-	case osgGA::GUIEventAdapter::MOVE				:	SetMousePos(ega);				return false; //TODO:
-	case osgGA::GUIEventAdapter::SCROLL				:									return false; //TODO:
-	default: return false;
+	case osgGA::GUIEventAdapter::DRAG				:	SetMousePos(ega);				return false;
+	case osgGA::GUIEventAdapter::MOVE				:	SetMousePos(ega);				return false;
+	case osgGA::GUIEventAdapter::SCROLL				:									return false;
+	default: 
+		return false;
 	}
 
 	switch (button) {	
@@ -77,6 +75,7 @@ bool MouseHandler::handle(const osgGA::GUIEventAdapter& ega, osgGA::GUIActionAda
 *								Keyboar
 ********************************************************************/
 
+#define LAST_ASCII_CHAR 128
 
 KeyboardHandler::KeyboardHandler(EventCollector& collector)
 	: KeyHandler_base(collector)
@@ -92,7 +91,8 @@ bool KeyboardHandler::handle(const osgGA::GUIEventAdapter& ega, osgGA::GUIAction
 	switch (eventType) {
 	case osgGA::GUIEventAdapter::KEYDOWN			:	event.action = EKeyAction::BA_Pressed;  break;
 	case osgGA::GUIEventAdapter::KEYUP				:	event.action = EKeyAction::BA_Released; break;
-	default: return false;
+	default: 
+		return false;
 	}
 
 	switch (button) {
@@ -102,7 +102,7 @@ bool KeyboardHandler::handle(const osgGA::GUIEventAdapter& ega, osgGA::GUIAction
 	case osgGA::GUIEventAdapter::KEY_Escape			:	event.key = KEY_ESCAPE;		break;
 	case osgGA::GUIEventAdapter::KEY_Caps_Lock		:	event.key = KEY_CAPS;		break;
 	default:
-		if (button < 128) //TODO: make valid binding
+		if (button <= LAST_ASCII_CHAR)
 		{
 			event.key = (EInputKey)button;
 		}
@@ -114,8 +114,3 @@ bool KeyboardHandler::handle(const osgGA::GUIEventAdapter& ega, osgGA::GUIAction
 
 	return true;
 }
-
-
-/********************************************************************
-*								//
-********************************************************************/

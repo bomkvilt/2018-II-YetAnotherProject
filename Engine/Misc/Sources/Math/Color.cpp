@@ -1,11 +1,33 @@
 #include "Color.hpp"
 
+#define OPERATION(_SIGN, _R) \
+	R  _SIGN  _R.R; \
+	G  _SIGN  _R.G; \
+	B  _SIGN  _R.B; \
+	A  _SIGN  _R.A;
+
+#define OPERATION_LIST(_SIGN, _R) \
+	R  _SIGN  _R.R, \
+	G  _SIGN  _R.G, \
+	B  _SIGN  _R.B, \
+	A  _SIGN  _R.A
+
+#define OPERATION_FLOAT(_SIGN, _R) \
+	R  _SIGN  _R; \
+	G  _SIGN  _R; \
+	B  _SIGN  _R; \
+	A  _SIGN  _R;
+
+#define OPERATION_LIST_FLOAT(_SIGN, _R) \
+	R  _SIGN  _R, \
+	G  _SIGN  _R, \
+	B  _SIGN  _R, \
+	A  _SIGN  _R
+
 // constants
 const FColor FColor::Red   = FColor(1, 0, 0);
 const FColor FColor::Green = FColor(0, 1, 0);
 const FColor FColor::Blue  = FColor(0, 0, 1);
-
-
 
 
 FColor::FColor(float R, float G, float B, float A)
@@ -18,14 +40,11 @@ FColor::FColor(const FColor & r)
 
 FColor& FColor::operator=(const FColor& r)
 {
-	R = r.R;
-	G = r.G;
-	B = r.B;
-	A = r.A;
+	OPERATION(=, r)
 	return *this;
 }
 
-float& FColor::operator[](int i)
+float& FColor::operator[](int i) 
 {
 	switch (i) {
 	case 0: return R;
@@ -36,126 +55,32 @@ float& FColor::operator[](int i)
 	throw std::out_of_range("");
 }
 
-float FColor::operator[](int i) const
+const float& FColor::operator[](int i) const
 {
-	switch (i) {
-	case 0: return R;
-	case 1: return G;
-	case 2: return B;
-	case 3: return A;
-	}
-	throw std::out_of_range("");
+	return const_cast<FColor&>(*this)[i];
 }
 
-FColor FColor::operator+(const FColor& r) const
-{
-	return FColor(
-		R + r.R,
-		G + r.G,
-		B + r.B,
-		A + r.A);
-}
+// FColor
 
-FColor FColor::operator-(const FColor& r) const
-{
-	return FColor(
-		R - r.R,
-		G - r.G,
-		B - r.B,
-		A - r.A);
-}
+FColor  FColor::operator+(const FColor& r) const { return FColor(OPERATION_LIST(+, r)); }
+FColor  FColor::operator-(const FColor& r) const { return FColor(OPERATION_LIST(-, r)); }
 
-FColor& FColor::operator-=(FColor r)
-{
-	R -= r.R;
-	G -= r.G;
-	B -= r.B;
-	A -= r.A;
-	return *this;
-}
+FColor& FColor::operator-=(FColor r) { OPERATION(-=, r) return *this; }
+FColor& FColor::operator+=(FColor r) { OPERATION(+=, r) return *this; }
 
-FColor& FColor::operator+=(FColor r)
-{
-	R += r.A;
-	G += r.G;
-	B += r.B;
-	A += r.A;
-	return *this;
-}
+// Scalar
 
-FColor FColor::operator+(float r) const
-{
-	return FColor(
-		R + r,
-		G + r,
-		B + r,
-		A + r);
-}
+FColor  FColor::operator+(float r) const {            return FColor(OPERATION_LIST_FLOAT(+, r)); }
+FColor  FColor::operator-(float r) const {            return FColor(OPERATION_LIST_FLOAT(-, r)); }
+FColor  FColor::operator*(float r) const {            return FColor(OPERATION_LIST_FLOAT(*, r)); }
+FColor  FColor::operator/(float r) const { assert(r); return FColor(OPERATION_LIST_FLOAT(/, r)); }
 
-FColor FColor::operator-(float r) const
-{
-	return FColor(
-		R - r,
-		G - r,
-		B - r,
-		A - r);
-}
+FColor& FColor::operator+=(float r) {            OPERATION_FLOAT(+=, r) return *this; }
+FColor& FColor::operator-=(float r) {            OPERATION_FLOAT(-=, r) return *this; }
+FColor& FColor::operator*=(float r) {            OPERATION_FLOAT(*=, r) return *this; }
+FColor& FColor::operator/=(float r) { assert(r); OPERATION_FLOAT(/=, r) return *this; }
 
-FColor FColor::operator*(float r) const
-{
-	return FColor(
-		R * r,
-		G * r,
-		B * r,
-		A * r);
-}
-
-FColor FColor::operator/(float r) const
-{
-	assert(r); // TODO:: log
-	return FColor(
-		R / r,
-		G / r,
-		B / r,
-		A / r);
-}
-
-FColor& FColor::operator+=(float r)
-{
-	R += r;
-	G += r;
-	B += r;
-	A += r;
-	return *this;
-}
-
-FColor& FColor::operator-=(float r)
-{
-	R -= r;
-	G -= r;
-	B -= r;
-	A -= r;
-	return *this;
-}
-
-FColor& FColor::operator*=(float r)
-{
-	R *= r;
-	G *= r;
-	B *= r;
-	A *= r;
-	return *this;
-}
-
-FColor& FColor::operator/=(float r)
-{
-	assert(r); // TODO:: log
-	R /= r;
-	G /= r;
-	B /= r;
-	A /= r;
-	return *this;
-}
+// Comapre
 
 bool FColor::operator==(const FColor& r) const
 {
@@ -169,6 +94,8 @@ bool FColor::operator!=(const FColor& r) const
 {
 	return !(*this == r);
 }
+
+// Misc
 
 FColor FColor::Lerp(const FColor & r, float factor)
 {

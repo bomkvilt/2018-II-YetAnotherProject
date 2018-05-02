@@ -68,8 +68,6 @@ public: //~~~~~~~~~~~~~~| chain and modules
 	      std::vector<ActorModule*>& GetModules()       { return modules; }
 	const std::vector<ActorModule*>& GetModules() const { return modules; }
 
-	// TODO:: GetComponents<T> - over modules and components
-
 protected:
 
 	/// >> common

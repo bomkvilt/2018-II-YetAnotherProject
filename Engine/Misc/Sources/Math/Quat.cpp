@@ -1,22 +1,40 @@
 #include "Quat.hpp"
 #include <assert.h>
 
+#define OPERATION(_SIGN, _R) \
+	X  _SIGN  _R.X; \
+	Y  _SIGN  _R.Y; \
+	Z  _SIGN  _R.Z; \
+	W  _SIGN  _R.W;
+
+#define OPERATION_LIST(_SIGN, _R) \
+	X  _SIGN  _R.X, \
+	Y  _SIGN  _R.Y, \
+	Z  _SIGN  _R.Z, \
+	W  _SIGN  _R.W
+
+#define OPERATION_FLOAT(_SIGN, _R) \
+	X  _SIGN  _R; \
+	Y  _SIGN  _R; \
+	Z  _SIGN  _R; \
+	W  _SIGN  _R;
+
+#define OPERATION_LIST_FLOAT(_SIGN, _R) \
+	X  _SIGN  _R, \
+	Y  _SIGN  _R, \
+	Z  _SIGN  _R, \
+	W  _SIGN  _R
+
 // constants
 const FQuat FQuat::Identity = FQuat(0, 0, 0, 1);
 
 
-FQuat::FQuat()
-	: X(0) 
-	, Y(0)
-	, Z(0)
-	, W(0)
+FQuat::FQuat() 
+	: X(0), Y(0), Z(0), W(0)
 {}
 
 FQuat::FQuat(float X, float Y, float Z, float W)
-	: X(X)
-	, Y(Y)
-	, Z(Z)
-	, W(W)
+	: X(X), Y(Y), Z(Z), W(W)
 {}
 
 FQuat::FQuat(const FVector& V, float angle)
@@ -38,10 +56,7 @@ FQuat::FQuat(const FQuat& r)
 
 FQuat& FQuat::FQuat::operator=(const FQuat& r)
 {
-	X = r.X;
-	Y = r.Y;
-	Z = r.Z;
-	W = r.W;
+	OPERATION(=, r);
 	return *this;
 }
 
@@ -56,35 +71,13 @@ float& FQuat::FQuat::operator[](int i)
 	throw std::out_of_range("");
 }
 
-float FQuat::operator[](int i) const
+const float& FQuat::operator[](int i) const
 {
-	switch (i) {
-	case 0: return X;
-	case 1: return Y;
-	case 2: return Z;
-	case 3: return W;
-	}
-	throw std::out_of_range("");
+	return const_cast<FQuat&>(*this)[i];
 }
 
-FQuat FQuat::operator+(const FQuat& r) const
-{
-	return FQuat(
-		X + r.X,
-		Y + r.Y,
-		Z + r.Z,
-		W + r.W);
-}
-
-FQuat FQuat::operator-(const FQuat& r) const
-{
-	return FQuat(
-		X - r.X,
-		Y - r.Y,
-		Z - r.Z,
-		W - r.W);
-}
-
+FQuat FQuat::operator+(const FQuat& r) const { return FQuat(OPERATION_LIST(+, r)); }
+FQuat FQuat::operator-(const FQuat& r) const { return FQuat(OPERATION_LIST(-, r)); }
 FQuat FQuat::operator*(const FQuat& r) const
 {
 	return FQuat(
@@ -94,93 +87,24 @@ FQuat FQuat::operator*(const FQuat& r) const
 		W*r.W - X*r.X - Y*r.Y - Z*r.Z);
 }
 
-FQuat& FQuat::operator+=(const FQuat& r)
-{
-	X += r.X;
-	Y += r.Y;
-	Z += r.Z;
-	W += r.W;
-	return *this;
-}
-
-FQuat& FQuat::operator-=(const FQuat& r)
-{
-	X -= r.X;
-	Y -= r.Y;
-	Z -= r.Z;
-	W -= r.W;
-	return *this;
-}
-
+FQuat& FQuat::operator+=(const FQuat& r) { OPERATION(+=, r); return *this; }
+FQuat& FQuat::operator-=(const FQuat& r) { OPERATION(-=, r); return *this; }
 FQuat& FQuat::operator*=(const FQuat& r)
 {
 	*this = (*this) * r;
 	return *this;
 }
 
-FQuat FQuat::operator+(float r) const
-{
-	return FQuat(
-		X + r,
-		Y + r,
-		Z + r,
-		W + r);
-}
+FQuat FQuat::operator+(float r) const { return FQuat(OPERATION_LIST_FLOAT(+, r)); }
+FQuat FQuat::operator-(float r) const { return FQuat(OPERATION_LIST_FLOAT(-, r)); }
+FQuat FQuat::operator*(float r) const { return FQuat(OPERATION_LIST_FLOAT(*, r)); }
 
-FQuat FQuat::operator-(float r) const
-{
-	return FQuat(
-		X - r,
-		Y - r,
-		Z - r,
-		W - r);
-}
+FQuat& FQuat::operator+=(float r) { OPERATION_FLOAT(+=, r); return *this; }
+FQuat& FQuat::operator-=(float r) { OPERATION_FLOAT(-=, r); return *this; }
+FQuat& FQuat::operator*=(float r) { OPERATION_FLOAT(*=, r); return *this; }
 
-FQuat FQuat::operator*(float r) const
-{
-	return FQuat(
-		X * r,
-		Y * r,
-		Z * r,
-		W * r);
-}
-
-FQuat& FQuat::operator+=(float r)
-{
-	X += r;
-	Y += r;
-	Z += r;
-	W += r;
-	return *this;
-}
-
-FQuat& FQuat::operator-=(float r)
-{
-	X -= r;
-	Y -= r;
-	Z -= r;
-	W -= r;
-	return *this;
-}
-
-FQuat& FQuat::operator*=(float r)
-{
-	X -= r;
-	Y -= r;
-	Z -= r;
-	W -= r;
-	return *this;
-}
-
-FQuat FQuat::operator-() const
-{
-	return FQuat(-X, -Y, -Z, -W);
-}
-
-FQuat FQuat::operator~() const
-{
-	return FQuat(-X, -Y, -Z, W);
-}
+FQuat FQuat::operator-() const { return FQuat(-X, -Y, -Z, -W); }
+FQuat FQuat::operator~() const { return FQuat(-X, -Y, -Z,  W); }
 
 bool FQuat::operator==(const FQuat& r) const
 {
@@ -205,24 +129,18 @@ float FQuat::SizeSq() const
 	return X*X + Y*Y + Z*Z + W*W;
 }
 
-FQuat FQuat::GetNormal() const
-{
-	float size = Size();
-	return FQuat(
-		X / size,
-		Y / size,
-		Z / size,
-		W / size);
+FQuat FQuat::GetNormal() const 
+{ 
+	float size = Size(); 
+	return FQuat(OPERATION_LIST_FLOAT(/, size)); 
+
 }
 
-FQuat& FQuat::Normalise()
-{
-	float size = Size();
-	X /= size;
-	Y /= size;
-	Z /= size;
-	W /= size;
-	return *this;
+FQuat& FQuat::Normalise() 
+{ 
+	float size = Size(); 
+	OPERATION_FLOAT(/=, size); 
+	return *this; 
 }
 
 FQuat FQuat::Lerp(const FQuat& r, float factor)

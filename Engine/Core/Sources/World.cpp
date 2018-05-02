@@ -1,15 +1,16 @@
 #include "World.hpp"
 #include "Actor.hpp"
-#include "Modules/ModuleManager.hpp"
 #include "Threading/ThreadPool.hpp"
+#include "Injection/DependencyInjectionManager.hpp"
 
 #include <algorithm>
 
 
 World::World()
 	: SimulationState(eUnstarted)
-	, scene(ModuleManager::MakeScene())
 {
+	scene = DependencyInjectionManager::MakeScene();
+
 	// to make a scene root it's enough to use the function
 	sceneRoot = ObjectCreator::CreateObject<ActorComponent>(std::string("scene Root"), this);
 }
@@ -33,7 +34,7 @@ void World::DoTick(float DeltaTime, ETickType type)
 {
 	//TaskBacket backet;
 
-	for (auto tick : tickFunctions[type])
+	for (auto* tick : tickFunctions[type])
 	{
 		if ( IsValid(tick->GetTarget()) ) 
 		{

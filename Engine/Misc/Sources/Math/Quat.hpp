@@ -1,13 +1,21 @@
+#pragma once
 #ifndef QUAT_HPP
 #define QUAT_HPP
 #pragma once
 
 #include "Vector.hpp"
 #include "Constants.hpp"
+#include "Reflection/Archived.hpp"
 
 
-struct FQuat
+struct FQuat : public Archived
 {
+	GENERATED_ARCHIVATION_BODY(FQuat, Archived);
+		ARCHIVE_MEMBER("", X);
+		ARCHIVE_MEMBER("", Y);
+		ARCHIVE_MEMBER("", Z);
+		ARCHIVE_MEMBER("", W);
+		ARCHIVATION_END()
 public:
 	float X;
 	float Y;
@@ -24,8 +32,8 @@ public:
 
 	FQuat& operator=(const FQuat& r);
 
-	float& operator[](int idx);
-	float  operator[](int idx) const;
+	      float& operator[](int idx);
+	const float& operator[](int idx) const;
 
 public: //~~~~~~~~~~~~~~| quat - quat
 

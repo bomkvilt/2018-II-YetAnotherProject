@@ -8,6 +8,6 @@
 #include "Misc.hpp"
 #include "Types.hpp"
 
-
+#include "Reflection/Archived.hpp"
 
 #endif // !COMMON_HPP

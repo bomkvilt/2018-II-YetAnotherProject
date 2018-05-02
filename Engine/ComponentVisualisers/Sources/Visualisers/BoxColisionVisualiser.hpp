@@ -2,7 +2,7 @@
 #ifndef BOX_COLLISION_VISUALISER_HPP
 #define BOX_COLLISION_VISUALISER_HPP
 
-#include "../ComponentVisualiser.hpp"
+#include "ComponentVisualiser.hpp"
 #include "BoxColision.hpp"
 
 class BoxColisionVisualiser : public ComponentVisualiser
@@ -11,9 +11,9 @@ class BoxColisionVisualiser : public ComponentVisualiser
 	{
 		if (auto* box = dynamic_cast<BoxColision*>(component))
 		{
-			FVector    extends   = box->GetExtends();
+			FVector    extents   = box->GetExtents();
 			FTransform transform = box->GetComponentTransform();
-			helper.DrawShape(FShape::MakeBox(extends), transform, FColor::Green);
+			helper.DrawShape(FShape::MakeBox(extents), transform, FColor::Green);
 		}
 	}
 };

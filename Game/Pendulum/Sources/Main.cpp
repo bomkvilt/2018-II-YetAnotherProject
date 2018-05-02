@@ -1,25 +1,27 @@
 #include "Engine.hpp"
-#include "B2Config.hpp"
-#include "OSGConfig.hpp"
-#include "Modules/ModuleManager.hpp"
+#include "B2Fabric.hpp"
+#include "OSGFabric.hpp"
+#include "Injection/DependencyInjectionManager.hpp"
 
 #include "PDGameMode.hpp"
 #include "PDPlayerController.hpp"
 #include "Pendulum.hpp"
 
-using PDSimulationConfig = TSimulationModeConfig<PDPlayerController, PDGameMode>;
+
+using PDSimulationFabric = TSimulationModeFabric<SimulationMode, PDPlayerController, PDGameMode>;
 
 
 
 int main()
 {
-	ModuleManager::SetFrontendConfig(new OSGConfig());
-	ModuleManager::SetPhysicsConfig (new B2Config() );
+	DependencyInjectionManager::SetFrontendFabric(OSGFabric::Get());
+	DependencyInjectionManager::SetPhysicsConfig (B2Fabric ::Get());
 
-	auto* config = new PDSimulationConfig();
-	auto mode = SimulationMode::Get(config);
+	auto simulationFabric = PDSimulationFabric::Get();
 	
 	Engine engine;
-	engine.SetSimulationMode(std::move(mode));
+	engine.SetPathToConfig("EngineConfig.txt");
+	engine.SetSimulationFabric(std::move(simulationFabric));
+	engine.SaveConfig();
 	return engine.MainCycle();
 }

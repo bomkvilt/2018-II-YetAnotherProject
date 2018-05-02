@@ -4,20 +4,19 @@
 Gosha::Gosha()
 {
 	body = CreateSubcomponent<BoxColision>("Body");
-	body->SetExtends(FVector(1, 2, 0.6f));
+	body->SetExtents(FVector(1, 2, 0.6f));
 	body->GetRigidBody()->SetMass(10);
 	
 	movement = CreateSubModule<MovementComponent>("Movement");
+	movement->SetTrackingComponent(body);
 	
 	movement->states.movementMode = EMovementMode::Jumping;
 	movement->states.CurrentMode().ImpactType = EMovementImpactType::Impulce;
-	movement->states.CurrentMode().Impulce = FVector(0, 200);
-	movement->SetTrackingComponent(body);
+	movement->states.CurrentMode().Impulce    = FVector2(0, 200);
 
 	movement->states.movementMode = EMovementMode::Walk;
-	movement->states.CurrentMode().ImpactType = EMovementImpactType::Acceleration;
-	movement->states.CurrentMode().Acceleration = FVector(30);
-	movement->SetTrackingComponent(body);
+	movement->states.CurrentMode().ImpactType   = EMovementImpactType::Acceleration;
+	movement->states.CurrentMode().Acceleration = FVector2(30, 0);
 
 	camera = CreateSubcomponent<CameraComponent>("Camera");
 	camera->AddComponentLocation(FVector(0, 0, 80), eParent);
@@ -35,7 +34,7 @@ void Gosha::OnBeginPlay()
 			{
 				coin->AttachTo(this);
 				coin->GetRootComponent()->SetMass(0);
-				coin->SetRelativeLocation(FVector(2));
+				coin->SetRelativeLocation(FVector2(2, 0));
 			}
 		});
 	}
@@ -52,7 +51,7 @@ void Gosha::Move(float value)
 {
 	if (movement && value)
 	{
-		movement->AddLenearInput(FVector(value));
+		movement->AddLenearInput(FVector2(value, 0));
 	}
 }
 
@@ -61,6 +60,6 @@ void Gosha::Jump(EKeyAction)
 	if (movement)
 	{
 		movement->states.extraMode = EMovementMode::Jumping;
-		movement->AddLenearInput(FVector(0, 1));
+		movement->AddLenearInput(FVector2(0, 1));
 	}
 }

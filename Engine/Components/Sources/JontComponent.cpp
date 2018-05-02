@@ -1,9 +1,11 @@
 #include "JontComponent.hpp"
-#include "Modules/ModuleManager.hpp"
+#include "Injection/DependencyInjectionManager.hpp"
+
 
 JointComponent::JointComponent()
-	: constraint(ModuleManager::MakeConstraint(this))
-{}
+{
+	constraint = DependencyInjectionManager::MakeConstraint(this);
+}
 
 FConstraintType JointComponent::GetConstraint()
 {

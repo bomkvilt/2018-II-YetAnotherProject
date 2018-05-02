@@ -2,27 +2,39 @@
 #define COMPONENT_VISUALISERS_HPP
 #pragma once
 
+#include <memory>
 #include <string>
 #include <unordered_map>
-#include "Interfaces/IViewer.hpp"
 
-class ComponentVisualiser;
+#include "Modules/IModule.hpp"
+#include "Interfaces/IViewer.hpp"
+#include "Misc.hpp"
+
+#include "ComponentVisualiser.hpp"
 class ActorComponent;
 
 
-class ComponentVisualisers
+class ComponentVisualisersModule : public IModule
 {
+	using Visualisers = std::unordered_map<std::string, UNIQUE(ComponentVisualiser)>;
+
 public:
-	using Visualisers = std::unordered_map<std::string, ComponentVisualiser*>;
+	static ComponentVisualisersModule& Get();
+
+	virtual void OnLoaded() override;
+	virtual void OnUnload() override;
+
 
 public:
 	// request a visualisation for the component
-	static void Visualise(ActorComponent* component, IViewer* viewer);
+	void Visualise(ActorComponent* component, IViewer* viewer);
 
-	static void AddVisualiser(const std::string& className, ComponentVisualiser* visualiser);
-	
+	// add visualiser for the component
+	void AddVisualiser   (const std::string& className, UNIQUE(ComponentVisualiser) visualiser);
+	void RemoveVisualiser(const std::string& classname);
+
 private:
-	static Visualisers visualisers;
+	Visualisers visualisers;
 };
 
 

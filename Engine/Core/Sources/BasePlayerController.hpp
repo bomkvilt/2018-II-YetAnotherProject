@@ -9,8 +9,9 @@ class Avatar;
 class GameMode;
 
 
-class BasePlayerController
+class BasePlayerController : public Archived
 {
+	GENERATED_BODY(BasePlayerController, Archived);
 public:
 
 	BasePlayerController();
@@ -38,7 +39,6 @@ public:
 	void SetGameMode(GameMode* newMode) { gameMode = newMode;   }
 
 protected:
-
 	/// << 
 	Avatar*   target;
 	World*    world;

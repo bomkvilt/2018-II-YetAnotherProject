@@ -1,23 +1,25 @@
 #include "Engine.hpp"
-#include "B2Config.hpp"
-#include "OSGConfig.hpp"
-#include "Modules/ModuleManager.hpp"
+#include "B2Fabric.hpp"
+#include "OSGFabric.hpp"
+#include "Injection/DependencyInjectionManager.hpp"
 
 #include "PGGameMode.hpp"
 #include "PGPlayerController.hpp"
 
-using PGSimulationConfig = TSimulationModeConfig<PGPlayerController, PGGameMode>;
+
+using PGSimulationConfig = TSimulationModeFabric<SimulationMode, PGPlayerController, PGGameMode>;
 
 
 int main()
 {
-	ModuleManager::SetFrontendConfig(new OSGConfig());
-	ModuleManager::SetPhysicsConfig (new B2Config() );
+	DependencyInjectionManager::SetFrontendFabric(OSGFabric::Get());
+	DependencyInjectionManager::SetPhysicsConfig (B2Fabric ::Get());
 
-	auto* config = new PGSimulationConfig();
-	auto mode = SimulationMode::Get(config);
+	auto simulationFabric = PGSimulationConfig::Get();
 	
 	Engine engine;
-	engine.SetSimulationMode(std::move(mode));
+	engine.SetPathToConfig("EngineConfig.txt");
+	engine.SetSimulationFabric(std::move(simulationFabric));
+	engine.SaveConfig();
 	return engine.MainCycle();
 }

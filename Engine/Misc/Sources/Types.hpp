@@ -148,20 +148,20 @@ enum class EShapeType
 
 struct FShape
 {
-	FShape(EShapeType type, FVector extends) 
+	FShape(EShapeType type, FVector extents) 
 		: type   (type)
-		, extends(extends)
+		, extents(extents)
 	{}
 
-	static FShape MakeBox(FVector extends)
+	static FShape MakeBox(FVector extents)
 	{
-		return FShape(EShapeType::eBox, extends);
+		return FShape(EShapeType::eBox, extents);
 	}
 
 public:
 
 	EShapeType type;
-	FVector extends;
+	FVector extents;
 };
 
 

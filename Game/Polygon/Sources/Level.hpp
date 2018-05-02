@@ -14,7 +14,7 @@ public:
 	Level()
 	{
 		floor = CreateSubcomponent<BoxColision>("floor");
-		floor->SetExtends(FVector(15, 0.1f, 2));
+		floor->SetExtents(FVector(15, 0.1f, 2));
 		floor->GetRigidBody()->SetMass(0);
 	}
 

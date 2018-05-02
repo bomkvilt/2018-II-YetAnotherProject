@@ -3,27 +3,32 @@
 #include "GameMode.hpp"
 
 
-SimulationMode::SimulationMode(ISimulationModeConfig* config)
-	: bStop		 (0)
+SimulationMode::SimulationMode(
+	UNIQUE(ISimulationModeFabric) newFabric, 
+	SHARED(FEngineConfig)         newConfig
+)	: bStop		 (0)
 	, lastTime	 (0)
 	, currentTime(0)
-	, config(config)
+	, fabric(std::move(newFabric))
+	, config(newConfig)
 {
-	if (config)
+	if (fabric && config)
 	{
 		auto init = Initialiser::Get();
 		init->world = new World();
+		init->config = config;
 		init->simulation = this;
 
-		controller = std::move(config->GetDefaultPlayerController(init.get()) );
+		controller = std::move(fabric->MakeDefaultPlayerController(init.get()));
 		init->controller = controller.get();
-
-		gameMode = std::move(config->GetDefaultGameMode(init.get()) );
+		
+		gameMode = std::move(fabric->MakeDefaultGameMode(init.get()) );
 		if (gameMode) 
 		{
 			gameMode->OnConstructed();
 		}
 	}
+	else throw std::runtime_error("fabric and config must be not nulled");
 }
 
 SimulationMode::~SimulationMode()
@@ -34,9 +39,11 @@ SimulationMode::~SimulationMode()
 	}
 }
 
-UNIQUE(SimulationMode) SimulationMode::Get(ISimulationModeConfig* config)
-{
-	return std::make_unique<SimulationMode>(config);
+UNIQUE(SimulationMode) SimulationMode::Get(
+	UNIQUE(ISimulationModeFabric) fabric, 
+	SHARED(FEngineConfig)         config
+) {
+	return std::make_unique<SimulationMode>(std::move(fabric), config);
 }
 
 void SimulationMode::OnSimulationBegin()
@@ -63,23 +70,25 @@ void SimulationMode::OnSimulationEnd()
 	}
 }
 
-void SimulationMode::DoTick(float deltaTime, ETickType type)
+void SimulationMode::Tick(float deltaTime, ETickType type)
 {
-	gameMode->Tick(deltaTime, type);
+	if (gameMode)
+	{
+		gameMode->Tick(deltaTime, type);
 
-	if (type == ETickType::ePostPhysics)
-	{
-		controller->Tick(deltaTime, type);
-	}
-	if (type == ETickType::eRender)
-	{
-		controller->Render();
+		if (type == ETickType::ePostPhysics)
+		{
+			controller->Tick(deltaTime, type);
+		}
+		if (type == ETickType::eRender)
+		{
+			controller->Render();
+		}
 	}
 }
 
 void SimulationMode::StopSimulation()
 {
-	// TODO::
 	bStop = true;
 }
 
@@ -90,11 +99,9 @@ bool SimulationMode::TickRequired() const
 
 float SimulationMode::GetSimulationStep() 
 { 
-	if (config)
-	{
-		return config->simlationStep;
-	}
-	return 1/30;
+	return config 
+		? config->simulation.stepTime
+		: 1/30.f; //TODO::get a default value from a default engine config
 }
 
 void SimulationMode::SetDeltaTime(float delta)

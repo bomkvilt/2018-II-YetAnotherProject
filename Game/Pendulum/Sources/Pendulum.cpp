@@ -4,12 +4,12 @@ Pendulum::Pendulum()
 	: pid(4, 0, 3)
 {
 	base = CreateSubcomponent<BoxColision>("Base");
-	base->SetExtends(FVector(0.6f, 0.6f, 0.6f));
+	base->SetExtents(FVector(0.6f, 0.6f, 0.6f));
 	base->GetRigidBody()->SetMass(0);
 
 	floor = CreateSubcomponent<BoxColision>("floor");
 	floor->AddComponentLocation(FVector(0, -8, 0));
-	floor->SetExtends(FVector(5, 0.1f, 5));
+	floor->SetExtents(FVector(5, 0.1f, 5));
 	floor->GetRigidBody()->SetMass(0);
 
 	joint = CreateSubcomponent<JointComponent>("joint");
@@ -18,20 +18,20 @@ Pendulum::Pendulum()
 
 	pendulum = CreateSubcomponent<BoxColision>("Pendulum");
 	pendulum->AddComponentLocation(FVector(2.5f, 0, 0), eParent);
-	pendulum->SetExtends(FVector(1.5f, 0.2f, 0.2f));
+	pendulum->SetExtents(FVector(1.5f, 0.2f, 0.2f));
 	pendulum->GetRigidBody()->SetMass(10);
 	pendulum->AttachTo(joint);
 
 	target = CreateSubcomponent<BoxColision>("Target");
 	target->AddComponentLocation(FVector(5, 0, 0), eParent);
 	target->AddComponentRotation(FQuat(0, 0, -90), eParent);
-	target->SetExtends(FVector(0.5f, 0.1f, 0.1f));
+	target->SetExtents(FVector(0.5f, 0.1f, 0.1f));
 	target->GetRigidBody()->SetMass(0);
 	target->AttachTo(joint);
 
 	jumper = CreateSubcomponent<BoxColision>("Target");
 	jumper->AddComponentLocation(FVector(-1, -7, 0), eParent);
-	jumper->SetExtends(FVector(0.1f, 0.1f, 0.1f));
+	jumper->SetExtents(FVector(0.1f, 0.1f, 0.1f));
 	jumper->GetRigidBody()->SetMass(1);
 
 	cam = CreateSubcomponent<CameraComponent>("Camera");
@@ -48,7 +48,7 @@ void Pendulum::OnBeginPlay()
 	{
 		std::cout << "Collision Enter" << std::endl;
 
-		jumper->AddComponentLocation({ 0, 2 });
+		jumper->AddComponentLocation(FVector2(0, 2));
 	});
 
 	jumper->OnCollisionEnter.Bind(this, [&](Actor*, ActorComponent*, FHit)

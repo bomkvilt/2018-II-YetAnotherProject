@@ -1,24 +1,22 @@
 #include "BaseCollision.hpp"
-#include "Modules/ModuleManager.hpp"
+#include "Injection/DependencyInjectionManager.hpp"
 
 BaseCollision::BaseCollision(EShapeType shape)
-	: extends(1, 1, 1)
+	: extents(1, 1, 1)
 {
-	rigidBody.reset(
-		ModuleManager::MakeBody(FShape(shape, extends), this, 10)
-		);
+	rigidBody = DependencyInjectionManager::MakeBody(FShape(shape, extents), this, 10);
 }
 
-FVector BaseCollision::GetExtends() const
+FVector BaseCollision::GetExtents() const
 {
-	return extends;
+	return extents;
 }
 
-void BaseCollision::SetExtends(FVector newExtends)
+void BaseCollision::SetExtents(FVector newExtents)
 {
-	extends = newExtends;
+	extents = newExtents;
 	if (rigidBody)
 	{
-		rigidBody->SetExtents(extends);
+		rigidBody->SetExtents(extents);
 	}
 }

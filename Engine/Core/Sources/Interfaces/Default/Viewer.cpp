@@ -2,8 +2,9 @@
 #include "PlayerController.hpp"
 
 
-FViewer::FViewer(PlayerController* controller)
-	: IViewer(controller)
+FViewer::FViewer(PlayerController* controller, SHARED(FEngineConfig) config)
+	: controller(controller)
+	, config    (config)
 {}
 
 World* FViewer::GetWorld()

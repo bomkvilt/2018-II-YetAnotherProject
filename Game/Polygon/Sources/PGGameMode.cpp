@@ -15,11 +15,11 @@ PGGameMode::PGGameMode()
 	auto* box3  = CreateActor<Box  >("Box"  );
 	auto* gosha = CreateAvatar<Gosha>("Gosha", true);
 
-	gosha->SetComponentLocation(FVector(0, 5));
-	coin ->SetComponentLocation(FVector(5, 1));
-	box1 ->SetComponentLocation(FVector(10,2));
-	box2 ->SetComponentLocation(FVector(13,6));
-	box3 ->SetComponentLocation(FVector(-15,2));
+	gosha->SetComponentLocation(FVector2(0, 5));
+	coin ->SetComponentLocation(FVector2(5, 1));
+	box1 ->SetComponentLocation(FVector2(10,2));
+	box2 ->SetComponentLocation(FVector2(13,6));
+	box3 ->SetComponentLocation(FVector2(-15,2));
 }
 
 void PGGameMode::Tick(float DeltaTime, ETickType type)

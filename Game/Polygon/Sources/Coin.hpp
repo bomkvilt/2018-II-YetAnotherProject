@@ -14,7 +14,7 @@ public:
 	Coin()
 	{
 		body = CreateSubcomponent<BoxColision>("Body");
-		body->SetExtends(FVector(0.5f, 0.5f, 0.6f));
+		body->SetExtents(FVector(0.5f, 0.5f, 0.6f));
 		body->GetRigidBody()->SetMass(1);
 	}
 

@@ -1,7 +1,7 @@
 #include "ActorComponent.hpp"
 
 #include "Avatar.hpp"
-#include "Modules/ModuleManager.hpp"
+#include "Injection/DependencyInjectionManager.hpp"
 
 ActorComponent::ActorComponent()
 	: owner(ThreadContext::TopInitialiser()->owner)
@@ -13,7 +13,7 @@ ActorComponent::ActorComponent()
 	, relativeTarnsform(FTransform::Identity)
 	, worldTransform   (FTransform::Identity)
 	
-	, facade   (ModuleManager::MakeFacade(this))
+	, facade(DependencyInjectionManager::MakeFacade(this))
 	, rigidBody(nullptr)
 {}
 

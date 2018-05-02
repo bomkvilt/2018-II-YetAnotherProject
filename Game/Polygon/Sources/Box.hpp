@@ -14,7 +14,7 @@ public:
 	Box()
 	{
 		body = CreateSubcomponent<BoxColision>("Body");
-		body->SetExtends(FVector(3, 2, 0.6f));
+		body->SetExtents(FVector(3, 2, 0.6f));
 		body->SetMass(0);
 	}
 

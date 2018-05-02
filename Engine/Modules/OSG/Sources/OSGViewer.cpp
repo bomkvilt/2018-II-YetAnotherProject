@@ -14,33 +14,28 @@
 #include "ComponentVisualisers.hpp"
 
 
-const unsigned int MASK_2D = 0xF0000000;
-const unsigned int MASK_3D = 0x0F000000;
-
-
-
-Viewer::Viewer(PlayerController* controller)
-	: FViewer(controller)
+Viewer::Viewer(PlayerController* controller, SHARED(FEngineConfig) config)
+	: FViewer(controller, config)
 	, window(nullptr)
 {
 	// setup windows
-
 	window.reset(new osgWidget::WindowManager(
 		&viewer, 
-		1280.0f, 
-		1024.0f, 
-		MASK_2D, 
-		osgWidget::WindowManager::WM_PICK_DEBUG));
+		config->viewer.ScreenSize.X,
+		config->viewer.ScreenSize.Y
+		));
 	window->setPointerFocusMode(osgWidget::WindowManager::PFM_SLOPPY);
+	window->setName(config->viewer.title);
 
-	viewer.setUpViewInWindow(350, 150,
-		static_cast<int>(window->getWidth()),
+	viewer.setUpViewInWindow(
+		config->viewer.WindowPosition.X,
+		config->viewer.WindowPosition.Y,
+		static_cast<int>(window->getWidth ()),
 		static_cast<int>(window->getHeight())
 		);
 
 	// setup scene
-
-	Facade* facade  = GetRootFacade();
+	Facade* facade = GetRootFacade();
 	osg::Group* root = new osg::Group();
 	osg::Camera* camera = window->createParentOrthoCamera();
 
@@ -52,17 +47,15 @@ Viewer::Viewer(PlayerController* controller)
 	root->addChild(facade->GetRoot());
 
 	// add handlers
-
 	viewer.addEventHandler     (new KeyboardHandler  (*GetEventCollector()) );
-	viewer.addEventHandler     (new MouseHandler	 (*GetEventCollector()) );
+	viewer.addEventHandler     (new MouseHandler     (*GetEventCollector()) );
 	viewer.setCameraManipulator(new CameraManipulator(*GetCameraManager ()) );
 
-	viewer.addEventHandler(new osgWidget::ResizeHandler			(window.get(), camera));
-	viewer.addEventHandler(new osgWidget::CameraSwitchHandler	(window.get(), camera));
-	viewer.addEventHandler(new osgViewer::WindowSizeHandler		(					 ));
+	viewer.addEventHandler(new osgWidget::ResizeHandler      (window.get(), camera));
+	viewer.addEventHandler(new osgWidget::CameraSwitchHandler(window.get(), camera));
+	viewer.addEventHandler(new osgViewer::WindowSizeHandler  (                    ));
 
 	// update window
-
 	window->resizeAllWindows();
 	viewer.setSceneData(root);
 	viewer.setReleaseContextAtEndOfFrameHint(false);
@@ -100,15 +93,16 @@ void Viewer::DrawShape(FShape shape, FTransform transform, FColor color)
 		transform.Rotation.W
 		);
 	osg::Vec3 len(
-		shape.extends.X * 2,
-		shape.extends.Y * 2,
-		shape.extends.Z * 2
+		shape.extents.X * 2,
+		shape.extents.Y * 2,
+		shape.extents.Z * 2
 		);
 
 	LShape mesh;
 	switch (shape.type) {
-	case EShapeType::eBox: mesh = MakeLShape( new osg::Box({0,0,0}, len.x(), len.y(), len.z()) );
-	// TODO:
+	case EShapeType::eBox: mesh = MakeLShape( new osg::Box({0,0,0}, len.x(), len.y(), len.z()) ); break;
+	default:
+		throw std::out_of_range("shape.type has unsupported value");
 	}
 
 	if (mesh)
@@ -144,9 +138,11 @@ void Viewer::ClearDraw()
 
 void Viewer::Visualisate()
 {
+	auto& visualisersModule = ComponentVisualisersModule::Get();
+
 	World& world = *GetWorld();
 	for (auto& component : world)
 	{
-		ComponentVisualisers::Visualise(&component, this);
+		visualisersModule.Visualise(&component, this);
 	}
 }

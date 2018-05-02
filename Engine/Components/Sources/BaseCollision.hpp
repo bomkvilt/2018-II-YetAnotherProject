@@ -4,6 +4,7 @@
 
 #include "ActorComponent.hpp"
 
+
 class BaseCollision : public ActorComponent
 {
 	GENERATED_BODY(BaseCollision, ActorComponent);
@@ -12,12 +13,12 @@ public:
 	BaseCollision(EShapeType shape);
 
 public:
-	FVector GetExtends() const;
-	void SetExtends(FVector newExtends);
+	FVector GetExtents() const;
+	void SetExtents(FVector newExtents);
 
 protected:
 	/// >> 
-	FVector extends;
+	FVector extents;
 	///
 };
 

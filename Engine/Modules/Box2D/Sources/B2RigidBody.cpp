@@ -18,7 +18,7 @@ RigidBody::RigidBody(FShape shape, ActorComponent* owner, float mass, FVector in
 		rigidBody = scene->world.CreateBody(&bodyDef);
 
 		shapeType = shape.type;
-		SetExtents(shape.extends);
+		SetExtents(shape.extents);
 		SetInertia(inertia);
 		SetMass(mass);
 		
