@@ -3,13 +3,14 @@ cmake_minimum_required(VERSION 3.0)
 project(YetAnotherProject)
 
 #~~~~~~~~~~~~~~~~~~~~~~~| >> setup project | 
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/Cmake" ${CMAKE_MODULE_PATH})
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 INCLUDE("Cmake/DefaultSetup.cmake")
 INCLUDE("Cmake/MacroUtiles.cmake")
 
 SET(3rdParty "${CMAKE_SOURCE_DIR}/3rdParty")
 SetupEvniroment()
-	
+
 #~~~~~~~~~~~~~~~~~~~~~~~| >> init project |
 INIT_PROJECT(Engine Pendulum)
 

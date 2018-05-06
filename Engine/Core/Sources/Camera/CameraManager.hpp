@@ -1,5 +1,6 @@
 #ifndef CAMERA_CONTROLLER_HPP
 #define CAMERA_CONTROLLER_HPP
+#pragma once
 
 #include <deque>
 #include <vector>

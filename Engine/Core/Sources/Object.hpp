@@ -21,12 +21,12 @@ public: //~~~~~~~~~~~~~~| Tick
 
 	virtual void Tick(float DeltaTime, ETickType type);
 
-	void RegisterTick  (ITickFunction& tick);
-	void UnregisterTick(ITickFunction& tick);
+	void RegisterTick  (ITickFunction& tick); // call form @OnConstructed
+	void UnregisterTick(ITickFunction& tick); // call form @OnEndPlay
 
 protected:
 
 	/// >> tIck
-	TickFunction PrimatyTick;
+	FTickFunction PrimatyTick;
 	/// << 
 };

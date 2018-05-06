@@ -27,7 +27,7 @@ public: //~~~~~~~~~~~~~~~~~~~| setup
 
 public: //~~~~~~~~~~~~~~~~~~~| update
 
-	void ProcessKeys(const std::vector<KeyEvent>& events);
+	void ProcessKeys(const std::vector<KeyEventType>& events);
 	void UpdateMouseLocation(float x, float y);
 
 protected:

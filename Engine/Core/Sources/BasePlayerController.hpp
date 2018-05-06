@@ -1,8 +1,8 @@
+#pragma once
 #ifndef BASE_PLAYER_CONTROLLER_HPP
 #define BASE_PLAYER_CONTROLLER_HPP
 
-#include "Misc.hpp"
-#include "Types.hpp"
+#include "Common.hpp"
 #include "Reflection/Archived.hpp"
 
 class World;

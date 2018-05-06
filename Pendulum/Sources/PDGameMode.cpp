@@ -5,7 +5,7 @@
 
 PDGameMode::PDGameMode()
 {
-	auto* pendulum = CreateActor<Pendulum>("Pendulum", true);
+	auto* pendulum = CreateAvatar<Pendulum>("Pendulum", true);
 }
 
 void PDGameMode::OnBeginPlay()

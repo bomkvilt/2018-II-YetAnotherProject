@@ -99,7 +99,7 @@ FTransform FTransform::operator~() const
 std::string FTransform::ToString() const
 {
 	return "R:{" + Rotation.ToString() + "}"
-		+  "LL{" + Location.ToString() + "}";
+		+  "L:{" + Location.ToString() + "}";
 }
 
 

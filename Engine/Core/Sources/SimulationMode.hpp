@@ -1,9 +1,8 @@
 #ifndef SIMULATION_MODE_HPP
 #define SIMULATION_MODE_HPP
+#pragma once
 
-#include <memory>
-#include "Misc.hpp"
-#include "Types.hpp"
+#include "Common.hpp"
 
 #include "Configs/EngineConfig.hpp"
 #include "Injection/ISimulationFabric.hpp"

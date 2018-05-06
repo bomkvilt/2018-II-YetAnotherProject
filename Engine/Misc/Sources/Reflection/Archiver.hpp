@@ -65,7 +65,4 @@ private:
 };
 
 
-
-
-
 #endif // !ARCIVER_HPP

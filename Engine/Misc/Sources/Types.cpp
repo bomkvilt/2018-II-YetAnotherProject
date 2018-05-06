@@ -1,17 +1,17 @@
 #include "Types.hpp"
 
 
-void TickFunction::operator()(float DeltaTime, ETickType type)
+void FTickFunction::operator()(float DeltaTime, ETickType type)
 {
 	function(DeltaTime, type);
 }
 
-Object* TickFunction::GetTarget() const
+Object* FTickFunction::GetTarget() const
 {
 	return target;
 }
 
-ETickType TickFunction::GetTickType() const
+ETickType FTickFunction::GetTickType() const
 {
 	return tickType;
 }

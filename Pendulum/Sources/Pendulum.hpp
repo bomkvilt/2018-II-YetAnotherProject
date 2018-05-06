@@ -15,21 +15,22 @@ class Pendulum : public Avatar
 public:
 
 	Pendulum()
-		: pid(4, 0, 20)
+		: pid(4, 0, 3)
 	{
-		base = CreateSubComponent<BoxColision>("Base");
+		base = CreateSubcomponent<BoxColision>("Base");
 		base->SetExtents(FVector(0.6f, 0.6f, 0.6f));
 		
-		pendulum = CreateSubComponent<BoxColision>("Pendulum");
+		pendulum = CreateSubcomponent<BoxColision>("Pendulum");
 		pendulum->AddComponentLocation(FVector(2, 0, 0), eParent);
+		pendulum->AddComponentRotation(FQuat(0, 0, 30), eParent);
 		pendulum->SetExtents(FVector(2, 0.2f, 0.2f));
 		
-		target = CreateSubComponent<BoxColision>("Target");
+		target = CreateSubcomponent<BoxColision>("Target");
 		target->AddComponentLocation(FVector(5, 0 , 0), eParent);
-		target->AddComponentRotation(FQuat(0 ,90, 0), eParent);
+		target->AddComponentRotation(FQuat(0 ,0, 90), eParent);
 		target->SetExtents(FVector(0.5f, 0.1f, 0.1f));
 
-		cam = CreateSubComponent<CameraComponent>("Camera");
+		cam = CreateSubcomponent<CameraComponent>("Camera");
 		cam->AddComponentLocation(FVector(-30, 0, 0), eParent);
 		cam->AddComponentRotation(FQuat( 0, 0 ,90), eParent);
 		cam->SetAutoregister(true);
@@ -43,9 +44,10 @@ public:
 
 		auto tr = target  ->GetComponentRotation();
 		auto cr = pendulum->GetComponentRotation();
+		//std::cout << cr.ToString()<<std::endl;
 		auto delta = ~cr * tr;
 		
-		const float control = pid.GetValue(delta.Y, dt);
+		const float control = pid.GetValue(delta.Z, dt);
 		const float inertia = 600;
 		const float M0      = 100;
 		
@@ -53,7 +55,7 @@ public:
 		const float dw = RAD2DEG(M / inertia * dt);
 		w += dw;
 		
-		pendulum->AddComponentRotation(FQuat(0, w * dt, 0), eParent);
+		pendulum->AddComponentRotation(FQuat(0, 0, w * dt), eParent);
 	}
 
 	virtual void SetupInput(EventBinder* binder)
@@ -89,7 +91,7 @@ protected:
 		if (value && target)
 		{
 			float delta = 40 * value * dt;
-			target->AddComponentRotation(FQuat(0, delta, 0), eParent);
+			target->AddComponentRotation(FQuat(0, 0, delta), eParent);
 		}
 	}
 

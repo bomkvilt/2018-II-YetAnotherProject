@@ -1,5 +1,6 @@
 #ifndef PLAYER_CONTROLLER_HPP
 #define PLAYER_CONTROLLER_HPP
+#pragma once
 
 #include <memory>
 #include <iostream>

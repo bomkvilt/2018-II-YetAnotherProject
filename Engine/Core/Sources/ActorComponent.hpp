@@ -2,7 +2,6 @@
 #define ACTOR_COMPONENT_HPP
 
 #include <string>
-#include <memory>
 #include <vector>
 
 #include "Object.hpp"
@@ -14,16 +13,7 @@ class World;
 class PlayerController;
 
 
-/** All object components in the world makes a backet tree (NODE: Actor is a kind of wrapper on components)
- *	Each Component have:
- *	. realtive transform 
- *	. absolute transform
- *	
- *	. subcomponent	- child nodes probably dependesce from the one
- *	. parent		- a parent node
- *	. owner			- an objects associated with the component
- *	. world			- a world where the component is placed
- */
+
 class ActorComponent : public Object
 {
 	GENERATED_BODY(ActorComponent, Object)
@@ -38,7 +28,7 @@ public: //~~~~~~~~~~~~~~| Physics
 
 public: //~~~~~~~~~~~~~~| Position
 
-	/// transform
+		/// transform
 
 	void SetComponentTransform(FTransform newTransform);
 	void SetRelativeTransform (FTransform newTransform);
@@ -67,41 +57,43 @@ public: //~~~~~~~~~~~~~~| Position
 
 public: //~~~~~~~~~~~~~~| Chain
 
-	/// owner
+		/// owner
 
 	const Actor* GetOwner() const	{ return owner; }
-		  Actor* GetOwner()			{ return owner; }
+	Actor* GetOwner()			{ return owner; }
 	void SetOwner(Actor* newOwner)	{ owner = newOwner; }
 
 	/// if owner is Avatar
 
 	const PlayerController* GetPlayerController() const;
-		  PlayerController* GetPlayerController();
-	
+	PlayerController* GetPlayerController();
+
 	void AttachTo(ActorComponent* newParent);
 	void Detach();
 
 	/// facade
 
 	const IFacade* GetFacade() const { return facade.get(); }
-          IFacade* GetFacade()		 { return facade.get(); }
+	IFacade* GetFacade()		 { return facade.get(); }
 
 	/// rigid body
 
 	const IRigidBody* GetRigidBody() const { return rigidBody.get(); }
-		  IRigidBody* GetRigidBody()       { return rigidBody.get(); }
-		  
+	IRigidBody* GetRigidBody()       { return rigidBody.get(); }
+
 	/// parent
 
 	const ActorComponent* GetParent() const		{ return parent; }
-	      ActorComponent* GetParent()			{ return parent; }
+	ActorComponent* GetParent()			{ return parent; }
 
 	/// components
 
-	      std::vector<ActorComponent*>& GetSubcomponents();
+	std::vector<ActorComponent*>& GetSubcomponents();
 	const std::vector<ActorComponent*>& GetSubcomponents() const;
-	
+
 protected:
+	void AddSubcomponent   (ActorComponent* child);
+	void RemoveSubcomponent(ActorComponent* child);
 
 	void Internal_GetSubcomponents(std::vector<		 ActorComponent*>& components);
 	void Internal_GetSubcomponents(std::vector<const ActorComponent*>& components) const;

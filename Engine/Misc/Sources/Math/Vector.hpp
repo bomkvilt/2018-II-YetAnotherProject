@@ -1,6 +1,7 @@
 #pragma once
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
+#pragma once
 
 #include <string>
 #include "Reflection/Archived.hpp"

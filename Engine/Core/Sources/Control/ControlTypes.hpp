@@ -1,5 +1,6 @@
 #ifndef CONTROL_TYPES_HPP
 #define CONTROL_TYPES_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -236,7 +237,7 @@ public:
 
 /** Event from a keyboard 
 */
-struct KeyEvent
+struct KeyEventType
 {
 	int			 rawKey		= 0;
 	EInputKey	 key		= EInputKey::KEY_NONE;
@@ -245,7 +246,7 @@ struct KeyEvent
 
 public:
 
-	bool operator==(const KeyEvent& r) const
+	bool operator==(const KeyEventType& r) const
 	{
 		return rawKey	== r.rawKey
 			&& key		== r.key

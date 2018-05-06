@@ -22,7 +22,7 @@ void EventManager::AddAction(std::string name, ControlKey key)
 	registeredActions.emplace_back(std::move(name), key);
 }
 
-void EventManager::ProcessKeys(const std::vector<KeyEvent>& events)
+void EventManager::ProcessKeys(const std::vector<KeyEventType>& events)
 {
 	for (auto& event : events)
 	{
@@ -89,7 +89,7 @@ void EventManager::ProcessActions(EventBinder& binder)
 		key.action = binded.type == BA_Pressed
 			? EKeyAction::BA_Pressed
 			: EKeyAction::BA_Released;
-		if (key) continue;
+		if (!key) continue;
 
 		action_map[key] = binded.calback;
 	}
