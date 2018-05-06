@@ -1,7 +1,6 @@
 #include "World.hpp"
 #include "Actor.hpp"
 #include "Threading/ThreadPool.hpp"
-#include "Injection/DependencyInjectionManager.hpp"
 
 #include <algorithm>
 
@@ -19,32 +18,34 @@ World::~World()
 void World::OnSimulationStart()
 {
 	SimulationState = eInProgress;
+
 	for (auto object : objects_set) object->OnBeginPlay();
 }
 
 void World::OnSimulationStop()
 {
 	SimulationState = eStopped;
+
 	for (auto object : objects_set) object->OnEndPlay();
 }
 
 void World::DoTick(float DeltaTime, ETickType type)
 {
-	//TaskBacket backet;
+	// TaskBacket backet;
 
 	for (auto* tick : tickFunctions[type])
 	{
 		if ( IsValid(tick->GetTarget()) ) 
 		{
-		//	backet.AddTask(new Runable([=]()
-		//	{
+			// backet.AddTask(new Runable([=]()
+			// {
 				(*tick)(DeltaTime, type);
-		//	}
-		//	));
+			// }
+			// ));
 		}
 	}
-	//ThreadPool::AddTaskBacket(backet);
-	//backet.Wait();
+	// ThreadPool::AddTaskBacket(backet);
+	// backet.Wait();
 }
 
 void World::RegisterTickFunction(ITickFunction& Tick)

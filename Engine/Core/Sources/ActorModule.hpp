@@ -1,6 +1,5 @@
 #ifndef ACTOR_MODULE_HPP
 #define ACTOR_MODULE_HPP
-#pragma once
 
 #include "Object.hpp"
 

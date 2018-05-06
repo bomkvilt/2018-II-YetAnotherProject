@@ -1,4 +1,3 @@
-#pragma once
 #ifndef IFACADE_HPP
 #define IFACADE_HPP
 

@@ -2,7 +2,7 @@
 
 
 
-void EventCollector::CollectKeyEvent(KeyEventType newEvent)
+void EventCollector::CollectKeyEvent(KeyEvent newEvent)
 {
 	for (auto& event : events)
 	{

@@ -1,5 +1,5 @@
 #include "Engine.hpp"
-#include "SFMLFabric.hpp"
+#include "OSGConfig.hpp"
 #include "Injection/DependencyInjectionManager.hpp"
 
 #include "PDGameMode.hpp"
@@ -13,7 +13,7 @@ using PDSimulationFabric = TSimulationModeFabric<SimulationMode, PDPlayerControl
 
 int main()
 {
-	DependencyInjectionManager::SetFrontendFabric(SFMLFabric::Get());
+	DependencyInjectionManager::SetFrontendFabric(OSGFabric::Get());
 
 	auto simulationFabric = PDSimulationFabric::Get();
 	

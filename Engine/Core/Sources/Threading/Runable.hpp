@@ -23,43 +23,22 @@ public:
  */
 struct ThreadTask
 {
-public:
-	enum Type
-	{
-		  eNextLoop     // Task found. But a next toop is required
-		, eShouldDie    // Reques passed. The thrad must be stopped
-		, eTaskFound    // A task is found. 
-		, eNoTasksFound // No Task is found. Weight for a new task
-	};
-
-public:
 	IRunable* task;
-	Type      type;
+	bool	  bDie;
 
-	ThreadTask()
-		: task(nullptr)
-		, type(eTaskFound)
-	{}
-
-	ThreadTask(IRunable* task, Type type = eTaskFound)
+	ThreadTask(IRunable* task = nullptr, bool bDie = true)
 		: task(task)
-		, type(type)
+		, bDie(bDie)
 	{}
 
 	bool operator==(const ThreadTask& r)
 	{
 		 return task == r.task
-			 && type == r.type;
-	}
-
-	bool operator!=(const ThreadTask& r)
-	{
-		return !(*this == r);
+			 && bDie == r.bDie;
 	}
 
 public:
 
-	const static ThreadTask NoTasksFound;
 	const static ThreadTask ShouldDie;
 	const static ThreadTask NextLoop;
 };
