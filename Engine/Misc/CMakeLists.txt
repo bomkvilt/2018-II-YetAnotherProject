@@ -1,0 +1,15 @@
+add_definitions( -DBOOST_ALL_DYN_LINK )
+set( BOOST_ROOT "${3rdParty}/boost" )
+set(Boost_USE_STATIC_LIBS    OFF)
+set(Boost_USE_STATIC_RUNTIME OFF)
+set(Boost_USE_MULTITHREADED  ON )
+find_package(Boost REQUIRED
+	)
+	
+DEFINE_UNIT(Misc)
+SET(CODE		"Sources"	)
+SET(TEST    	"Tests" 	)
+SET(CATEGORY	"Engine"	)
+SET(PUBLIC_INCLUDES  ${Boost_INCLUDE_DIR} )
+SET(PUBLIC_LIBRARIES ${Boost_LIBRARIES}   )
+MAKE_MODULE()
