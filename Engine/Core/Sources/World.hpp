@@ -1,12 +1,14 @@
-#ifndef WORLD_HPP
-#define WORLD_HPP
 #pragma once
 
 #include <array>
+#include <memory>
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Types.hpp"
+#include "Misc.hpp"
 #include "ObjectBase.hpp"
+
 #include "Threading/Initialiser.hpp"
 
 
@@ -38,23 +40,22 @@ public: //~~~~~~~~~~~~~~| Tick
 public: //~~~~~~~~~~~~~~| Construction
 
 	template<class _T>
-	_T* CreateObject() //TODO:: make a review
+	_T* CreateObject()
 	{
-		// make the name unique
 		auto* initialiser = ThreadContext::TopInitialiser();
-		assert(initialiser);  auto* name = initialiser->name;
-		assert(name       );  UpdateNameToUnique(*name);
+		assert(initialiser);
+		auto* name = initialiser->name;
+		assert(name);
+		UpdateNameToUnique(*name);
 
-		// create a new uid
 		OUID newOUID = lastOUID++;
-		initialiser->ouid = newOUID;
+		ThreadContext::TopInitialiser()->ouid = newOUID;
 
-		// create a new object
 		auto base = UNIQUE(ObjectBase)(new _T);
 
 		auto* pointer_base = base.get();
 		auto* pointer = static_cast<_T*>(pointer_base);
-		
+
 		objects.emplace(newOUID, std::move(base));
 		objects_set.emplace(pointer);
 
@@ -76,8 +77,8 @@ public:
 
 public: //~~~~~~~~~~~~~~| 
 
-		  ActorComponent* GetSceneRoot()		{ return sceneRoot; }
 	const ActorComponent* GetSceneRoot() const	{ return sceneRoot; }
+		  ActorComponent* GetSceneRoot()		{ return sceneRoot; }
 
 protected:
 
@@ -89,20 +90,21 @@ protected:
 	ESimulationState SimulationState;
 	/// << 
 
-	/// >> scene
+	/// >> physics
+	
+	/// << 
+
+	/// >> graphic
 	ActorComponent* sceneRoot;
 	/// <<
 
 	/// >> indices
-	OUID lastOUID;
-	
-	std::unordered_set<Object*>      objects_set;
+	std::unordered_set<Object*> objects_set;
 	std::unordered_map<std::string, Index> names;
 
-	std::unordered_map< OUID
-		, UNIQUE(ObjectBase)
-		, std::hash<size_t>
-	> objects;
+	OUID lastOUID;
+
+	std::unordered_map<OUID, UNIQUE(ObjectBase), std::hash<size_t>> objects;
 	/// <<
 
 	/// >> tick functions
@@ -143,5 +145,3 @@ public: //~~~~~~~~~~~~~~| Iteration
 	SceneIterator begin() { return SceneIterator(sceneRoot); }
 	SceneIterator end()   { return SceneIterator(nullptr);   }
 };
-
-#endif //!WORLD_HPP

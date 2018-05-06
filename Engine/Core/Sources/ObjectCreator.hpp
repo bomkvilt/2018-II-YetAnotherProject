@@ -1,8 +1,8 @@
 #ifndef OBJECT_CREATOR_HPP
 #define OBJECT_CREATOR_HPP
-#pragma once
 
-#include "Common.hpp"
+#include <memory>
+#include <assert.h>
 #include "Threading/ThreadContext.hpp"
 
 class PlayerController;
@@ -24,7 +24,7 @@ public:
 	}
 
 	template<class _T>
-	static _T* CreateAvatar(std::string& name, World* world, BasePlayerController* controller)
+	static _T* CreateActor(std::string& name, World* world, BasePlayerController* controller)
 	{
 		assert(world);
 		auto init = Initialiser::Get();
@@ -41,21 +41,9 @@ public:
 		}
 		return point;
 	}
-	
-	template<class _T>
-		static _T* CreateActor(std::string& name, World* world)
-	{
-		assert(world);
-		auto init = Initialiser::Get();
-		init->type  = EObjectType::eActor;
-		init->name  = &name;
-		init->world	= world;
-
-		return CreateObject<_T>(init);
-	}
 
 	template<class _T>
-	static _T* CreateSubcomponent(std::string& name, World* world, Actor* owner)
+	static _T* CreateSubComponent(std::string& name, World* world, Actor* owner)
 	{
 		assert(world && owner);
 		auto init = Initialiser::Get();
@@ -64,20 +52,19 @@ public:
 		init->world = world;
 		init->owner = owner;
 
-		return CreateObject<_T>(init);
-	}
+		auto* point = CreateObject<_T>(init);
 
-	template<class _T>
-	static _T* CreateSubmodule(std::string& name, World* world, Actor* owner)
-	{
-		assert(world && owner);
-		auto init = Initialiser::Get();
-		init->type  = EObjectType::eActorModule;
-		init->name  = &name;
-		init->world = world;
-		init->owner = owner;
+		if (auto root = owner->GetRootComponent()) 
+		{ 
+			point->AttachTo(root);
+		}
+		else
+		{
+			point->AttachTo(world->GetSceneRoot());
+			owner->SetRootComponent(point);
+		}
 
-		return CreateObject<_T>(init);
+		return point;
 	}
 
 	template<class _T>
@@ -104,7 +91,7 @@ public:
 		return UNIQUE(_T)(new _T);
 	}
 
-private:
+protected:
 	
 	template<class _T>
 	static _T* CreateObject(UNIQUE(Initialiser)& init)

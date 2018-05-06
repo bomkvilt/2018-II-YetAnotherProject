@@ -1,10 +1,12 @@
 #ifndef THREAD_CONTEXT_HPP
 #define THREAD_CONTEXT_HPP
-#pragma once
 
 #include <stack>
+#include <memory>
 #include <unordered_map>
-#include "Common.hpp"
+
+#include "Misc.hpp"
+
 #include "Thread.hpp"
 #include "Initialiser.hpp"
 

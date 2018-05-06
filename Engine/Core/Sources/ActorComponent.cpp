@@ -106,36 +106,33 @@ PlayerController* ActorComponent::GetPlayerController()
 
 void ActorComponent::AttachTo(ActorComponent* newParent)
 {
-	if (world) 
-	{
-		Detach();
+	if (!world) return;
 
-		if (!newParent) 
-		{
-			newParent = world->GetSceneRoot();
-		}
-		parent = newParent;
-		parent->AddSubcomponent(this);
-		UpdateWoldTransform();
-
-		if (facade)
-		{
-			facade->AttachTo(newParent->GetFacade());
-		}
+	if (!newParent) {
+		newParent = world->GetSceneRoot();
 	}
+	Detach();
+
+	parent = newParent;
+	parent->subcomponents.emplace_back(this);
+
+	facade->AttachTo(newParent->GetFacade());
 }
 
 void ActorComponent::Detach()
 {
 	if (parent && world)
 	{
-		auto* lastParent = parent;
-
-		parent->RemoveSubcomponent(this);
+		auto bgn = parent->subcomponents.begin();
+		auto end = parent->subcomponents.end();
+		auto pos = std::find(bgn, end, this);
+		if (pos != end)
+		{
+			parent->subcomponents.erase(pos);
+		}
 		parent = world->GetSceneRoot();
-		facade->Detach();
 
-		UpdateRelativeTransform();
+		facade->Detach();
 	}
 }
 
@@ -153,28 +150,6 @@ const std::vector<ActorComponent*>& ActorComponent::GetSubcomponents() const
 	// std::vector<const ActorComponent*> components;
 	// Internal_GetSubcomponents(components);
 	// return components;
-}
-
-void ActorComponent::AddSubcomponent(ActorComponent* child)
-{
-	if (child)
-	{
-		subcomponents.emplace_back(child);
-	}
-}
-
-void ActorComponent::RemoveSubcomponent(ActorComponent* child)
-{
-	if (child)
-	{
-		auto bgn = subcomponents.begin();
-		auto end = subcomponents.end();
-		auto pos = std::find(bgn, end, this);
-		if (pos != end)
-		{
-			subcomponents.erase(pos);
-		}
-	}
 }
 
 void ActorComponent::Internal_GetSubcomponents(std::vector<ActorComponent*>& components)

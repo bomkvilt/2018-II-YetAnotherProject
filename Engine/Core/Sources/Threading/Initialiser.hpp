@@ -1,9 +1,11 @@
 #ifndef INITIALISER_HPP
 #define INITIALISER_HPP
-#pragma once
 
 #include <string>
-#include "Common.hpp"
+#include <memory>
+#include "Misc.hpp"
+#include "Types.hpp"
+
 
 class World;
 class Object;

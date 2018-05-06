@@ -1,10 +1,8 @@
-#pragma once
 #ifndef CORE_TYPES_HPP
 #define CORE_TYPES_HPP
 
 #include <assert.h>
 #include <functional>
-#include <array>
 
 #include "Math.hpp"
 
@@ -13,43 +11,43 @@ class Object;
 
 enum ESpaceType
 {
-	  eLocal
-	, eWorld
-	, eParent
+	eLocal,
+	eWorld,
+	eParent
 };
 
 enum EObjectType
 {
-	  eObject
-	, eActor
-	, eActorComponent
-	, eActorModule
-	, eGameMode
+	eObject,
+	eActor,
+	eActorComponent,
+	eActorModule,
+	eGameMode
 };
 
 enum ETickType
 {
-	  ePrePhysics
-	, eInPhysics
-	, ePostPhysics
-	, eRender
-	
-	, eMAX
+	ePrePhysics,
+	eInPhysics,
+	ePostPhysics,
+	eRender,
+
+	eMAX
 };
 
 enum ESimulationState
 {
-	  eUnstarted
-	, eInProgress
-	, ePaused
-	, eStopped
+	eUnstarted,
+	eInProgress,
+	ePaused,
+	eStopped
 };
 
 enum EAttachmentRule
 {
-	  eKeepRelative
-	, eSnapToTarget
-	, eKeepWorld
+	eKeepRelative,
+	eSnapToTarget,
+	eKeepWorld
 };
 
 
@@ -73,7 +71,7 @@ struct ITickFunction
 
 /**
  */
-struct FTickFunction : public ITickFunction
+struct TickFunction : public ITickFunction
 {
 	ETickType tickType;
 	Object*	  target;
@@ -90,7 +88,7 @@ public:
 public:
 	
 	template<class _Fx, class _T>
-	void BindFunction(_T* newTarget, _Fx func)
+	void BindFunction(_Fx func, _T* newTarget)
 	{
 		target = newTarget;
 		function = std::function<void(float, ETickType)>(std::bind(

@@ -5,7 +5,7 @@
 Object::Object()
 {
 	PrimatyTick.tickType = ETickType::ePostPhysics;
-	PrimatyTick.BindFunction(this, &Object::Tick);
+	PrimatyTick.BindFunction(&Object::Tick, this);
 }
 
 void Object::OnConstructed()

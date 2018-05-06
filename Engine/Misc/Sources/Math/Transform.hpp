@@ -1,7 +1,6 @@
 #pragma once
 #ifndef TRANSFORM_HPP
 #define TRANSFORM_HPP
-#pragma once
 
 #include "Quat.hpp"
 #include "Vector.hpp"

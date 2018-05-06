@@ -1,13 +1,22 @@
 #include "Thread.hpp"
 
 #include <chrono>
-#include <iostream>
+
 #include "ThreadPool.hpp"
 
-const ThreadTask ThreadTask::NoTasksFound = ThreadTask(nullptr, ThreadTask::eNoTasksFound);
-const ThreadTask ThreadTask::ShouldDie    = ThreadTask(nullptr, ThreadTask::eShouldDie   );
-const ThreadTask ThreadTask::NextLoop     = ThreadTask(nullptr, ThreadTask::eNextLoop    );
 
+const ThreadTask ThreadTask::ShouldDie = ThreadTask(nullptr, true );
+const ThreadTask ThreadTask::NextLoop  = ThreadTask(nullptr, false);
+
+
+Thread::Thread()
+	: bAcive(false)
+{
+}
+
+Thread::~Thread()
+{
+}
 
 UNIQUE(Thread) Thread::Get()
 {
@@ -24,17 +33,24 @@ void Thread::Run()
 	std::thread([&]()
 	{
 		using namespace std::chrono_literals;
+
+		const auto restTime = 5us;
+		this->bAcive = true;
+		
 		ThreadTask currentTask = ThreadTask::NextLoop;
 
-		while ((currentTask = ThreadPool::GetRunTask(this, currentTask.task)) != ThreadTask::ShouldDie)
+		while (currentTask = ThreadPool::GetRunTask(this, currentTask.task), !currentTask.bDie)
 		{
-			// try to take a new task
+			// try to take new task
 			if (currentTask.task == nullptr)
 			{
-				std::this_thread::sleep_for(5us); 
+				std::this_thread::sleep_for(restTime); 
 				continue;
 			}
+			
 			currentTask.task->Run();
 		}
+
+		this->bAcive = false;
 	}).detach();
 }
