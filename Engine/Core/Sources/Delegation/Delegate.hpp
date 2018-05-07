@@ -6,7 +6,7 @@
 #include <functional>
 #include <algorithm>
 
-#include "../World.hpp"
+#include "World.hpp"
 
 class Object;
 
