@@ -13,6 +13,8 @@ Viewer::Viewer(PlayerController* controller, SHARED(FEngineConfig) config)
 	mouseHandler(*GetEventCollector())
 {
 	window.create(sf::VideoMode(1024, 768), "test");
+
+	boxTexture.loadFromFile("../../box.png"); //TODO:: resource system
 }
 
 void Viewer::Render()
@@ -55,15 +57,11 @@ void Viewer::DrawShape(FShape shape, FTransform transform, FColor color)
 	const int   pixinunit   = 80;
 	const int   spritesize  = 510;
 	const float scalefactor = (float)pixinunit/spritesize;
-//	std::cout << scalefactor << std::endl;
 	
 	FVector extents = shape.extents;
 	
 	sf::Sprite sprite;
-	sf::Texture texture;
-	texture.loadFromFile("../../box.png"); //TODO:: resource system
-	sprite.setTexture(texture);
-	
+	sprite.setTexture(boxTexture);
 	sprite.setTextureRect(sf::IntRect(0, 0, spritesize, spritesize));
 	
 	FVector scale  = extents * scalefactor * 2;
@@ -72,7 +70,6 @@ void Viewer::DrawShape(FShape shape, FTransform transform, FColor color)
 	sprite.setScale(scale.X, scale.Y);
 	sprite.setPosition(sf::Vector2f(origin.X, origin.Y));
 	sprite.rotate(transform.Rotation.GetEulerAngles().Z);
-	//window.draw(sprite);
 	
 	myMultimap.insert(std::make_pair(transform.Location.Z, sprite));
 }
