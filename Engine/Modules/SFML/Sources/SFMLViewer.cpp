@@ -33,8 +33,6 @@ void Viewer::Render()
 	for (auto& component : world)
 	{
 		visualisersModule.Visualise(&component, this);
-		for (auto& pair : myMultimap)
-			window.draw(pair.second);
 		myMultimap.clear();
 		if (auto* tmp = dynamic_cast<Facade*>(component.GetFacade()))
 		{
