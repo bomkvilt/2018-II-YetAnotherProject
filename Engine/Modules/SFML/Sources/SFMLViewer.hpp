@@ -10,7 +10,7 @@
 #include "SFML/System.hpp"
 #include "SFML/Window.hpp"
 #include "SFMLFacade.hpp"
-
+#include <map>
 
 
 class Viewer : public FViewer
@@ -27,6 +27,7 @@ protected:
 	MouseHandler mouseHandler;
 	KeyboardHandler keyboardHandler;
 	sf::RenderWindow window;
+	std::multimap <float, sf::Sprite> myMultimap;
 };
 
 

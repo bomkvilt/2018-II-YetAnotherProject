@@ -18,26 +18,34 @@ Viewer::Viewer(PlayerController* controller, SHARED(FEngineConfig) config)
 void Viewer::Render()
 {
 	window.clear();
-
+	myMultimap.clear();
 	sf::Event event;
-	while(window.pollEvent(event))
+	while (window.pollEvent(event))
 	{
 		keyboardHandler.handle(event);
 		mouseHandler.handle(event);
 	}
 	auto& visualisersModule = ComponentVisualisersModule::Get();
-
-
+	
 	World& world = *GetWorld();
 	for (auto& component : world)
 	{
 		visualisersModule.Visualise(&component, this);
-		auto* tmp = dynamic_cast<Facade*>(component.GetFacade());
-		if (tmp)
+		for (auto& pair : myMultimap)
+			window.draw(pair.second);
+		myMultimap.clear();
+		if (auto* tmp = dynamic_cast<Facade*>(component.GetFacade()))
 		{
-			window.draw(tmp->sprite);
-		}		
+
+		
+			myMultimap.insert(std::make_pair(component.GetComponentTransform().Location.Z, tmp->sprite));
+		}
+		
 	}
+	
+	for (auto& pair : myMultimap)
+		window.draw(pair.second);
+	
 	window.display();
 }
 
@@ -64,8 +72,9 @@ void Viewer::DrawShape(FShape shape, FTransform transform, FColor color)
 	sprite.setScale(scale.X, scale.Y);
 	sprite.setPosition(sf::Vector2f(origin.X, origin.Y));
 	sprite.rotate(transform.Rotation.GetEulerAngles().Z);
+	//window.draw(sprite);
 	
-	window.draw(sprite);
+	myMultimap.insert(std::make_pair(transform.Location.Z, sprite));
 }
 
 Facade* Viewer::GetRootFacade()
