@@ -2,7 +2,7 @@
 #define SFML_MODULE_CONFIG_HPP
 
 #include "Injection/IFrontendFabric.hpp"
-
+#include <string>
 #include "SFMLViewer.hpp"
 
 
@@ -13,7 +13,7 @@ struct SFMLFabric : public IFrontendFabric
 		return std::make_unique<SFMLFabric>();
 	}
 
-	virtual UNIQUE(IFacade) MakeFacade(ActorComponent* owner) override
+	virtual UNIQUE(IFacade) MakeFacade(ActorComponent* owner, std::string relativePath) override
 	{
 		return std::make_unique<Facade>(owner);
 	}

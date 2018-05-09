@@ -10,7 +10,7 @@ ActorComponent::ActorComponent()
 	, relativeTarnsform(FTransform::Identity)
 	, worldTransform   (FTransform::Identity)
 	
-	, facade(DependencyInjectionManager::MakeFacade(this))
+	
 {}
 
 void ActorComponent::AddForce(const FVector& force, ESpaceType space)

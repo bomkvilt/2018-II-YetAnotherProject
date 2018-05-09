@@ -4,24 +4,27 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-
 #include "Modules/IModule.hpp"
-#include "Interfaces/IViewer.hpp"
 #include "Misc.hpp"
-#include <string>
-#include "ComponentVisualiser.hpp"
+#include "Modules/IResource.hpp"
 
-#include "Modules\IResource.hpp"
-
-class ResourseSystem : public IModule
+class ResourceSystem : public IModule
 {
-	
+	ResourceSystem(SHARED(FEngineConfig) config) :
+		IModule(config)
+	{
+	};
 
 public:
-	
-
-	
-	SHARED(IResource) GetResource( std::string relativePath);
+	template<class T>
+	SHARED(T) GetResource(std::string relativePath) {
+		if (resources.find(relativePath) == resources.end())
+		{
+			
+			SHARED(T) newResource = new std::make_shared<T>(relativePath);;
+			resources.insert(std::make_pair(relativePath, newResource));
+			}
+	};
 
 protected:
 	std::unordered_map<std::string, SHARED(IResource)> resources;

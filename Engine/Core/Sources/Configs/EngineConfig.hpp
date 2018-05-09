@@ -12,6 +12,7 @@ struct FEngineConfig : public Archived
 	GENERATED_ARCHIVATION_BODY(FEngineConfig, Archived)
 		ARCHIVE_MEMBER("", viewer    )
 		ARCHIVE_MEMBER("", simulation)
+		ARCHIVE_MEMBER("", resource)
 		ARCHIVATION_END()
 public:
 	FViewerConfig     viewer;

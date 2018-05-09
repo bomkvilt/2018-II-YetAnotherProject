@@ -6,7 +6,7 @@
 #include "Types.hpp"
 #include "Interfaces/IFacade.hpp"
 #include "SFML/Graphics.hpp"
-
+#include "RTexture.hpp"
 
 
 
@@ -23,6 +23,8 @@ public:
 	virtual bool AttachTo(IFacade* parent) override;
 	virtual bool Detach() override;
 	virtual void Update();
+	virtual void SetupPathToSprite(std::string path);
 public:
 	sf::Sprite sprite;
+	SHARED(RTexture) texture;
 };

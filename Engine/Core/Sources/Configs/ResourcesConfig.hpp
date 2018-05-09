@@ -1,15 +1,14 @@
 
-#ifndef RESOURCESCONFIG_CONFIG_HPP
-#define RESOURCESCONFIG_CONFIG_HPP
+#ifndef RESOURCES_CONFIG_HPP
+#define RESOURCES_CONFIG_HPP
 
-#include "FrontendConfig.hpp"
-#include "SimulationConfig.hpp"
+
 #include "Reflection/Archived.hpp"
 
 
 struct FResourcesConfig : public Archived
 {
-	GENERATED_ARCHIVATION_BODY(FViewerConfig, Archived)
+	GENERATED_ARCHIVATION_BODY(FResourcesConfig, Archived)
 		ARCHIVE_MEMBER("", pathToResources)
 	
 		ARCHIVATION_END()

@@ -28,3 +28,8 @@ void Facade::Update()
 
 }
 
+void Facade::SetupPathToSprite(std::string path) 
+{
+	
+
+}
