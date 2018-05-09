@@ -4,7 +4,7 @@
 
 #include "FrontendConfig.hpp"
 #include "SimulationConfig.hpp"
-
+#include "ResourcesConfig.hpp"
 
 
 struct FEngineConfig : public Archived
@@ -16,6 +16,7 @@ struct FEngineConfig : public Archived
 public:
 	FViewerConfig     viewer;
 	FSimulationConfig simulation;
+	FResourcesConfig resource;
 };
 
 
