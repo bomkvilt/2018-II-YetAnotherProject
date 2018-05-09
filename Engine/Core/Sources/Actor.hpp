@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ACTOR_HPP
+#define ACTOR_HPP
 
 #include <vector>
 #include <memory>
@@ -8,11 +10,6 @@
 #include "Object.hpp"
 
 
-/** Base class for all Actors on scene
-*	Privides:
-*	. relative location	(root component driven)
-*	. obsolute location	(root component driven)
-*/
 class Actor : public Object
 {
 	GENERATED_BODY(Actor, Object)
@@ -57,10 +54,10 @@ public: //~~~~~~~~~~~~~~| Kinematic -> to root component
 public: //~~~~~~~~~~~~~~| chain and modules
 
 	const ActorComponent* GetRootComponent() const { return rootComponent; }
-	ActorComponent* GetRootComponent()       { return rootComponent; }
+	      ActorComponent* GetRootComponent()       { return rootComponent; }
 	void SetRootComponent(ActorComponent* newRoot);
 
-	std::vector<ActorModule*>& GetModules()       { return modules; }
+	      std::vector<ActorModule*>& GetModules()       { return modules; }
 	const std::vector<ActorModule*>& GetModules() const { return modules; }
 
 protected:
@@ -72,10 +69,10 @@ protected:
 
 public: //~~~~~~~~~~~~~~| Creation functions
 
-	template<class _T>
-	_T* CreateSubcomponent(std::string name)
+	template<class _T, typename... Args>
+	_T* CreateSubcomponent(std::string name, Args&... args)
 	{
-		if (auto* point = ObjectCreator::CreateSubcomponent<_T>(name, world, this))
+		if (auto* point = ObjectCreator::CreateSubcomponent<_T>(name, world, this, args...))
 		{
 			if (rootComponent)
 			{ 
@@ -91,10 +88,10 @@ public: //~~~~~~~~~~~~~~| Creation functions
 		return nullptr;
 	}
 
-	template<class _T>
-	_T* CreateSubModule(std::string name)
+	template<class _T, typename... Args>
+	_T* CreateSubModule(std::string name, Args&... args)
 	{
-		if (auto* point = ObjectCreator::CreateSubmodule<_T>(name, world, this))
+		if (auto* point = ObjectCreator::CreateSubmodule<_T>(name, world, this, args...))
 		{
 			modules.emplace_back(point);
 			return point;
@@ -102,3 +99,6 @@ public: //~~~~~~~~~~~~~~| Creation functions
 		return nullptr;
 	}
 };
+
+
+#endif // !ACTOR_HPP

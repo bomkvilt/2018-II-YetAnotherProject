@@ -3,25 +3,21 @@
 
 #include <memory>
 #include <string>
-#include "Modules/IResource.hpp"
-#include "SFML\Graphics.hpp"
+#include "Interfaces/IResource.hpp"
+#include "SFML/Graphics.hpp"
 
 
 
 class RTexture : public IResource
 {
-	RTexture(std::string relativePath):
-		IResource(relativePath)
+public:
+	RTexture(std::string relativePath)
+		: IResource(relativePath)
 	{
-		texture.loadFromFile(relativePath); 
-		
-	};
+		texture.loadFromFile(relativePath); 	
+	}
 
-
-
-
-protected:
-	
+public:
 	sf::Texture texture;
 };
 

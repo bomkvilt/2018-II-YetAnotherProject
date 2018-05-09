@@ -15,7 +15,7 @@ struct SFMLFabric : public IFrontendFabric
 
 	virtual UNIQUE(IFacade) MakeFacade(ActorComponent* owner, std::string relativePath) override
 	{
-		return std::make_unique<Facade>(owner);
+		return std::make_unique<Facade>(owner, relativePath);
 	}
 
 	virtual UNIQUE(IViewer) MakeViewer(PlayerController* controller, SHARED(FEngineConfig) config) override

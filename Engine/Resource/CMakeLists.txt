@@ -1,10 +1,6 @@
-DEFINE_UNIT(Resource)
-
-
-
-
+DEFINE_UNIT(Resources)
 SET(CODE		"Sources"	)
 SET(TEST    	"Tests" 	)
 SET(CATEGORY	"Engine"	)
-SET(MODULES 	 Misc Core ComponentVisualisers	Components SFML )
+SET(MODULES 	 Misc Core)
 MAKE_MODULE()

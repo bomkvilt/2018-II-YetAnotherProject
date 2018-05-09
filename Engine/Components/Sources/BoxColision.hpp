@@ -11,19 +11,7 @@ public:
 	BoxColision();
 
 public:
-
-	FVector GetExtents() const	
-	{ 
-		return extents; 
-	}
-
-	void SetExtents(FVector newExtents);
-
-protected:
-
-	/// >> 
-	FVector extents;
-	///
+	virtual void SetExtents(const FVector& newExtents) override;
 };
 
 #endif

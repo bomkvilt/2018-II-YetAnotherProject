@@ -60,36 +60,41 @@ public: //~~~~~~~~~~~~~~| Chain
 		/// owner
 
 	const Actor* GetOwner() const	{ return owner; }
-	Actor* GetOwner()			{ return owner; }
+	      Actor* GetOwner()			{ return owner; }
 	void SetOwner(Actor* newOwner)	{ owner = newOwner; }
 
 	/// if owner is Avatar
 
+	      PlayerController* GetPlayerController();
 	const PlayerController* GetPlayerController() const;
-	PlayerController* GetPlayerController();
 
 	void AttachTo(ActorComponent* newParent);
 	void Detach();
 
 	/// facade
 
+	      IFacade* GetFacade()		 { return facade.get(); } 
 	const IFacade* GetFacade() const { return facade.get(); }
-	IFacade* GetFacade()		 { return facade.get(); }
 
 	/// rigid body
 
+	      IRigidBody* GetRigidBody()       { return rigidBody.get(); }
 	const IRigidBody* GetRigidBody() const { return rigidBody.get(); }
-	IRigidBody* GetRigidBody()       { return rigidBody.get(); }
 
 	/// parent
 
+	      ActorComponent* GetParent()			{ return parent; }
 	const ActorComponent* GetParent() const		{ return parent; }
-	ActorComponent* GetParent()			{ return parent; }
 
 	/// components
 
-	std::vector<ActorComponent*>& GetSubcomponents();
+	      std::vector<ActorComponent*>& GetSubcomponents();
 	const std::vector<ActorComponent*>& GetSubcomponents() const;
+
+public: //~~~~~~~~~~~~~~| Misc
+
+	virtual FVector GetExtents() const { return extents; }
+	virtual void SetExtents(const FVector& newExtents) { extents = newExtents; }
 
 protected:
 	void AddSubcomponent   (ActorComponent* child);
@@ -115,6 +120,8 @@ protected:
 	/// << modules
 	UNIQUE(IFacade)		facade;
 	UNIQUE(IRigidBody)	rigidBody;
+
+	FVector extents;
 	///
 
 	/// >> position

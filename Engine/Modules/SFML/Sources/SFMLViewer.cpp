@@ -32,8 +32,7 @@ void Viewer::Render()
 	for (auto& component : world)
 	{
 		visualisersModule.Visualise(&component, this);
-		auto* tmp = dynamic_cast<Facade*>(component.GetFacade());
-		if (tmp)
+		if (auto* tmp = dynamic_cast<Facade*>(component.GetFacade()))
 		{
 			window.draw(tmp->sprite);
 		}		
@@ -47,15 +46,12 @@ void Viewer::DrawShape(FShape shape, FTransform transform, FColor color)
 	const int   pixinunit   = 80;
 	const int   spritesize  = 510;
 	const float scalefactor = (float)pixinunit/spritesize;
-//	std::cout << scalefactor << std::endl;
 	
 	FVector extents = shape.extents;
 	
-	sf::Sprite sprite;
+	sf::Sprite  sprite;
 	sf::Texture texture;
-	texture.loadFromFile("../../box.png"); //TODO:: resource system
 	sprite.setTexture(texture);
-	
 	sprite.setTextureRect(sf::IntRect(0, 0, spritesize, spritesize));
 	
 	FVector scale  = extents * scalefactor * 2;

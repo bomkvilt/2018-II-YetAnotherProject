@@ -1,5 +1,7 @@
 #include "DependencyInjectionManager.hpp"
 #include <string>
+
+
 UNIQUE(IFrontendFabric) DependencyInjectionManager::frontend = nullptr;
 
 

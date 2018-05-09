@@ -1,10 +1,18 @@
 #include "SFMLFacade.hpp"
 #include "ActorComponent.hpp"
+#include "ResourceSystem.hpp"
+#include "Modules/ModuleManager.hpp"
 
 
-Facade::Facade(ActorComponent* owner)
+Facade::Facade(ActorComponent* owner, std::string relativePath)
 	: IFacade(owner)
-{}
+{
+	auto& manager = ModuleManager::Get();
+	auto& resources = manager.GetModule<ResourceSystem>();
+	
+	texture = resources.GetResource<RTexture>(relativePath);
+	sprite.setTexture(texture->texture, true);
+}
 
 bool Facade::AttachTo(IFacade* parent)
 {
@@ -18,18 +26,21 @@ bool Facade::Detach()
 
 void Facade::Update()
 {
+	if (owner)
+	{
+		FVector2 pixinunit(80, 80);
+		auto textureSize  = texture->texture.getSize();
+		auto textureSize2 = FVector2(textureSize.x, textureSize.y);
+		auto transform   = owner->GetComponentTransform();
 
-	
+		FVector2 extents = owner->GetExtents();
+		FVector2 scalefactor = pixinunit * extents * 2 / textureSize2;
 
-	sf::Sprite sprite;
-	sf::Texture texture;
-	//texture.loadFromFile("box.jpg");
-	sprite.setTexture(texture);
+		FVector origin  = transform(-extents) * pixinunit + FVector2(255, 255);
 
-}
-
-void Facade::SetupPathToSprite(std::string path) 
-{
-	
-
+		sprite.setRotation(0);
+		sprite.setPosition(sf::Vector2f(origin.X, origin.Y));
+		sprite.rotate(transform.Rotation.GetEulerAngles().Z);
+		sprite.setScale(scalefactor.X, scalefactor.Y);
+	}
 }

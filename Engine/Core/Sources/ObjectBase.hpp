@@ -58,21 +58,21 @@ protected: //~~~~~~~~~~~| Object meta
 
 public: //~~~~~~~~~~~~~~| Creation functions
 
-	template<class _T>
-	_T* CreateObject(std::string name)
+	template<class _T, typename... Args>
+	_T* CreateObject(std::string name, Args&... args)
 	{
-		return ObjectCreator::CreateObject<_T>(name, world);
+		return ObjectCreator::CreateObject<_T>(name, world, args...);
 	}
 
-	template<class _T>
-	_T* CreateActor(std::string name)
+	template<class _T, typename... Args>
+	_T* CreateActor(std::string name, Args&... args)
 	{
-		return ObjectCreator::CreateActor<_T>(name, world.get());
+		return ObjectCreator::CreateActor<_T>(name, world.get(), args...);
 	}
 
-	template<class _T>
-	_T* CreateAvatar(std::string name,  bool AttachToController = false)
+	template<class _T, typename... Args>
+	_T* CreateAvatar(std::string name,  bool AttachToController = false, Args&... args)
 	{
-		return ObjectCreator::CreateAvatar<_T>(name, world.get(), AttachToController ? playerController : nullptr);
+		return ObjectCreator::CreateAvatar<_T>(name, world.get(), AttachToController ? playerController : nullptr, args...);
 	}
 };

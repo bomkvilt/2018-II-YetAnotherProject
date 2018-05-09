@@ -3,8 +3,8 @@
 
 SUBDIRS(Misc)
 SUBDIRS(Core)
+SUBDIRS(Resource)
 SUBDIRS(Components)
 SUBDIRS(ComponentVisualisers)
 SUBDIRS(Modules)
 SUBDIRS(Engine)
-SUBDIRS(Resource)

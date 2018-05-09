@@ -3,6 +3,7 @@
 #include "Avatar.hpp"
 #include "BoxColision.hpp"
 #include "CameraComponent.hpp"
+#include "SpriteComponent.hpp"
 #include "Control/EventBinder.hpp"
 #include "PID.hpp"
 
@@ -24,6 +25,11 @@ public:
 		pendulum->AddComponentLocation(FVector(2, 0, 0), eParent);
 		pendulum->AddComponentRotation(FQuat(0, 0, 30), eParent);
 		pendulum->SetExtents(FVector(2, 0.2f, 0.2f));
+
+		sprite = CreateSubcomponent<SpriteComponent>("sprite", "box.png");
+		sprite->AddComponentLocation(FVector(0, 0, 0.1f));
+		sprite->SetExtents(FVector(2, 0.2f, 0.2f));
+		sprite->AttachTo(pendulum);
 		
 		target = CreateSubcomponent<BoxColision>("Target");
 		target->AddComponentLocation(FVector(5, 0 , 0), eParent);
@@ -100,10 +106,11 @@ protected:
 
 protected:
 
-	BoxColision* base		= nullptr;
-	BoxColision* pendulum	= nullptr;
-	BoxColision* target		= nullptr;
-	CameraComponent* cam	= nullptr;
+	BoxColision* base       = nullptr;
+	BoxColision* target     = nullptr;
+	BoxColision* pendulum   = nullptr;
+	SpriteComponent* sprite = nullptr;
+	CameraComponent* cam    = nullptr;
 
 	float dt = 0;
 	float w  = 0;
