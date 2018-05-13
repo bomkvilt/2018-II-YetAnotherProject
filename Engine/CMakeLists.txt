@@ -3,7 +3,7 @@
 
 SUBDIRS(Misc)
 SUBDIRS(Core)
-SUBDIRS(Components)
+SUBDIRS(GameFramwork)
 SUBDIRS(ComponentVisualisers)
 SUBDIRS(Modules)
 SUBDIRS(Engine)

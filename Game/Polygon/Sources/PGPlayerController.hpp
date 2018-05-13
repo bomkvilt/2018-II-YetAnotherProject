@@ -15,6 +15,11 @@ public:
 				{KEY_D,  1},
 				{KEY_A, -1}
 			});
+		eventManager.AddAxis("R", 
+			{
+				{KEY_R,  1},
+				{KEY_F, -1}
+			});
 		eventManager.AddAction("Jump"   , ControlKey(KEY_X));
 	}
 };

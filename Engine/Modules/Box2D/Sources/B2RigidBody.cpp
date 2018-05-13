@@ -1,9 +1,9 @@
 #include "B2RigidBody.hpp"
 #include "B2PhysicsScene.hpp"
-#include "ActorComponent.hpp"
+#include "BaseActorComponent.hpp"
 #include <iostream>
 
-RigidBody::RigidBody(FShape shape, ActorComponent* owner, float mass, FVector inertia)
+RigidBody::RigidBody(FShape shape, BaseActorComponent* owner, float mass, FVector inertia)
 	: FRigidBody(owner)
 	, fixture(nullptr)
 	, density(0)
@@ -54,7 +54,8 @@ void RigidBody::Sync()
 {
 	if (owner && rigidBody && bDynamic)
 	{
-		FTransform newTransform = FTransform() << rigidBody->GetTransform();
+		FTransform prevTransfotm = owner->GetComponentTransform();
+		FTransform newTransform  = prevTransfotm << rigidBody->GetTransform();
 		owner->SetComponentTransform(newTransform, true, false);
 	}
 }
@@ -63,7 +64,6 @@ void RigidBody::AddForce(const FVector& force)
 {
 	if (rigidBody && force != FVector::ZeroVector)
 	{
-		std::cout << force.ToString() << std::endl;
 		rigidBody->ApplyForceToCenter(
 			b2Vec2() << force
 			, true 
@@ -86,7 +86,6 @@ void RigidBody::AddImpulce(const FVector& impulce)
 {
 	if (rigidBody)
 	{
-		std::cout << impulce.ToString() << std::endl;
 		rigidBody->ApplyLinearImpulseToCenter(
 			b2Vec2() << impulce
 			, true
@@ -181,7 +180,8 @@ FVector RigidBody::GetOmega() const
 {
 	if (rigidBody)
 	{
-		return FVector(0, 0, rigidBody->GetAngularVelocity());
+		auto rads = rigidBody->GetAngularVelocity();
+		return FVector(0, 0, RAD2DEG(rads));
 	}
 	return FVector::ZeroVector;
 }
@@ -190,7 +190,8 @@ void RigidBody::SetOmega(const FVector& newOmega)
 {
 	if (rigidBody)
 	{
-		rigidBody->SetAngularVelocity(newOmega.Z);
+		auto degs = newOmega.Z;
+		rigidBody->SetAngularVelocity(DEG2RAD(degs));
 	}
 }
 

@@ -1,7 +1,7 @@
 #include "Pendulum.hpp"
 
 Pendulum::Pendulum()
-	: pid(4, 0, 3)
+	: pid(4, 0.002f, 1.2f)
 {
 	base = CreateSubcomponent<BoxColision>("Base");
 	base->SetExtents(FVector(0.6f, 0.6f, 0.6f));
@@ -44,16 +44,16 @@ void Pendulum::OnBeginPlay()
 {
 	Super::OnBeginPlay();
 
-	jumper->OnCollisionEnter.Bind(this, [&](Actor*, ActorComponent*, FHit)
+	jumper->OnCollisionEnter.Bind(this, [&](Actor*, BaseActorComponent*, FHit)
 	{
-		std::cout << "Collision Enter" << std::endl;
+		//std::cout << "Collision Enter" << std::endl;
 
 		jumper->AddComponentLocation(FVector2(0, 2));
 	});
 
-	jumper->OnCollisionEnter.Bind(this, [&](Actor*, ActorComponent*, FHit)
+	jumper->OnCollisionEnter.Bind(this, [&](Actor*, BaseActorComponent*, FHit)
 	{
-		std::cout << "Collision Exit" << std::endl;
+		//std::cout << "Collision Exit" << std::endl;
 	});
 }
 
@@ -63,12 +63,13 @@ void Pendulum::Tick(float DeltaTime, ETickType type)
 
 	dt = DeltaTime;
 
-	auto tr = target->GetComponentRotation();
+	auto tr = target  ->GetComponentRotation();
 	auto cr = pendulum->GetComponentRotation();
 	auto delta = ~cr * tr;
+	auto z = delta.GetEulerAngles().Z;
 
-	const float control = pid.GetValue(delta.Z, dt);
-	const float M0 = 150;
+	const float control = pid.GetValue(z, dt);
+	const float M0 = 100;
 	const float M = M0 * control;
 	pendulum->AddTorque(FVector(0, 0, M), eParent);
 }
@@ -76,9 +77,9 @@ void Pendulum::Tick(float DeltaTime, ETickType type)
 void Pendulum::SetupInput(EventBinder* binder)
 {
 	Super::SetupInput(binder);
-	binder->BindAxis("Bvd", this, &Pendulum::Cam_1);
-	binder->BindAxis("Fvd", this, &Pendulum::Cam_2);
-	binder->BindAxis("R1", this, &Pendulum::MoveTarget);
+	binder->BindAxis("Bwd", this, &Pendulum::Cam_1);
+	binder->BindAxis("Fwd", this, &Pendulum::Cam_2);
+	binder->BindAxis("R1" , this, &Pendulum::MoveTarget);
 }
 
 void Pendulum::Cam_1(float value)
@@ -103,7 +104,7 @@ void Pendulum::MoveTarget(float value)
 {
 	if (value && target)
 	{
-		float delta = 40 * value * dt;
+		float delta = 500 * value * dt;
 		target->AddComponentRotation(FQuat(0, 0, delta), eParent);
 	}
 }

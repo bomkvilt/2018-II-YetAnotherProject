@@ -1,22 +1,34 @@
 #include "Gosha.hpp"
 #include "Coin.hpp"
 
+#include "Components/JointComponent.hpp"
+
+
 Gosha::Gosha()
 {
 	body = CreateSubcomponent<BoxColision>("Body");
 	body->SetExtents(FVector(1, 2, 0.6f));
 	body->GetRigidBody()->SetMass(10);
 	
-	movement = CreateSubModule<MovementComponent>("Movement");
-	movement->SetTrackingComponent(body);
 	
+	FVector epsilon(0,0,2000);
+	FVector acceleration(30,0,0);
+	movement->SetTrackingComponent(body);
+
 	movement->states.movementMode = EMovementMode::Jumping;
-	movement->states.CurrentMode().ImpactType = EMovementImpactType::Impulce;
-	movement->states.CurrentMode().Impulce    = FVector2(0, 200);
+	movement->states.ImpactType() = EMovementImpactType::Impulce;
+	movement->states.NormalImpulce() = FVector2(0, 200);
+	movement->states.NormalEpsilon() = epsilon;
+
+	movement->states.movementMode = EMovementMode::falling;
+	movement->states.ImpactType() = EMovementImpactType::Acceleration;
+	movement->states.NormalAcceleration() = acceleration;
+	movement->states.NormalEpsilon() = epsilon;
 
 	movement->states.movementMode = EMovementMode::Walk;
-	movement->states.CurrentMode().ImpactType   = EMovementImpactType::Acceleration;
-	movement->states.CurrentMode().Acceleration = FVector2(30, 0);
+	movement->states.ImpactType() = EMovementImpactType::Acceleration;
+	movement->states.NormalAcceleration() = acceleration;
+	movement->states.NormalEpsilon() = epsilon;
 
 	camera = CreateSubcomponent<CameraComponent>("Camera");
 	camera->AddComponentLocation(FVector(0, 0, 80), eParent);
@@ -28,13 +40,28 @@ void Gosha::OnBeginPlay()
 {
 	if (body)
 	{
-		body->OnCollisionEnter.Bind(this, [&](Actor* other, ActorComponent*, FHit)
+		body->OnCollisionEnter.Bind(this, [&](Actor* other, BaseActorComponent*, FHit)
 		{
 			if (auto* coin = dynamic_cast<Coin*>(other))
 			{
 				coin->AttachTo(this);
 				coin->GetRootComponent()->SetMass(0);
 				coin->SetRelativeLocation(FVector2(2, 0));
+				return;
+			}
+			if (movement)
+			{ // make a counter
+				movement->states.movementMode = EMovementMode::Walk;
+				return;
+			}
+		});
+
+		body->OnCollisionExit.Bind(this, [&](Actor* other, BaseActorComponent*)
+		{
+			if (movement)
+			{
+				movement->states.movementMode = EMovementMode::falling;
+				return;
 			}
 		});
 	}
@@ -59,7 +86,6 @@ void Gosha::Jump(EKeyAction)
 {
 	if (movement)
 	{
-		movement->states.extraMode = EMovementMode::Jumping;
-		movement->AddLenearInput(FVector2(0, 1));
+		movement->Jump();
 	}
 }

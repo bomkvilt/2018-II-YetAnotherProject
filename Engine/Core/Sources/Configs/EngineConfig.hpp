@@ -10,12 +10,15 @@
 struct FEngineConfig : public Archived
 {
 	GENERATED_ARCHIVATION_BODY(FEngineConfig, Archived)
-		ARCHIVE_MEMBER("", viewer    )
-		ARCHIVE_MEMBER("", simulation)
+		ARCHIVE_MEMBER("", viewer        )
+		ARCHIVE_MEMBER("", simulation    )
+		ARCHIVE_MEMBER("", countOfThreads)
 		ARCHIVATION_END()
 public:
 	FViewerConfig     viewer;
 	FSimulationConfig simulation;
+
+	size_t countOfThreads = 1;
 };
 
 

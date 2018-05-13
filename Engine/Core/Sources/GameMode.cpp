@@ -1,15 +1,16 @@
 #include "GameMode.hpp"
 #include "Threading/ThreadContext.hpp"
 #include "Threading/Initialiser.hpp"
-#include "PlayerController.hpp"
+#include "BasePlayerController.hpp"
 
 GameMode::GameMode()
 {
-	auto* init = ThreadContext::TopInitialiser();
-	assert(init);
-	world.reset(init->world);
-	simulationMode = init->simulation;
-	playerController = dynamic_cast<PlayerController*>(init->controller);
+	if (auto* init = ThreadContext::TopInitialiser())
+	{
+		world.reset(init->world);
+		simulationMode   = init->simulation;
+		playerController = init->controller;
+	}
 }
 
 void GameMode::OnBeginPlay()

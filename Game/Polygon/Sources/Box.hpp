@@ -3,7 +3,7 @@
 #define BOX_HPP
 
 #include "Actor.hpp"
-#include "BoxColision.hpp"
+#include "Components/BoxColision.hpp"
 
 
 class Box : public Actor

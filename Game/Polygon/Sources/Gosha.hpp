@@ -3,9 +3,9 @@
 #define GOSHA_HPP
 
 #include "Avatar.hpp"
-#include "BoxColision.hpp"
-#include "CameraComponent.hpp"
-#include "MovementComponent.hpp"
+#include "Components/BoxColision.hpp"
+#include "Components/CameraComponent.hpp"
+#include "Components/MovementComponent.hpp"
 #include "PlayerController.hpp"
 
 
@@ -27,8 +27,6 @@ protected:
 protected:
 	BoxColision* body;
 	CameraComponent* camera;
-	MovementComponent* movement;
-
 };
 
 

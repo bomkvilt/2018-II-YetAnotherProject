@@ -5,12 +5,12 @@
 
 #include "Interfaces/Default/RigidBody.hpp"
 #include "B2Convertion.hpp"
-
+#include "Common.hpp"
 
 struct RigidBody : public FRigidBody
 {
 public:
-	RigidBody(FShape shape, ActorComponent* owner, float mass, FVector inertia);
+	RigidBody(FShape shape, BaseActorComponent* owner, float mass, FVector inertia);
 	~RigidBody();
 
 	virtual void Update() override;

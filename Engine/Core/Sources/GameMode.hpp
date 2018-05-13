@@ -26,9 +26,9 @@ public:
 
 protected:
 	/// >>
-	UNIQUE(World)     world;
-	SimulationMode*   simulationMode;
-	PlayerController* playerController;
+	UNIQUE(World)         world;
+	SimulationMode*       simulationMode;
+	BasePlayerController* playerController;
 	/// << 
 
 public: //~~~~~~~~~~~~~~| Creation functions

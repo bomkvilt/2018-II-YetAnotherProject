@@ -9,7 +9,7 @@ void DependencyInjectionManager::SetFrontendFabric(UNIQUE(IFrontendFabric) fabri
 	frontend = std::move(fabric);
 }
 
-UNIQUE(IFacade) DependencyInjectionManager::MakeFacade(ActorComponent* owner)
+UNIQUE(IFacade) DependencyInjectionManager::MakeFacade(BaseActorComponent* owner)
 {
 	if (frontend)
 	{
@@ -41,7 +41,7 @@ UNIQUE(IPhysicsScene) DependencyInjectionManager::MakeScene()
 	return nullptr;
 }
 
-UNIQUE(IConstraint) DependencyInjectionManager::MakeConstraint(ActorComponent* owner)
+UNIQUE(IConstraint) DependencyInjectionManager::MakeConstraint(BaseActorComponent* owner)
 {
 	if (physics)
 	{
@@ -50,7 +50,7 @@ UNIQUE(IConstraint) DependencyInjectionManager::MakeConstraint(ActorComponent* o
 	return nullptr;
 }
 
-UNIQUE(IRigidBody) DependencyInjectionManager::MakeBody(FShape shape, ActorComponent* owner, float mass, FVector inertia)
+UNIQUE(IRigidBody) DependencyInjectionManager::MakeBody(FShape shape, BaseActorComponent* owner, float mass, FVector inertia)
 {
 	if (physics)
 	{

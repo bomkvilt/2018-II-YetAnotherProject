@@ -16,8 +16,8 @@ public:
 	virtual void RemoveChild (IRigidBody* ibody) = 0;
 	virtual void RemoveParent(IRigidBody* ibody) = 0;
 
-	virtual void UpdateConstraint() = 0;             // constraint's local transform changed
-	virtual void UpdateChild(IRigidBody* ibody) = 0; // subcomponents's one changed
+	virtual void UpdateConstraint() = 0;             // constraint's local transform is changed
+	virtual void UpdateChild(IRigidBody* ibody) = 0; // subcomponents's local transform is changed
 
 public:
 	virtual FConstraintType GetConstraints() const = 0;

@@ -1,12 +1,12 @@
+#pragma once
 #ifndef DELEGATE_HPP
 #define DELEGATE_HPP
-
 
 #include <vector>
 #include <functional>
 #include <algorithm>
 
-#include "../World.hpp"
+#include "World.hpp"
 
 class Object;
 

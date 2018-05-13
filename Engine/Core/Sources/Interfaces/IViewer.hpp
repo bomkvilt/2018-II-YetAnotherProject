@@ -5,9 +5,6 @@
 #include "Common.hpp"
 #include "Configs/EngineConfig.hpp"
 
-class  PlayerController;
-
-
 
 struct IViewer
 {

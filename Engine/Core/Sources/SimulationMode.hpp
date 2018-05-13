@@ -1,6 +1,6 @@
+#pragma once
 #ifndef SIMULATION_MODE_HPP
 #define SIMULATION_MODE_HPP
-#pragma once
 
 #include "Common.hpp"
 
@@ -8,7 +8,7 @@
 #include "Injection/ISimulationFabric.hpp"
 
 class GameMode;
-class PlayerController;
+class BasePlayerController;
 
 
 /** A class handling a symualtion
@@ -61,7 +61,7 @@ protected:
 	/// >>
 	SHARED(FEngineConfig)         config;
 	UNIQUE(ISimulationModeFabric) fabric;
-	UNIQUE(PlayerController) controller;
+	UNIQUE(BasePlayerController) controller;
 	UNIQUE(GameMode) gameMode;
 	/// <<
 };

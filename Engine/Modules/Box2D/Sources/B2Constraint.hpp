@@ -12,7 +12,7 @@
 class Constraint : public FConstraint
 {
 public: 
-	Constraint(ActorComponent* owner);
+	Constraint(BaseActorComponent* owner);
 
 public:
 	virtual void AddChild    (IRigidBody* ibody) override;

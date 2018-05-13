@@ -5,13 +5,13 @@
 #include "Interfaces/IViewer.hpp"
 
 class PlayerController;
-class ActorComponent;
+class BaseActorComponent;
 
 
 
 struct IFrontendFabric
 {
-	virtual UNIQUE(IFacade) MakeFacade(ActorComponent* owner) = 0;
+	virtual UNIQUE(IFacade) MakeFacade(BaseActorComponent* owner) = 0;
 	virtual UNIQUE(IViewer) MakeViewer(PlayerController* controller, SHARED(FEngineConfig) config) = 0;
 };
 

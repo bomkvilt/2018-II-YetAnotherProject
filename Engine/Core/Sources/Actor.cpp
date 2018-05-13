@@ -39,7 +39,7 @@ void Actor::Detach()                   { if (rootComponent) rootComponent->Detac
 //~~~~~~~~~~~~~~~~~~~~~~| >> proxi functions
 
 
-void Actor::SetRootComponent(ActorComponent* newRoot)
+void Actor::SetRootComponent(BaseActorComponent* newRoot)
 {
 	if (rootComponent)
 	{

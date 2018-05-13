@@ -3,6 +3,7 @@
 #define FRONTEND_CONFIG_HPP
 
 #include "Reflection/Archived.hpp"
+#include "Common.hpp"
 
 
 struct FViewerConfig : public Archived

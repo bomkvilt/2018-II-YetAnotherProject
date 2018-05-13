@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 
-#include "ActorComponent.hpp"
+#include "BaseActorComponent.hpp"
 #include "ActorModule.hpp"
 #include "Object.hpp"
 
@@ -14,6 +14,7 @@
  *	. obsolute location	(root component driven)
  */
 class Actor : public Object
+	, public IWorldObject
 {
 	GENERATED_BODY(Actor, Object)
 public:
@@ -29,41 +30,41 @@ public: //~~~~~~~~~~~~~~| Physics -> to root component
 
 public: //~~~~~~~~~~~~~~| Kinematic -> to root component
 
-		/// transform
+	/// transform
 
-	void SetComponentTransform(FTransform newTransform);
-	void SetRelativeTransform (FTransform newTransform);
-	FTransform GetComponentTransform() const;
-	FTransform GetRelativeTransform()  const;
+	virtual void SetComponentTransform(FTransform newTransform) override;
+	virtual void SetRelativeTransform (FTransform newTransform) override;
+	virtual FTransform GetComponentTransform() const override;
+	virtual FTransform GetRelativeTransform()  const override;
 
 	/// location
 
-	void SetComponentLocation(FVector newLocation);
-	void SetRelativeLocation (FVector newLocation);
-	FVector GetComponentLocation() const;
-	FVector GetRelativeLocation()  const;
+	virtual void SetComponentLocation(FVector newLocation) override;
+	virtual void SetRelativeLocation (FVector newLocation) override;
+	virtual FVector GetComponentLocation() const override;
+	virtual FVector GetRelativeLocation()  const override;
 
 	/// rotation
 
-	void SetComponentRotation(FQuat newRotation);
-	void SetRelativeRotation (FQuat newRotation);
-	FQuat GetComponentRotation() const;
-	FQuat GetRelativeRotation()  const;
+	virtual void SetComponentRotation(FQuat newRotation);
+	virtual void SetRelativeRotation (FQuat newRotation);
+	virtual FQuat GetComponentRotation() const override;
+	virtual FQuat GetRelativeRotation()  const override;
 
 	/// add
 
-	void AddTransform        (FTransform delta, ESpaceType space = ESpaceType::eWorld);
-	void AddComponentLocation(FVector    delta, ESpaceType space = ESpaceType::eWorld);
-	void AddComponentRotation(FQuat      delta, ESpaceType space = ESpaceType::eWorld);
+	virtual void AddTransform        (FTransform delta, ESpaceType space = ESpaceType::eWorld) override;
+	virtual void AddComponentLocation(FVector    delta, ESpaceType space = ESpaceType::eWorld) override;
+	virtual void AddComponentRotation(FQuat      delta, ESpaceType space = ESpaceType::eWorld) override;
 
 public: //~~~~~~~~~~~~~~| chain and modules
 
 	void AttachTo(Actor* newParent);
 	void Detach();
 
-	const ActorComponent* GetRootComponent() const { return rootComponent; }
-	      ActorComponent* GetRootComponent()       { return rootComponent; }
-	void SetRootComponent(ActorComponent* newRoot);
+	const BaseActorComponent* GetRootComponent() const { return rootComponent; }
+	      BaseActorComponent* GetRootComponent()       { return rootComponent; }
+	void SetRootComponent(BaseActorComponent* newRoot);
 
 	      std::vector<ActorModule*>& GetModules()       { return modules; }
 	const std::vector<ActorModule*>& GetModules() const { return modules; }
@@ -71,7 +72,7 @@ public: //~~~~~~~~~~~~~~| chain and modules
 protected:
 
 	/// >> common
-	ActorComponent* rootComponent;
+	BaseActorComponent* rootComponent;
 	std::vector<ActorModule*> modules;
 	/// <<	
 

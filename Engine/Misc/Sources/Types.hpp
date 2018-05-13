@@ -340,8 +340,8 @@ struct FHit
 {
 	class Actor* actor = nullptr;
 	class Actor* other = nullptr;
-	class ActorComponent* component      = nullptr;
-	class ActorComponent* otherComponent = nullptr;
+	class BaseActorComponent* component      = nullptr;
+	class BaseActorComponent* otherComponent = nullptr;
 
 	FVector Location;
 	FVector HitNormal;

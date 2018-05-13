@@ -6,12 +6,12 @@
 
 
 #include "World.hpp"
-#include "ActorComponent.hpp"
+#include "BaseActorComponent.hpp"
 
 #include "Control/EventHandlers.hpp"
 #include "Camera/CameraManipulator.hpp"
 
-#include "ComponentVisualisers.hpp"
+#include "ComponentVisualisersModule.hpp"
 
 
 Viewer::Viewer(PlayerController* controller, SHARED(FEngineConfig) config)

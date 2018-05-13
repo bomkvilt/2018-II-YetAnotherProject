@@ -3,7 +3,7 @@
 
 #include "Threading/Initialiser.hpp"
 
-class PlayerController;
+class BasePlayerController;
 class SimulationMode;
 class GameMode;
 
@@ -11,9 +11,9 @@ class GameMode;
 
 struct ISimulationModeFabric
 {
-	virtual UNIQUE(SimulationMode  ) MakeSimulationMode(SHARED(FEngineConfig) config) = 0;
-	virtual UNIQUE(GameMode        ) MakeDefaultGameMode        (Initialiser* init) = 0;
-	virtual UNIQUE(PlayerController) MakeDefaultPlayerController(Initialiser* init) = 0;
+	virtual UNIQUE(SimulationMode      ) MakeSimulationMode(SHARED(FEngineConfig) config) = 0;
+	virtual UNIQUE(GameMode            ) MakeDefaultGameMode        (Initialiser* init) = 0;
+	virtual UNIQUE(BasePlayerController) MakeDefaultPlayerController(Initialiser* init) = 0;
 };
 
 
@@ -38,7 +38,7 @@ struct TSimulationModeFabric : public ISimulationModeFabric
 		return ObjectCreator::CreateGameMode<_GM>(init);
 	}
 
-	virtual UNIQUE(PlayerController) MakeDefaultPlayerController(Initialiser* init) override 
+	virtual UNIQUE(BasePlayerController) MakeDefaultPlayerController(Initialiser* init) override 
 	{ 
 		return ObjectCreator::CreatePlayerController<_CT>(init);
 	}

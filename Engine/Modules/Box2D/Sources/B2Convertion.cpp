@@ -11,7 +11,6 @@ FVector& operator<<(FVector& l, const b2Vec2& r)
 {
 	l.X = r.x;
 	l.Y = r.y;
-	l.Z = 0;
 	return l;
 }
 
@@ -24,6 +23,6 @@ b2Transform& operator<<(b2Transform& l, const FTransform& r)
 FTransform& operator<<(FTransform& l, const b2Transform& r)
 {
 	l.Location << r.p;
-	l.Rotation = FQuat(0, 0,RAD2DEG(r.q.GetAngle()));
+	l.Rotation = FQuat(0, 0, RAD2DEG(r.q.GetAngle()));
 	return l;
 }

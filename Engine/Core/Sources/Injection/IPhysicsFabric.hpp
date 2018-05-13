@@ -10,8 +10,8 @@
 struct IPhysicsFabric
 {
 	virtual UNIQUE(IPhysicsScene) MakePhysicsScene() = 0;
-	virtual UNIQUE(IConstraint  ) MakeConstraint(ActorComponent* owner) = 0;
-	virtual UNIQUE(IRigidBody   ) MakeRigidBody(FShape shape, ActorComponent* owner, float  mass = 0, FVector inertia = FVector::ZeroVector) = 0;
+	virtual UNIQUE(IConstraint  ) MakeConstraint(BaseActorComponent* owner) = 0;
+	virtual UNIQUE(IRigidBody   ) MakeRigidBody(FShape shape, BaseActorComponent* owner, float  mass = 0, FVector inertia = FVector::ZeroVector) = 0;
 };
 
 

@@ -9,13 +9,13 @@ class DependencyInjectionManager
 {
 public:
 	static void SetFrontendFabric(UNIQUE(IFrontendFabric) fabric);
-	static UNIQUE(IFacade) MakeFacade(ActorComponent* owner);
+	static UNIQUE(IFacade) MakeFacade(BaseActorComponent* owner);
 	static UNIQUE(IViewer) MakeViewer(PlayerController* controller, SHARED(FEngineConfig) config);
 
 	static void SetPhysicsConfig(UNIQUE(IPhysicsFabric) conf);
 	static UNIQUE(IPhysicsScene) MakeScene();
-	static UNIQUE(IConstraint  ) MakeConstraint(ActorComponent* owner);
-	static UNIQUE(IRigidBody   ) MakeBody(FShape shape, ActorComponent* owner, float mass = 0, FVector inertia = FVector::ZeroVector);
+	static UNIQUE(IConstraint  ) MakeConstraint(BaseActorComponent* owner);
+	static UNIQUE(IRigidBody   ) MakeBody(FShape shape, BaseActorComponent* owner, float mass = 0, FVector inertia = FVector::ZeroVector);
 private:
 
 	static UNIQUE(IFrontendFabric) frontend;

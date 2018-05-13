@@ -3,7 +3,7 @@
 #define COIN_HPP
 
 #include "Actor.hpp"
-#include "BoxColision.hpp"
+#include "Components/BoxColision.hpp"
 
 
 class Coin : public Actor

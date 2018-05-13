@@ -13,7 +13,7 @@
 
 class Actor;
 class Object;
-class ActorComponent;
+class BaseActorComponent;
 
 
 /** 
@@ -39,7 +39,7 @@ public: //~~~~~~~~~~~~~~| Tick
 public: //~~~~~~~~~~~~~~| Construction
 
 	template<class _T>
-	_T* CreateObject() //TODO:: make a review
+	_T* CreateObject()
 	{
 		// make the name unique
 		auto* initialiser = ThreadContext::TopInitialiser();
@@ -77,8 +77,8 @@ public:
 
 public: //~~~~~~~~~~~~~~| 
 
-		  ActorComponent* GetSceneRoot()		{ return sceneRoot; }
-	const ActorComponent* GetSceneRoot() const	{ return sceneRoot; }
+		  BaseActorComponent* GetSceneRoot()		{ return sceneRoot; }
+	const BaseActorComponent* GetSceneRoot() const	{ return sceneRoot; }
 
 	      IPhysicsScene* GetPhysicsScene()       { return scene.get(); }
 	const IPhysicsScene* GetPhysicsScene() const { return scene.get(); }
@@ -94,7 +94,7 @@ protected:
 	/// << 
 
 	/// >> scene
-	ActorComponent*   sceneRoot;
+	BaseActorComponent*   sceneRoot;
 	UNIQUE(IPhysicsScene) scene;
 	/// <<
 
@@ -122,27 +122,27 @@ public: //~~~~~~~~~~~~~~| Iteration
 	class SceneIterator
 	{
 	public:
-		SceneIterator(ActorComponent* root);
+		SceneIterator(BaseActorComponent* root);
 
-		ActorComponent* operator->();
-		ActorComponent& operator* ();
+		BaseActorComponent* operator->();
+		BaseActorComponent& operator* ();
 		SceneIterator*  operator++();
 		bool operator==(const SceneIterator& r) const;
 		bool operator!=(const SceneIterator& r) const;
 
 	private:
 
-		ActorComponent* PrevNode();
-		ActorComponent* CurrNode();
-		ActorComponent* Brunch(size_t node);
-		std::vector<ActorComponent*>& CurrLine();
+		BaseActorComponent* PrevNode();
+		BaseActorComponent* CurrNode();
+		BaseActorComponent* Brunch(size_t node);
+		std::vector<BaseActorComponent*>& CurrLine();
 
 		size_t CurrIndex();
 		size_t MaxIndex();
 		void Move();
 		
 		std::stack<size_t> indices;
-		std::stack<ActorComponent*> path;
+		std::stack<BaseActorComponent*> path;
 	};
 
 	SceneIterator begin() { return SceneIterator(sceneRoot); }

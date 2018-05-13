@@ -21,12 +21,12 @@ public:
 		return std::make_unique<PhysicsScene>();
 	}
 
-	virtual UNIQUE(IConstraint) MakeConstraint(ActorComponent* owner) override
+	virtual UNIQUE(IConstraint) MakeConstraint(BaseActorComponent* owner) override
 	{
 		return std::make_unique<Constraint>(owner);
 	}
 
-	virtual UNIQUE(IRigidBody) MakeRigidBody(FShape shape, ActorComponent* owner, float mass, FVector inertia) override
+	virtual UNIQUE(IRigidBody) MakeRigidBody(FShape shape, BaseActorComponent* owner, float mass, FVector inertia) override
 	{
 		return std::make_unique<RigidBody>(shape, owner, mass, inertia);
 	}

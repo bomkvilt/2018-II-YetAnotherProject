@@ -1,6 +1,6 @@
 #include "CameraManipulator.hpp"
 
-#include "CameraComponent.hpp"
+#include "Components/CameraComponent.hpp"
 #include "Camera/CameraManager.hpp"
 
 #include <iostream>
@@ -38,7 +38,7 @@ bool CameraManipulator::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActio
 		return false;
 	}
 	
-	if (auto* camera = manager.GetCurrentCamera())
+	if (auto* camera = dynamic_cast<IWorldObject*>(manager.GetActiveCamera()))
 	{
 		const FQuat correction(0, -90, 0);
 

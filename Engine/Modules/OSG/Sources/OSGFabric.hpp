@@ -14,7 +14,7 @@ struct OSGFabric : public IFrontendFabric
 		return std::make_unique<OSGFabric>();
 	}
 
-	virtual UNIQUE(IFacade) MakeFacade(ActorComponent* owner) 
+	virtual UNIQUE(IFacade) MakeFacade(BaseActorComponent* owner) 
 	{ 
 		return std::make_unique<Facade>(owner); 
 	}

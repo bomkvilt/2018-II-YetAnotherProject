@@ -22,7 +22,7 @@
 class Facade : public IFacade
 {
 public:
-	Facade(ActorComponent* owner);
+	Facade(BaseActorComponent* owner);
 
 public:
 

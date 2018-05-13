@@ -1,5 +1,5 @@
 #include "B2PhysicsScene.hpp"
-#include "ActorComponent.hpp"
+#include "BaseActorComponent.hpp"
 #include "Actor.hpp"
 
 PhysicsScene::PhysicsScene()
@@ -86,16 +86,16 @@ void PhysicsScene::ProcessCollisions()
 	}
 
 	// OnCollisionEnd
-	for (auto& pair  : contactListener.newConacts)
-	for (auto& pair2 : pair.second)
+	for (auto& pair  : contactListener.FinishedContacts)
+	for (auto& other : pair.second)
 	{
-		auto contact = pair2.second;
+		auto* body = pair.first;
 
-		if (body2body.count(contact.body ) 
-			&& body2body.count(contact.other))
+		if (body2body.count(body )
+		 && body2body.count(other))
 		{
-			RigidBody* target    = body2body[contact.body ];
-			RigidBody* otherBody = body2body[contact.other];
+			RigidBody* target    = body2body[body ];
+			RigidBody* otherBody = body2body[other];
 
 			if (target && otherBody)
 			{

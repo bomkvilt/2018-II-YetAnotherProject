@@ -5,9 +5,9 @@
 #include <iostream>
 
 #include "Avatar.hpp"
-#include "BoxColision.hpp"
-#include "JontComponent.hpp"
-#include "CameraComponent.hpp"
+#include "Components/BoxColision.hpp"
+#include "Components/JointComponent.hpp"
+#include "Components/CameraComponent.hpp"
 #include "Control/EventBinder.hpp"
 #include "PID.hpp"
 

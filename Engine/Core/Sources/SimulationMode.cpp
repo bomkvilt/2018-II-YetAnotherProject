@@ -1,5 +1,5 @@
 #include "SimulationMode.hpp"
-#include "PlayerController.hpp"
+#include "BasePlayerController.hpp"
 #include "GameMode.hpp"
 
 
@@ -72,18 +72,10 @@ void SimulationMode::OnSimulationEnd()
 
 void SimulationMode::Tick(float deltaTime, ETickType type)
 {
-	if (gameMode)
+	if (gameMode && controller)
 	{
-		gameMode->Tick(deltaTime, type);
-
-		if (type == ETickType::ePostPhysics)
-		{
-			controller->Tick(deltaTime, type);
-		}
-		if (type == ETickType::eRender)
-		{
-			controller->Render();
-		}
+		gameMode  ->Tick(deltaTime, type);
+		controller->Tick(deltaTime, type);
 	}
 }
 

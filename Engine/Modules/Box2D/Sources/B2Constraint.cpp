@@ -2,7 +2,7 @@
 #include "B2PhysicsScene.hpp"
 #include <iostream>
 
-Constraint::Constraint(ActorComponent* owner)
+Constraint::Constraint(BaseActorComponent* owner)
 	: FConstraint(owner)
 {}
 

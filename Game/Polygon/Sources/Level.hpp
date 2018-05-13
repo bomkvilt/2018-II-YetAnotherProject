@@ -3,7 +3,7 @@
 #define LEVEL_HPP
 
 #include "Actor.hpp"
-#include "BoxColision.hpp"
+#include "Components/BoxColision.hpp"
 
 
 class Level : public Actor
