@@ -15,17 +15,14 @@ KeyHandler_base::KeyHandler_base(EventCollector& collector)
 void KeyHandler_base::SetKeyMode(const sf::Event& ega, KeyEventType& event)
 {
 	switch (ega.type) {
-	case sf::Keyboard::LAlt					:	event.modifier = EKeyModifier::eAlt;	break;
-	case sf::Keyboard::LControl		:	event.modifier = EKeyModifier::eCtrl;	break;
+	case sf::Keyboard::LAlt				:	event.modifier = EKeyModifier::eAlt;	break;
+	case sf::Keyboard::LControl			:	event.modifier = EKeyModifier::eCtrl;	break;
 	case sf::Keyboard::LShift			:	event.modifier = EKeyModifier::eShift;	break;
 	}
 }
 
 void KeyHandler_base::SetMousePos(const  sf::Event& ega)
 {
-	/*float x = (ega.getX()-ega.getXmin()) / (ega.getXmax()-ega.getXmin()) * ega.getWindowWidth ();
-	float y = (ega.getY()-ega.getYmin()) / (ega.getYmax()-ega.getYmin()) * ega.getWindowHeight();
-	collector.CollectMousPosition(x, y);*/
 }
 
 void KeyHandler_base::Store(KeyEventType event)

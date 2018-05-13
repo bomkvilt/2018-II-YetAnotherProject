@@ -18,12 +18,8 @@ bool Facade::Detach()
 
 void Facade::Update()
 {
-
-	
-
 	sf::Sprite sprite;
 	sf::Texture texture;
-	//texture.loadFromFile("box.jpg");
 	sprite.setTexture(texture);
 
 }
