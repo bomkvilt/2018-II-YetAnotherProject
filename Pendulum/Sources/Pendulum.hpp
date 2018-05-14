@@ -34,6 +34,7 @@ public:
 		cam->AddComponentLocation(FVector(-30, 0, 0), eParent);
 		cam->AddComponentRotation(FQuat( 0, 0 ,90), eParent);
 		cam->SetAutoregister(true);
+		cam->SetRenderSize(FVector(12, 10, 0));
 	}
 
 	virtual void Tick(float DeltaTime, ETickType type)

@@ -27,9 +27,9 @@ protected:
 	MouseHandler mouseHandler;
 	KeyboardHandler keyboardHandler;
 	sf::RenderWindow window;
-
 	sf::Texture boxTexture;
 	std::multimap <float, sf::Sprite> myMultimap;
+	
 };
 
 

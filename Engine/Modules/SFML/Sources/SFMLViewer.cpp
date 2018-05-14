@@ -3,7 +3,7 @@
 #include "World.hpp"
 #include "ActorComponent.hpp"
 #include "ComponentVisualisersModule.hpp"
-
+#include "CameraComponent.hpp"
 #include <iostream>
 
 
@@ -52,18 +52,44 @@ void Viewer::Render()
 void Viewer::DrawShape(FShape shape, FTransform transform, FColor color)
 {
 	assert(shape.type == EShapeType::eBox);
-	const int   pixinunit   = 80;
-	const int   spritesize  = 510;
-	const float scalefactor = (float)pixinunit/spritesize;
+	CameraComponent* cam = GetActiveCamera();
+	assert(cam != nullptr);
+		FVector renderSize = cam->GetRenderSize();
+
+		const sf::Vector2u  pixinunit(
+			window.getSize().x / renderSize.X,
+			window.getSize().y / renderSize.Y
+		);
+		
+
+		const sf::Vector2u  spritesize = boxTexture.getSize();
+		const sf::Vector2f scalefactor(
+			static_cast<float>(pixinunit.x) / static_cast<float>(spritesize.x),
+			static_cast<float>(pixinunit.y) / static_cast<float>(spritesize.y)
+		);
+			
+
 	
 	FVector extents = shape.extents;
 	
 	sf::Sprite sprite;
 	sprite.setTexture(boxTexture);
-	sprite.setTextureRect(sf::IntRect(0, 0, spritesize, spritesize));
+	sprite.setTextureRect(sf::IntRect(0, 0, spritesize.x, spritesize.y));
 	
-	FVector scale  = extents * scalefactor * 2;
-	FVector origin = transform(-extents) * pixinunit + FVector(255, 255, 0);
+	FVector scale  (
+		extents.X * scalefactor.x * 2,
+		extents.Y * scalefactor.y * 2,
+		0
+
+	);
+	FVector origin(
+		transform(-extents).X * pixinunit.x,
+		transform(-extents).Y * pixinunit.y,
+		0);
+		
+		
+		
+	origin+= FVector(255, 255, 0);
 
 	sprite.setScale(scale.X, scale.Y);
 	sprite.setPosition(sf::Vector2f(origin.X, origin.Y));
