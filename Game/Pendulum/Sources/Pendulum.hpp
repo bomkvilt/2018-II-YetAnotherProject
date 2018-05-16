@@ -8,6 +8,7 @@
 #include "Components/BoxColision.hpp"
 #include "Components/JointComponent.hpp"
 #include "Components/CameraComponent.hpp"
+#include "Components/SpriteComponent.hpp"
 #include "Control/EventBinder.hpp"
 #include "PID.hpp"
 
@@ -37,8 +38,12 @@ protected:
 	BoxColision* target;
 	BoxColision* jumper;
 	BoxColision* pendulum;
+	
 	JointComponent*	joint;
+	
 	CameraComponent* cam;
+
+	SpriteComponent* sprite;
 
 	float dt = 0;
 	float w  = 0;

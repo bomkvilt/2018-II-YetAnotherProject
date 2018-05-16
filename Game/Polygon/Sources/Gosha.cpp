@@ -34,6 +34,7 @@ Gosha::Gosha()
 	camera->AddComponentLocation(FVector(0, 0, 80), eParent);
 	camera->AddComponentRotation(FQuat  (0, 90, 0), eLocal );
 	camera->SetAutoregister(true);
+	camera->SetRenderSize(20);
 }
 
 void Gosha::OnBeginPlay()

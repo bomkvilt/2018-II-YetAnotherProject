@@ -22,6 +22,10 @@ Pendulum::Pendulum()
 	pendulum->GetRigidBody()->SetMass(10);
 	pendulum->AttachTo(joint);
 
+	sprite = CreateSubcomponent<SpriteComponent>("Sprite", "box.png");
+	sprite->SetExtents(FVector(1.5f, 0.2f, 0.2f));
+	sprite->AttachTo(pendulum);
+
 	target = CreateSubcomponent<BoxColision>("Target");
 	target->AddComponentLocation(FVector(5, 0, 0), eParent);
 	target->AddComponentRotation(FQuat(0, 0, -90), eParent);
@@ -38,7 +42,7 @@ Pendulum::Pendulum()
 	cam->AddComponentLocation(FVector(0, -5, 40), eParent);
 	cam->AddComponentRotation(FQuat(0, 90, 0), eLocal);
 	cam->SetAutoregister(true);
-	cam->SetRenderSize(FVector(12, 10, 0));
+	cam->SetRenderSize(20);
 }
 
 void Pendulum::OnBeginPlay()

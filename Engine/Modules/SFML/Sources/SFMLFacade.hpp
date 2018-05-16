@@ -20,7 +20,7 @@ public:
 	virtual void Update();
 
 public:
-	sf::Sprite sprite;
+	sf::Sprite       sprite;
 	SHARED(RTexture) texture;
 };
 

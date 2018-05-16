@@ -20,7 +20,7 @@ public:
 				{KEY_R,  1},
 				{KEY_F, -1}
 			});
-		eventManager.AddAction("Jump"   , ControlKey(KEY_X));
+		eventManager.AddAction("Jump", ControlKey(KEY_X));
 	}
 };
 

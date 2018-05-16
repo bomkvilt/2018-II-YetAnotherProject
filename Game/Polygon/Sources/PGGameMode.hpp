@@ -10,9 +10,4 @@ public:
 public:
 
 	PGGameMode();
-
-public:
-	/// >> SimulationMode
-	virtual void Tick(float DeltaTime, ETickType type) override;
-	/// <<
 };

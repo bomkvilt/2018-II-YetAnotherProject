@@ -24,12 +24,17 @@ public:
 
 protected:
 	Facade* GetRootFacade();
-	MouseHandler mouseHandler;
+
+	sf::Sprite GetAlligned(sf::Sprite sprite);
+
+protected:
+	MouseHandler    mouseHandler;
 	KeyboardHandler keyboardHandler;
+
 	sf::RenderWindow window;
-	sf::Texture boxTexture;
-	std::multimap <float, sf::Sprite> myMultimap;
-	
+	SHARED(RTexture) emptyTexture;
+
+	std::multimap<float, sf::Sprite> myMultimap;
 };
 
 

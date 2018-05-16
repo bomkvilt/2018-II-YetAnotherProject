@@ -11,15 +11,8 @@ class BaseCollision : public ActorComponent
 
 public:
 	BaseCollision(EShapeType shape);
-
-public:
-	FVector GetExtents() const;
+	
 	void SetExtents(FVector newExtents);
-
-protected:
-	/// >> 
-	FVector extents;
-	///
 };
 
 

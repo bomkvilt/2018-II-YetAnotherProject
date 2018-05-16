@@ -21,8 +21,3 @@ PGGameMode::PGGameMode()
 	box2 ->SetComponentLocation(FVector2(13,6));
 	box3 ->SetComponentLocation(FVector2(-15,2));
 }
-
-void PGGameMode::Tick(float DeltaTime, ETickType type)
-{
-	Super::Tick(DeltaTime, type);
-}

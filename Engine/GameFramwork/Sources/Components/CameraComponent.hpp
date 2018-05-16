@@ -38,8 +38,8 @@ public: //~~~~~~~~~~~~~~~~~~~| common
 	 *	@return wether activated		*/
 	bool Activate(bool newState);
 
-	FVector GetRenderSize();
-	void SetRenderSize(FVector renderSize);
+	float GetRenderSize();
+	void  SetRenderSize(float renderSize);
 
 protected:
 
@@ -48,7 +48,7 @@ protected:
 	bool bRegistered;	// is registered
 	bool bAutoRegister;	// regisers automaticly
 	/// <<
-	FVector RenderSize;
+	float RenderSize;
 };
 
 

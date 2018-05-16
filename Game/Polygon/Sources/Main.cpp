@@ -1,6 +1,6 @@
 #include "Engine.hpp"
 #include "B2Fabric.hpp"
-#include "OSGFabric.hpp"
+#include "SFMLFabric.hpp"
 #include "Injection/DependencyInjectionManager.hpp"
 
 #include "PGGameMode.hpp"
@@ -12,8 +12,8 @@ using PGSimulationConfig = TSimulationModeFabric<SimulationMode, PGPlayerControl
 
 int main()
 {
-	DependencyInjectionManager::SetFrontendFabric(OSGFabric::Get());
-	DependencyInjectionManager::SetPhysicsConfig (B2Fabric ::Get());
+	DependencyInjectionManager::SetFrontendFabric(SFMLFabric::Get());
+	DependencyInjectionManager::SetPhysicsConfig (B2Fabric  ::Get());
 
 	auto simulationFabric = PGSimulationConfig::Get();
 	

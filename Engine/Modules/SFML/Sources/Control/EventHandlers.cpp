@@ -47,18 +47,16 @@ bool MouseHandler::handle(const sf::Event& ega)
 	KeyEventType event;
 
 	switch (eventType) {
-	case sf::Event::MouseButtonPressed:  event.action = BA_Pressed;		break; 
-	case sf::Event::MouseButtonReleased				:	event.action = BA_Released;		break;
-	case sf::Event::Closed							:   std::cout << "close button";
-	case sf::Event::MouseMoved						:	SetMousePos(ega);				return false; //TODO:
-	case sf::Event::MouseWheelMoved					:			return false; //TODO:
+	case sf::Event::MouseButtonPressed  : event.action = BA_Pressed;    break; 
+	case sf::Event::MouseButtonReleased	: event.action = BA_Released;	break;
+	case sf::Event::Closed              : std::cout << "close button";
+	case sf::Event::MouseMoved          : SetMousePos(ega);	     return false; //TODO:
+	case sf::Event::MouseWheelMoved     :                        return false; //TODO:
 	default: return false;
 	}
 
-		
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) event.key = KEY_MOUSE_L;	
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) event.key = KEY_MOUSE_R;
-	
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left )) event.key = KEY_MOUSE_L;	
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) event.key = KEY_MOUSE_R;	
 
 	SetKeyMode(ega, event);
 	Store(event);
@@ -69,6 +67,8 @@ bool MouseHandler::handle(const sf::Event& ega)
 /********************************************************************
 *								Keyboar
 ********************************************************************/
+
+#define MAP_KEY(KEY) case sf::Keyboard::Key::KEY: event.key = KEY_##KEY; break;
 
 
 KeyboardHandler::KeyboardHandler(EventCollector& collector)
@@ -82,28 +82,29 @@ bool KeyboardHandler::handle(const sf::Event& ega)
 	
 	KeyEventType event;
 	switch (eventType) {
-	case sf::Event::KeyPressed		:	event.action = EKeyAction::BA_Pressed;  break;
-	case sf::Event::KeyReleased		:	event.action = EKeyAction::BA_Released; break;
+	case sf::Event::KeyPressed  : event.action = EKeyAction::BA_Pressed;  break;
+	case sf::Event::KeyReleased : event.action = EKeyAction::BA_Released; break;
 	default: return false;
 	}
 	
-
 	switch (button) {
-	case sf::Keyboard::Key::Down		:	 break;
-	case sf::Keyboard::Key::Up			:	 break;
-	case sf::Keyboard::Key::Return		:	event.key = KEY_ENTER;		break;
-	case sf::Keyboard::Key::Tab			:	event.key = KEY_TAB;		break;
-	case sf::Keyboard::Key::Escape		:	event.key = KEY_ESCAPE;		break;
-	
+	case sf::Keyboard::Key::Down   : break;
+	case sf::Keyboard::Key::Up     : break;
+	case sf::Keyboard::Key::Return : event.key = KEY_ENTER;  break;
+	case sf::Keyboard::Key::Tab	   : event.key = KEY_TAB;    break;
+	case sf::Keyboard::Key::Escape : event.key = KEY_ESCAPE; break;
 	default:
-		switch (button) {
-		case sf::Keyboard::Key::R:			button = 114; event.key = (EInputKey)button; break;
-		case sf::Keyboard::Key::F:			button = 102;	event.key = (EInputKey)button; break;
+		switch (button) 
+		{
+		MAP_KEY(A) MAP_KEY(B) MAP_KEY(C) MAP_KEY(D)
+		MAP_KEY(E) MAP_KEY(F) MAP_KEY(G) MAP_KEY(H)
+		MAP_KEY(I) MAP_KEY(J) MAP_KEY(K) MAP_KEY(L)
+		MAP_KEY(M) MAP_KEY(N) MAP_KEY(O) MAP_KEY(P)
+		MAP_KEY(R) MAP_KEY(S) MAP_KEY(T) MAP_KEY(U)
+		MAP_KEY(V) MAP_KEY(W) MAP_KEY(X) MAP_KEY(Y)
+		MAP_KEY(Z)
+		}
 	}
-		
-		
-	}
-	event.rawKey = button;
 
 	SetKeyMode(ega, event);
 	Store(event);

@@ -80,11 +80,10 @@ protected:
 
 public: //~~~~~~~~~~~~~~| Creation functions
 
-	template<class _T>
-	_T* CreateSubcomponent(std::string name)
-
+	template<class _T, typename... Args>
+	_T* CreateSubcomponent(std::string name, Args&... args)
 	{
-		if (auto* point = ObjectCreator::CreateSubcomponent<_T>(name, world, this))
+		if (auto* point = ObjectCreator::CreateSubcomponent<_T>(name, world, this, args...))
 		{
 			if (rootComponent)
 			{ 
@@ -100,11 +99,10 @@ public: //~~~~~~~~~~~~~~| Creation functions
 		return nullptr;
 	}
 
-	template<class _T>
-	_T* CreateSubModule(std::string name)
+	template<class _T, typename... Args>
+	_T* CreateSubModule(std::string name, Args&... args)
 	{
-
-		if (auto* point = ObjectCreator::CreateSubmodule<_T>(name, world, this))
+		if (auto* point = ObjectCreator::CreateSubmodule<_T>(name, world, this, args...))
 		{
 			modules.emplace_back(point);
 			return point;
