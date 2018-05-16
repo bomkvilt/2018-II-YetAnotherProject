@@ -13,8 +13,6 @@ Viewer::Viewer(PlayerController* controller, SHARED(FEngineConfig) config)
 	mouseHandler(*GetEventCollector())
 {
 	window.create(sf::VideoMode(1024, 768), "test");
-
-	boxTexture.loadFromFile("../../box.png"); //TODO:: resource system
 }
 
 void Viewer::Render()

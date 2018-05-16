@@ -40,8 +40,8 @@ public: //~~~~~~~~~~~~~~| Tick
 
 public: //~~~~~~~~~~~~~~| Construction
 
-	template<class _T>
-	_T* CreateObject() //TODO:: make a review
+	template<class _T, typename... Args>
+	_T* CreateObject(Args&... args) //TODO:: make a review
 	{
 		// make the name unique
 		auto* initialiser = ThreadContext::TopInitialiser();
@@ -53,7 +53,7 @@ public: //~~~~~~~~~~~~~~| Construction
 		initialiser->ouid = newOUID;
 
 		// create a new object
-		auto base = UNIQUE(ObjectBase)(new _T);
+		auto base = std::make_unique<_T>(args...);
 
 		auto* pointer_base = base.get();
 		auto* pointer = static_cast<_T*>(pointer_base);
