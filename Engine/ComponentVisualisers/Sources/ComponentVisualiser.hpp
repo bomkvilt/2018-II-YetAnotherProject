@@ -3,14 +3,14 @@
 #pragma once
 
 #include "ComponentVisualiserHelper.hpp"
-#include "BaseActorComponent.hpp"
+#include "ActorComponent.hpp"
 
 
 class ComponentVisualiser
 {
 public:
 
-	virtual void Visualize(BaseActorComponent* component, ComponentVisualiserHelper& helper) = 0;
+	virtual void Visualize(ActorComponent* component, ComponentVisualiserHelper& helper) = 0;
 };
 
 

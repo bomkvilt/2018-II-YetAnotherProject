@@ -1,8 +1,11 @@
+#pragma once
 #ifndef BASE_PLAYER_CONTROLLER_HPP
 #define BASE_PLAYER_CONTROLLER_HPP
 #pragma once
 
 #include "Common.hpp"
+#include "Reflection/Archived.hpp"
+
 
 class World;
 class Avatar;

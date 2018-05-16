@@ -8,12 +8,9 @@
 
 ComponentVisualisersModule& ComponentVisualisersModule::Get()
 {
-	return ModuleManager::Get().GetModule<ComponentVisualisersModule>();
+	auto& manager = ModuleManager::Get();
+	return manager.GetModule<ComponentVisualisersModule>();
 }
-
-ComponentVisualisersModule::ComponentVisualisersModule(SHARED(FEngineConfig)& config)
-	: IModule(config)
-{}
 
 void ComponentVisualisersModule::OnLoaded()
 {
@@ -24,7 +21,7 @@ void ComponentVisualisersModule::OnUnload()
 {
 }
 
-void ComponentVisualisersModule::Visualise(BaseActorComponent* component, IViewer* viewer)
+void ComponentVisualisersModule::Visualise(ActorComponent* component, IViewer* viewer)
 {
 	if (!component || !viewer) return;
 

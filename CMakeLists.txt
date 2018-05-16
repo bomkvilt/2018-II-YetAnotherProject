@@ -10,7 +10,7 @@ INCLUDE("Cmake/MacroUtiles.cmake")
 
 SET(3rdParty "${CMAKE_SOURCE_DIR}/3rdParty")
 SetupEvniroment()
-	
+
 #~~~~~~~~~~~~~~~~~~~~~~~| >> init project |
 INIT_PROJECT(Engine Game)
 

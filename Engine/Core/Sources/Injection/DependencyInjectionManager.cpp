@@ -3,7 +3,6 @@
 UNIQUE(IFrontendFabric) DependencyInjectionManager::frontend = nullptr;
 UNIQUE(IPhysicsFabric ) DependencyInjectionManager::physics  = nullptr;
 
-
 void DependencyInjectionManager::SetFrontendFabric(UNIQUE(IFrontendFabric) fabric)
 {
 	frontend = std::move(fabric);

@@ -3,9 +3,14 @@
 #define CAMERA_COMPONENT_HPP
 
 #include "ActorComponent.hpp"
-#include "Interfaces/ICameraComponent.hpp"
+#include "Math/Vector2.hpp"
 
-
+/** Camera component - is 
+ *  
+ *	. registers in it's owner controller
+ *	. controller takes the camera's position
+ *	. controller sets a viewer's to the position
+ */
 class CameraComponent : public ActorComponent
 	, public ICameraComponent
 {
@@ -32,6 +37,9 @@ public: //~~~~~~~~~~~~~~~~~~~| common
 	 *	@return wether activated		*/
 	bool Activate(bool newState);
 
+	FVector GetRenderSize();
+	void SetRenderSize(FVector renderSize);
+
 protected:
 
 	/// >> common
@@ -39,7 +47,7 @@ protected:
 	bool bRegistered;	// is registered
 	bool bAutoRegister;	// regisers automaticly
 	/// <<
-
+	FVector RenderSize;
 };
 
 

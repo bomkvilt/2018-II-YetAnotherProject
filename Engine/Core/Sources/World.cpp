@@ -48,10 +48,12 @@ void World::DoTick(float DeltaTime, ETickType type)
 	//ThreadPool::AddTaskBacket(backet);
 	//backet.Wait();
 
+
 	if (scene && type == ETickType::eInPhysics)
 	{
 		scene->Update(DeltaTime);
 	}
+
 }
 
 void World::RegisterTickFunction(ITickFunction& Tick)

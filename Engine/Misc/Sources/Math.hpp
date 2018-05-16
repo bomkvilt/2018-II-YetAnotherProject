@@ -1,6 +1,7 @@
 #pragma once
 #ifndef MATH_HPP
 #define MATH_HPP
+#pragma once
 
 #include "Math/Constants.hpp"
 #include "Math/Color.hpp"

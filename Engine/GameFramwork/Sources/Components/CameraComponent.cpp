@@ -63,3 +63,16 @@ bool CameraComponent::Activate(bool newState)
 {
 	return false;
 }
+
+
+FVector  CameraComponent::GetRenderSize()
+{
+	return RenderSize;
+}
+
+
+void  CameraComponent::SetRenderSize(FVector renderSize)
+
+{
+	RenderSize = renderSize;
+}

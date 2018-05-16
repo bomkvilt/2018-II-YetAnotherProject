@@ -22,7 +22,7 @@ void EventManager::AddAction(std::string name, ControlKey key)
 	registeredActions.emplace_back(std::move(name), key);
 }
 
-void EventManager::ProcessKeys(const std::vector<KeyEvent>& events)
+void EventManager::ProcessKeys(const std::vector<KeyEventType>& events)
 {
 	for (auto& event : events)
 	{

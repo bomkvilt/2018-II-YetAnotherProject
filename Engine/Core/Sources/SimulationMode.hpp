@@ -1,6 +1,7 @@
 #pragma once
 #ifndef SIMULATION_MODE_HPP
 #define SIMULATION_MODE_HPP
+#pragma once
 
 #include "Common.hpp"
 

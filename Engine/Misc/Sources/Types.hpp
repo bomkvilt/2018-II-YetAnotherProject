@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CORE_TYPES_HPP
 #define CORE_TYPES_HPP
 #pragma once

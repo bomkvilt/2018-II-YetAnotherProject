@@ -9,10 +9,10 @@
 
 
 /** Base class for all Actors on scene
- *	Privides:
- *	. relative location	(root component driven)
- *	. obsolute location	(root component driven)
- */
+*	Privides:
+*	. relative location	(root component driven)
+*	. obsolute location	(root component driven)
+*/
 class Actor : public Object
 	, public IWorldObject
 {
@@ -59,6 +59,7 @@ public: //~~~~~~~~~~~~~~| Kinematic -> to root component
 
 public: //~~~~~~~~~~~~~~| chain and modules
 
+
 	void AttachTo(Actor* newParent);
 	void Detach();
 
@@ -66,7 +67,8 @@ public: //~~~~~~~~~~~~~~| chain and modules
 	      BaseActorComponent* GetRootComponent()       { return rootComponent; }
 	void SetRootComponent(BaseActorComponent* newRoot);
 
-	      std::vector<ActorModule*>& GetModules()       { return modules; }
+
+	std::vector<ActorModule*>& GetModules()       { return modules; }
 	const std::vector<ActorModule*>& GetModules() const { return modules; }
 
 protected:
@@ -80,6 +82,7 @@ public: //~~~~~~~~~~~~~~| Creation functions
 
 	template<class _T>
 	_T* CreateSubcomponent(std::string name)
+
 	{
 		if (auto* point = ObjectCreator::CreateSubcomponent<_T>(name, world, this))
 		{
@@ -100,6 +103,7 @@ public: //~~~~~~~~~~~~~~| Creation functions
 	template<class _T>
 	_T* CreateSubModule(std::string name)
 	{
+
 		if (auto* point = ObjectCreator::CreateSubmodule<_T>(name, world, this))
 		{
 			modules.emplace_back(point);

@@ -11,7 +11,7 @@
 #include "Misc.hpp"
 
 #include "ComponentVisualiser.hpp"
-class BaseActorComponent;
+class ActorComponent;
 
 
 class ComponentVisualisersModule : public IModule
@@ -21,13 +21,13 @@ class ComponentVisualisersModule : public IModule
 public:
 	static ComponentVisualisersModule& Get();
 
-	ComponentVisualisersModule(SHARED(FEngineConfig)& config);
 	virtual void OnLoaded() override;
 	virtual void OnUnload() override;
 
+
 public:
 	// request a visualisation for the component
-	void Visualise(BaseActorComponent* component, IViewer* viewer);
+	void Visualise(ActorComponent* component, IViewer* viewer);
 
 	// add visualiser for the component
 	void AddVisualiser   (const std::string& className, UNIQUE(ComponentVisualiser) visualiser);

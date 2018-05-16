@@ -8,13 +8,13 @@
 struct EventCollector
 {
 public:
-	std::vector<KeyEvent> events;
+	std::vector<KeyEventType> events;
 	float mouse_X;
 	float mouse_Y;
 
 public:
 
-	void CollectKeyEvent	(KeyEvent newEvent);
+	void CollectKeyEvent	(KeyEventType newEvent);
 	void CollectMousPosition(float x, float y);
 
 public:

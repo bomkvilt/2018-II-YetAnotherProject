@@ -38,6 +38,7 @@ Pendulum::Pendulum()
 	cam->AddComponentLocation(FVector(0, -5, 40), eParent);
 	cam->AddComponentRotation(FQuat(0, 90, 0), eLocal);
 	cam->SetAutoregister(true);
+	cam->SetRenderSize(FVector(12, 10, 0));
 }
 
 void Pendulum::OnBeginPlay()
