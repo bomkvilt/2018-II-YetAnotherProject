@@ -79,16 +79,13 @@ public:
 
 public: //~~~~~~~~~~~~~~| 
 
-<<<<<<< HEAD
+
 		  BaseActorComponent* GetSceneRoot()		{ return sceneRoot; }
 	const BaseActorComponent* GetSceneRoot() const	{ return sceneRoot; }
 
 	      IPhysicsScene* GetPhysicsScene()       { return scene.get(); }
 	const IPhysicsScene* GetPhysicsScene() const { return scene.get(); }
-=======
-		  ActorComponent* GetSceneRoot()		{ return sceneRoot; }
-	const ActorComponent* GetSceneRoot() const	{ return sceneRoot; }
->>>>>>> origin/sfml
+
 
 protected:
 
@@ -101,12 +98,10 @@ protected:
 	/// << 
 
 	/// >> scene
-<<<<<<< HEAD
+
 	BaseActorComponent*   sceneRoot;
 	UNIQUE(IPhysicsScene) scene;
-=======
-	ActorComponent* sceneRoot;
->>>>>>> origin/sfml
+
 	/// <<
 
 	/// >> indices

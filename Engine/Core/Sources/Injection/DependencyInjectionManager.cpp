@@ -8,11 +8,11 @@ void DependencyInjectionManager::SetFrontendFabric(UNIQUE(IFrontendFabric) fabri
 	frontend = std::move(fabric);
 }
 
-UNIQUE(IFacade) DependencyInjectionManager::MakeFacade(BaseActorComponent* owner)
+UNIQUE(IFacade) DependencyInjectionManager::MakeFacade(BaseActorComponent* owner,  std::string relativePath)
 {
 	if (frontend)
 	{
-		return frontend->MakeFacade(owner);
+		return frontend->MakeFacade(owner, relativePath);
 	}
 	return nullptr;
 }

@@ -4,6 +4,7 @@
 
 #include "ActorComponent.hpp"
 #include "Math/Vector2.hpp"
+#include "Interfaces/ICameraComponent.hpp"
 
 /** Camera component - is 
  *  

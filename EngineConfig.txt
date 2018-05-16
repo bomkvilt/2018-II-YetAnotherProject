@@ -10,6 +10,7 @@
             "Y": "200"
         }
     },
+    "countOfThreads": "1",
     "simulation": {
         "stepTime": "0.0333333"
     },

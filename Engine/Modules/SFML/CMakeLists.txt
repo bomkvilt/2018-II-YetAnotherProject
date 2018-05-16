@@ -20,5 +20,5 @@ SET(PUBLIC_LIBRARIES
 SET(CODE		"Sources"	)
 SET(TEST    	"Tests" 	)
 SET(CATEGORY	"Engine/Modules"	)
-SET(MODULES 	 Misc Core Components ComponentVisualisers Resources)
+SET(MODULES 	 Misc Core Components GameFramwork ComponentVisualisers Resources)
 MAKE_MODULE()

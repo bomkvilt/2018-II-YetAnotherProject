@@ -12,7 +12,7 @@
 class Facade : public IFacade
 {
 public:
-	Facade(ActorComponent* owner, std::string relativePath);
+	Facade(BaseActorComponent* owner, std::string relativePath);
 
 public:
 	virtual bool AttachTo(IFacade* parent) override;

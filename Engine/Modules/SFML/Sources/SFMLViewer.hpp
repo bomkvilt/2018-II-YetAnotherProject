@@ -3,7 +3,7 @@
 
 
 #include "Control/EventHandlers.hpp"
-#include "Interfaces/Default/Viewer.hpp"
+#include "Interfaces\Default\Viewer.hpp"
 #include "Misc.hpp"
 #include <memory>
 #include "SFML/Graphics.hpp"

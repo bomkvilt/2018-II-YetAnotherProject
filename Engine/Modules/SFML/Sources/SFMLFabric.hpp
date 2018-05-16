@@ -13,7 +13,7 @@ struct SFMLFabric : public IFrontendFabric
 		return std::make_unique<SFMLFabric>();
 	}
 
-	virtual UNIQUE(IFacade) MakeFacade(ActorComponent* owner, std::string relativePath) override
+	virtual UNIQUE(IFacade) MakeFacade(BaseActorComponent* owner, std::string relativePath) override
 	{
 		return std::make_unique<Facade>(owner, relativePath);
 	}

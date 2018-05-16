@@ -21,7 +21,7 @@ void ComponentVisualisersModule::OnUnload()
 {
 }
 
-void ComponentVisualisersModule::Visualise(ActorComponent* component, IViewer* viewer)
+void ComponentVisualisersModule::Visualise(BaseActorComponent* component, IViewer* viewer)
 {
 	if (!component || !viewer) return;
 

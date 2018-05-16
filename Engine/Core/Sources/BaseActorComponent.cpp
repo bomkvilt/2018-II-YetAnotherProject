@@ -12,7 +12,7 @@ BaseActorComponent::BaseActorComponent()
 	, relativeTarnsform(FTransform::Identity)
 	, worldTransform   (FTransform::Identity)
 	
-	, facade(DependencyInjectionManager::MakeFacade(this))
+	
 	, rigidBody(nullptr)
 {}
 
@@ -132,7 +132,7 @@ void BaseActorComponent::AttachTo(BaseActorComponent* newParent)
 
 void BaseActorComponent::Detach()
 {
-	if (parent && world)
+	if (parent && facade)
 	{
 		auto* lastParent = parent;
 

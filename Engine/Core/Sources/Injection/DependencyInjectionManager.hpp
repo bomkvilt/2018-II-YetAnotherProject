@@ -3,13 +3,13 @@
 
 #include "IFrontendFabric.hpp"
 #include "IPhysicsFabric.hpp"
-
+#include <string>
 
 class DependencyInjectionManager
 {
 public:
 	static void SetFrontendFabric(UNIQUE(IFrontendFabric) fabric);
-	static UNIQUE(IFacade) MakeFacade(BaseActorComponent* owner);
+	static UNIQUE(IFacade) MakeFacade(BaseActorComponent* owner, std::string relativePath);
 	static UNIQUE(IViewer) MakeViewer(PlayerController* controller, SHARED(FEngineConfig) config);
 
 	static void SetPhysicsConfig(UNIQUE(IPhysicsFabric) conf);

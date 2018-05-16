@@ -1,9 +1,9 @@
 #include "SFMLViewer.hpp"
 
 #include "World.hpp"
-#include "ActorComponent.hpp"
+#include "BaseActorComponent.hpp"
 #include "ComponentVisualisersModule.hpp"
-#include "CameraComponent.hpp"
+#include "Components\CameraComponent.hpp"
 #include <iostream>
 
 
@@ -18,7 +18,7 @@ Viewer::Viewer(PlayerController* controller, SHARED(FEngineConfig) config)
 void Viewer::Render()
 {
 	window.clear();
-	myMultimap.clear();
+	//myMultimap.clear();
 	sf::Event event;
 	while (window.pollEvent(event))
 	{

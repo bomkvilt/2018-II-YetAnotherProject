@@ -1,10 +1,10 @@
 #include "SFMLFacade.hpp"
-#include "ActorComponent.hpp"
+#include "BaseActorComponent.hpp"
 #include "ResourceSystem.hpp"
 #include "Modules/ModuleManager.hpp"
 
 
-Facade::Facade(ActorComponent* owner, std::string relativePath)
+Facade::Facade(BaseActorComponent* owner, std::string relativePath)
 	: IFacade(owner)
 {
 	auto& manager = ModuleManager::Get();

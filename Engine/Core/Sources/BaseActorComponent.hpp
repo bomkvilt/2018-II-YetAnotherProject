@@ -133,6 +133,11 @@ public: //~~~~~~~~~~~~~~| Chain
 
 public: //~~~~~~~~~~~~~~| Misc
 
+
+
+		virtual FVector GetExtents() const { return extents; }
+		virtual void SetExtents(const FVector& newExtents) { extents = newExtents; }
+
 	FVector SpaceToWorld(const FVector& v, ESpaceType space) const;
 	FQuat   SpaceToWorld(const FQuat&   v, ESpaceType space) const;
 
@@ -174,7 +179,7 @@ protected:
 	/// >> common 
 	Actor*	owner;
 	/// << 
-
+	FVector extents;
 	/// << modules
 	UNIQUE(IFacade)		facade;
 	UNIQUE(IRigidBody)	rigidBody;
