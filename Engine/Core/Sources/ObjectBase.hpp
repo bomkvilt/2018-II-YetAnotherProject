@@ -67,12 +67,12 @@ public: //~~~~~~~~~~~~~~| Creation functions
 	template<class _T, typename... Args>
 	_T* CreateActor(std::string name, Args&... args)
 	{
-		return ObjectCreator::CreateActor<_T>(name, world.get(), args...);
+		return ObjectCreator::CreateActor<_T>(name, world, args...);
 	}
 
 	template<class _T, typename... Args>
 	_T* CreateAvatar(std::string name,  bool AttachToController = false, Args&... args)
 	{
-		return ObjectCreator::CreateAvatar<_T>(name, world.get(), AttachToController ? playerController : nullptr, args...);
+		return ObjectCreator::CreateAvatar<_T>(name, world, AttachToController ? playerController : nullptr, args...);
 	}
 };

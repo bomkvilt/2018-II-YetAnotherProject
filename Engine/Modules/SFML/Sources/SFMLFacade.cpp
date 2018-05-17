@@ -12,6 +12,11 @@ Facade::Facade(BaseActorComponent* owner, std::string relativePath)
 	
 	texture = resources.GetResource<RTexture>(relativePath);
 	sprite.setTexture(texture->texture, true);
+
+	auto rect = sprite.getTextureRect();
+	rect.top += rect.height;
+	rect.height *= -1;
+	sprite.setTextureRect(rect);
 }
 
 bool Facade::AttachTo(IFacade* parent)

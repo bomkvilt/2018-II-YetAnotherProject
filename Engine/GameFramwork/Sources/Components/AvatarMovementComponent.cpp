@@ -28,8 +28,11 @@ void AvatarMovementComponent::StartFlying()    { states.movementMode = EMovement
 
 void AvatarMovementComponent::Jump()
 {
-	states.extraMode = EMovementMode::Jumping;
-	AddLenearInput(FVector(0, 1, 0), eLocal);
+	if (collidedComponents)
+	{
+		states.extraMode = EMovementMode::Jumping;
+		AddLenearInput(FVector(0, 1, 0), eLocal);
+	}
 }
 
 bool AvatarMovementComponent::IsSprinting() const { return states.CurrentModeType() == EMovementMode::Sprint;  }

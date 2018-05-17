@@ -132,13 +132,17 @@ void BaseActorComponent::AttachTo(BaseActorComponent* newParent)
 
 void BaseActorComponent::Detach()
 {
-	if (parent && facade)
+	if (parent)
 	{
 		auto* lastParent = parent;
 
 		parent->RemoveSubcomponent(this);
 		parent = world->GetSceneRoot();
-		facade->Detach();
+
+		if (facade)
+		{
+			facade->Detach();
+		}
 
 		UpdateRelativeTransform(false,true);
 		OnComponentDetached(lastParent);

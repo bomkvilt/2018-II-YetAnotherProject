@@ -39,6 +39,9 @@ public: //~~~~~~~~~~~~~~|
 	/// bDynamic
 	virtual bool    IsDinamic() const = 0;
 	
+	//virtual bool    GetProcessed
+	//virtual void    SetProcessed() const = 0;
+	
 	/// velocity
 	virtual FVector GetVelocity() const = 0;
 	virtual void    SetVelocity(const FVector& newVelocity) = 0;
