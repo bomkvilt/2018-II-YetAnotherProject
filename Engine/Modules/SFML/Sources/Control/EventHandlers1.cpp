@@ -97,7 +97,7 @@ bool KeyboardHandler::handle(const sf::Event& ega)
 	
 	default:
 		switch (button) {
-		
+
 		case sf::Keyboard::Key::A:	event.key = KEY_A; break;
 		case sf::Keyboard::Key::B:	event.key = KEY_B; break;
 		case sf::Keyboard::Key::C:	event.key = KEY_C; break;
@@ -124,12 +124,12 @@ bool KeyboardHandler::handle(const sf::Event& ega)
 		case sf::Keyboard::Key::X:	event.key = KEY_X; break;
 		case sf::Keyboard::Key::Y:	event.key = KEY_Y; break;
 		case sf::Keyboard::Key::Z:	event.key = KEY_Z; break;
-		
+
+		}
+
+
 	}
-		
-		
-	}
-	
+
 
 	SetKeyMode(ega, event);
 	Store(event);
