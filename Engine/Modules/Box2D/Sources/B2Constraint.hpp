@@ -28,12 +28,12 @@ public:
 
 private:
 	b2Transform GetTransform() const;
-	b2RevoluteJoint* GetConstraint(RigidBody* child);
-	b2RevoluteJoint* MakeConstraint(RigidBody* parent, RigidBody* child);
+	b2Joint* GetConstraint(RigidBody* child);
+	b2Joint* MakeConstraint(RigidBody* parent, RigidBody* child);
 
 private:
 	RigidBody* parent;
-	std::unordered_map<RigidBody*, b2RevoluteJoint*> childConstraints; //TODO:: make a mare generic joint
+	std::unordered_map<RigidBody*, b2Joint*> childConstraints; //TODO:: make a mare generic joint
 };
 
 

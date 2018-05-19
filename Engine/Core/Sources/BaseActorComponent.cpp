@@ -130,6 +130,8 @@ void BaseActorComponent::AttachTo(BaseActorComponent* newParent)
 		{
 			newParent = world->GetSceneRoot();
 		}
+		relativeTarnsform = FTransform::Identity;
+
 		parent = newParent;
 		parent->AddSubcomponent(this);
 		UpdateWoldTransform(false,true);

@@ -45,10 +45,13 @@ void Gosha::OnBeginPlay()
 		{
 			if (auto* coin = dynamic_cast<Coin*>(other))
 			{
-				coin->AttachTo(this);
-				coin->GetRootComponent()->GetRigidBody()->SetBodyType(ERigidBodyType::eIgnore);
-				coin->SetRelativeLocation(FVector2(0, 2.5f));
-				return;
+				auto joint = CreateSubcomponent<JointComponent>("joint");
+				joint->SetConstraint(FConstraintType::MakeAxis(eY, -4, 6));
+				joint->AttachTo(body);
+
+				coin->AttachTo(joint);
+				coin->GetRootComponent()->GetRigidBody()->SetBodyType(ERigidBodyType::eDynamic);
+				coin->SetRelativeLocation(FVector2(2, 2.5f));
 			}
 			if (movement)
 			{ // make a counter
@@ -62,7 +65,6 @@ void Gosha::OnBeginPlay()
 			if (movement)
 			{
 				movement->states.movementMode = EMovementMode::falling;
-				return;
 			}
 		});
 	}
