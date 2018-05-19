@@ -2,6 +2,7 @@
 
 #include "Actor.hpp"
 #include "Components/BoxColision.hpp"
+#include "Components/JointComponent.hpp"
 #include "Gosha.hpp"
 
 
@@ -17,10 +18,15 @@ public:
 		trigger->SetExtents(FVector2(3, 0.08f));
 		trigger->SetMass(0);
 
+		joint = CreateSubcomponent<JointComponent>("Joint");
+		joint->SetConstraint(FConstraintType::MakeAxis(eY, 0, 11));
+		joint->AttachTo(trigger);
+
 		wall = CreateSubcomponent<BoxColision>("Wall");
 		wall->SetRelativeLocation(FVector2(0, 2.2f));
 		wall->SetExtents(FVector2(1, 4));
 		wall->SetMass(1500000);
+		wall->AttachTo(joint);
 
 		border1 = CreateSubcomponent<BoxColision>("border1");
 		border1->SetRelativeLocation(FVector2( 1.15f, 11));
@@ -43,11 +49,6 @@ public:
 		if (bTriggered)
 		{
 			wall->AddForce(FVector2(0, 600), eWorld);
-		}
-
-		if (wall->GetRelativeLocation().Y >= 12)
-		{
-			wall->SetRelativeLocation(FVector2(0, 12));
 		}
 	}
 
@@ -78,4 +79,5 @@ private:
 	BoxColision* border1;
 	BoxColision* border2;
 	BoxColision* trigger;
+	JointComponent* joint;
 };

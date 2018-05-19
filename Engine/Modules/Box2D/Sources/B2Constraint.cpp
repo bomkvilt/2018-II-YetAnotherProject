@@ -91,15 +91,20 @@ b2Transform Constraint::GetTransform() const
 	return b2Transform();
 }
 
-b2RevoluteJoint* Constraint::GetConstraint(RigidBody* child)
+b2Joint* Constraint::GetConstraint(RigidBody* child)
 {
 	return childConstraints[child];
 }
 
-b2RevoluteJoint* Constraint::MakeConstraint(RigidBody* parent, RigidBody* child)
+b2Joint* Constraint::MakeConstraint(RigidBody* parent, RigidBody* child)
 {
+	auto bRot = constraint.rotation[eZ].bAcive;
+	auto bX   = constraint.movement[eX].bAcive;
+	auto bY   = constraint.movement[eY].bAcive;
+
 	if (auto* scene = GetPhysicsScene<PhysicsScene>())
 	if (parent && parent->rigidBody && child && child->rigidBody)
+	if (bRot && !bX && !bY)
 	{
 		b2RevoluteJointDef def;
 		def.bodyA = parent->rigidBody;
@@ -113,7 +118,44 @@ b2RevoluteJoint* Constraint::MakeConstraint(RigidBody* parent, RigidBody* child)
 		def.enableLimit = constraint.rotation[eZ].bAcive;
 		def.lowerAngle  = DEG2RAD(constraint.rotation[eZ].min);
 		def.upperAngle  = DEG2RAD(constraint.rotation[eZ].max);
-		(b2RevoluteJoint*)scene->world.CreateJoint(&def);
+		return scene->world.CreateJoint(&def);
 	}
+	else if (!bRot && bX && !bY)
+	{
+		std::cout << "X" << std::endl;
+		b2PrismaticJointDef def;
+		def.bodyA = parent->rigidBody;
+		def.bodyB = child ->rigidBody;
+		def.localAnchorA = this ->GetTransform().p;
+		def.localAnchorB = child->GetTransform().p;
+
+		def.enableMotor      = false;
+		def.collideConnected = true;
+
+		def.localAxisA       = b2Vec2(1, 0);
+		def.enableLimit      = constraint.movement[eX].bAcive;
+		def.lowerTranslation = constraint.movement[eX].min;
+		def.upperTranslation = constraint.movement[eX].max;
+		return scene->world.CreateJoint(&def);
+	}
+	else if (!bRot && !bX && bY)
+	{
+		std::cout << "Y" << std::endl;
+		b2PrismaticJointDef def;
+		def.bodyA = parent->rigidBody;
+		def.bodyB = child ->rigidBody;
+		def.localAnchorA = this ->GetTransform().p;
+		def.localAnchorB = child->GetTransform().p;
+		def.enableMotor      = false;
+		def.collideConnected = true;
+
+		def.localAxisA       = b2Vec2(0, 1);
+		def.enableLimit      = constraint.movement[eY].bAcive;
+		def.lowerTranslation = constraint.movement[eY].min;
+		def.upperTranslation = constraint.movement[eY].max;
+		return  scene->world.CreateJoint(&def);
+	}
+	else throw std::runtime_error("Unsupported constraint type");
+	
 	return nullptr;
 }

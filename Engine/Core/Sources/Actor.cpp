@@ -38,8 +38,9 @@ void        Actor::AddComponentLocation (FVector    delta, ESpaceType space) { i
 void        Actor::AddComponentRotation (FQuat      delta, ESpaceType space) { if (rootComponent) rootComponent->AddComponentRotation(delta, space); }
 
 // chain
-void Actor::AttachTo(Actor* newParent) { if (rootComponent) rootComponent->AttachTo(newParent->rootComponent); }
-void Actor::Detach()                   { if (rootComponent) rootComponent->Detach();                           }
+void Actor::AttachTo(Actor             * newParent) { if (rootComponent) rootComponent->AttachTo(newParent->rootComponent); }
+void Actor::AttachTo(BaseActorComponent* newParent) { if (rootComponent) rootComponent->AttachTo(newParent);                }
+void Actor::Detach()                                { if (rootComponent) rootComponent->Detach();                           }
 //~~~~~~~~~~~~~~~~~~~~~~| >> proxi functions
 
 

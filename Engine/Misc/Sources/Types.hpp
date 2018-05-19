@@ -198,7 +198,7 @@ struct FConstraintType
 	{
 		float min = 0; // minimal value 
 		float max = 0; // maximal value
-		bool  bAcive = true; // is the constraint active
+		bool  bAcive = false; // is the constraint active
 	};
 
 public: //~~~~~~~~~~~~~~| constraints
@@ -214,9 +214,9 @@ public: //~~~~~~~~~~~~~~| constructors
 	static FConstraintType MakeSphere()
 	{
 		FConstraintType res;
-		res.RotationConstaraint(ePitch, false);
-		res.RotationConstaraint(eYaw  , false);
-		res.RotationConstaraint(eRoll , false);
+		res.RotationConstaraint(ePitch, true);
+		res.RotationConstaraint(eYaw  , true);
+		res.RotationConstaraint(eRoll , true);
 		return res;
 	}
 
@@ -224,9 +224,9 @@ public: //~~~~~~~~~~~~~~| constructors
 	static FConstraintType MakeMovement()
 	{
 		FConstraintType res;
-		res.MovementConstarint(eX, false);
-		res.MovementConstarint(eY, false);
-		res.MovementConstarint(eZ, false);
+		res.MovementConstarint(eX, true);
+		res.MovementConstarint(eY, true);
+		res.MovementConstarint(eZ, true);
 		return res;
 	}
 
@@ -235,24 +235,24 @@ public: //~~~~~~~~~~~~~~| constructors
 	{
 		FConstraintType res;
 		EAngleType angle = (EAngleType)axis;
-		res.MovementConstarint (axis , false);
-		res.RotationConstaraint(angle, false);
+		res.MovementConstarint (axis , true);
+		res.RotationConstaraint(angle, true);
 		return res;
 	}
 
 	// 5 - rotation
-	static FConstraintType MakeRotation(EAngleType angle)
+	static FConstraintType MakeRotation(EAngleType angle, float min = 0, float max = 0)
 	{
 		FConstraintType res;
-		res.RotationConstaraint(angle, false);
+		res.SetRotation(angle, min, max);
 		return res;
 	}
 
 	// 5 - axis
-	static FConstraintType MakeAxis(EAxisType axis)
+	static FConstraintType MakeAxis(EAxisType axis, float min = 0, float max = 0)
 	{
 		FConstraintType res;
-		res.MovementConstarint(axis, false);
+		res.SetMovement(axis, min, max);
 		return res;
 	}
 
@@ -260,13 +260,13 @@ public: //~~~~~~~~~~~~~~| constructors
 	static FConstraintType MakeSeal()
 	{
 		FConstraintType res;
-		res.MovementConstarint(eX, false);
-		res.MovementConstarint(eY, false);
-		res.MovementConstarint(eZ, false);
+		res.MovementConstarint(eX, true);
+		res.MovementConstarint(eY, true);
+		res.MovementConstarint(eZ, true);
 
-		res.RotationConstaraint(ePitch, false);
-		res.RotationConstaraint(eYaw  , false);
-		res.RotationConstaraint(eRoll , false);
+		res.RotationConstaraint(ePitch, true);
+		res.RotationConstaraint(eYaw  , true);
+		res.RotationConstaraint(eRoll , true);
 		return res;
 	}
 

@@ -59,8 +59,8 @@ public: //~~~~~~~~~~~~~~| Kinematic -> to root component
 
 public: //~~~~~~~~~~~~~~| chain and modules
 
-
-	void AttachTo(Actor* newParent);
+	void AttachTo(Actor             * newParent);
+	void AttachTo(BaseActorComponent* newParent);
 	void Detach();
 
 	const BaseActorComponent* GetRootComponent() const { return rootComponent; }
