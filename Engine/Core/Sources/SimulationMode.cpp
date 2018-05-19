@@ -91,9 +91,9 @@ bool SimulationMode::TickRequired() const
 
 float SimulationMode::GetSimulationStep() 
 { 
-	return config 
+	return config
 		? config->simulation.stepTime
-		: 1/30.f; //TODO::get a default value from a default engine config
+		: FSimulationConfig::StaticClass.stepTime;
 }
 
 void SimulationMode::SetDeltaTime(float delta)

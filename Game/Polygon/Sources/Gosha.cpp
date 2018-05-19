@@ -1,6 +1,7 @@
 #include "Gosha.hpp"
 #include "Coin.hpp"
 
+#include "Threading/ObjectLocker.hpp"
 #include "Components/JointComponent.hpp"
 
 
@@ -45,8 +46,8 @@ void Gosha::OnBeginPlay()
 			if (auto* coin = dynamic_cast<Coin*>(other))
 			{
 				coin->AttachTo(this);
-				coin->GetRootComponent()->SetMass(0);
-				coin->SetRelativeLocation(FVector2(2, 0));
+				coin->GetRootComponent()->GetRigidBody()->SetBodyType(ERigidBodyType::eIgnore);
+				coin->SetRelativeLocation(FVector2(0, 2.5f));
 				return;
 			}
 			if (movement)
@@ -71,6 +72,7 @@ void Gosha::SetupInput(EventBinder* binder)
 {
 	Super::SetupInput(binder);
 	binder->BindAxis("Fwd", this, &Gosha::Move);
+	binder->BindAxis("R"  , this, [&](auto, float value){ camera->AddComponentRotation(FQuat(0, 5 * value, 0), eParent); });
 	binder->BindAction("Jump", BA_Pressed, this, &Gosha::Jump);
 }
 

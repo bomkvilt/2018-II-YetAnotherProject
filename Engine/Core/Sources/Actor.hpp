@@ -107,4 +107,11 @@ public: //~~~~~~~~~~~~~~| Creation functions
 		}
 		return nullptr;
 	}
+
+private:
+	friend struct ObjectLocker;
+
+	std::mutex _lock;
+	
+	std::unique_lock<std::mutex> lock;
 };

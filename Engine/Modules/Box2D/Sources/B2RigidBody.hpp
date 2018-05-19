@@ -23,18 +23,20 @@ public:
 	virtual void AddKineticMomement(const FVector& moment ) override;
 
 public:
-	virtual void    SetMass    (float newMass     )       override;
-	virtual void    SetInertia (FVector newInertia)       override;
-	virtual float   GetMass    ()                   const override;
-	virtual FVector GetInertia ()                   const override;
-	
 	virtual void SetExtents(FVector newExtents) override;
 
-	virtual FVector GetVelocity()                     const override;
-	virtual void    SetVelocity(const FVector& newVelocity) override;
+	virtual void SetBodyType(ERigidBodyType newType) override;
+
+	virtual void    SetMass    (float newMass     ) override;
+	virtual void    SetInertia (FVector newInertia) override;
+	virtual float   GetMass    ()             const override;
+	virtual FVector GetInertia ()             const override;
 	
 	virtual FVector GetOmega()                  const override;
 	virtual void    SetOmega(const FVector& newOmega) override;
+
+	virtual FVector GetVelocity()                     const override;
+	virtual void    SetVelocity(const FVector& newVelocity) override;
 
 public:
 	b2Transform GetTransform() const;

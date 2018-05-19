@@ -38,6 +38,9 @@ protected:
 	std::mutex				mutex_processingTasks;
 	/// <<
 
+	std::mutex               mutex_complitted;
+	std::condition_variable convar_complitted;
+
 	std::atomic<bool> bComplitted;
 };
 
@@ -67,14 +70,14 @@ public:
 
 protected:
 	
-	static ThreadTask GetRunTask_common   (Thread* thread, IRunable* complittedTask);
-	static ThreadTask GetRunTask_backet   (Thread* thread, IRunable* complittedTask);
+	static ThreadTask GetRunTask_common(Thread* thread, IRunable* complittedTask);
+	static ThreadTask GetRunTask_backet(Thread* thread, IRunable* complittedTask);
 	
 	// wether the thread should be stoped
 	static bool ShouldDie(Thread* thread);
 
-	static bool NewThreadRequired(); // mutex_threads required
-	static void CreateThread();      // mutex_threads required
+	static bool NewThreadRequired(); // mutex_threads is required
+	static void CreateThread();      // mutex_threads is required
 	static void DeleteThread(Thread* thread);
 
 private:

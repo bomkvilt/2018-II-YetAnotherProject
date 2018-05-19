@@ -102,16 +102,16 @@ public: //~~~~~~~~~~~~~~| Chain
 
 	/// owner
 
-	const Actor* GetOwner() const	{ return owner; }
-		  Actor* GetOwner()			{ return owner; }
-	void SetOwner(Actor* newOwner)	{ owner = newOwner; }
+	      Actor* GetOwner()        { return owner; }
+	const Actor* GetOwner() const  { return owner; }
+	void SetOwner(Actor* newOwner);
 	
 	void AttachTo(BaseActorComponent* newParent);
 	void Detach();
 
 	/// facade
 
-          IFacade* GetFacade()		 { return facade.get(); }
+          IFacade* GetFacade()       { return facade.get(); }
 	const IFacade* GetFacade() const { return facade.get(); }
 
 	/// rigid body
@@ -123,13 +123,13 @@ public: //~~~~~~~~~~~~~~| Chain
 		  
 	/// parent
 
-	      BaseActorComponent* GetParent()			{ return parent; }
-	const BaseActorComponent* GetParent() const		{ return parent; }
+	      BaseActorComponent* GetParent()       { return parent; }
+	const BaseActorComponent* GetParent() const { return parent; }
 
 	/// components
 
-	      std::vector<BaseActorComponent*>& GetSubcomponents();
-	const std::vector<BaseActorComponent*>& GetSubcomponents() const;
+	      std::vector<BaseActorComponent*>& GetSubcomponents()       { return subcomponents; }
+	const std::vector<BaseActorComponent*>& GetSubcomponents() const { return subcomponents; }
 
 public: //~~~~~~~~~~~~~~| Misc
 
@@ -147,9 +147,6 @@ protected:
 
 	void AddSubcomponent   (BaseActorComponent* child);
 	void RemoveSubcomponent(BaseActorComponent* child);
-
-	void Internal_GetSubcomponents(std::vector<		 BaseActorComponent*>& components);
-	void Internal_GetSubcomponents(std::vector<const BaseActorComponent*>& components) const;
 
 	void UpdateFacade();
 	void UpdateBody();

@@ -2,9 +2,10 @@
 #ifndef RIGID_BODY_HPP
 #define RIGID_BODY_HPP
 
-
 #include "Interfaces/IRigidBody.hpp"
 #include "World.hpp"
+
+
 
 struct FRigidBody : public IRigidBody
 {
@@ -18,8 +19,8 @@ public: //~~~~~~~~~~~~~~| interface realisation
 	virtual       BaseActorComponent* GetOwner()        override { return owner;     }
 	virtual void SetOwner(BaseActorComponent* newOwner) override { owner = newOwner; }
 
-	// bDynamic
-	virtual bool IsDinamic() const override { return bDynamic; }
+	// body type
+	virtual ERigidBodyType GetBodyType() const override { return bodyType; }
 	/// >>
 
 protected: //~~~~~~~~~~~| helper function
@@ -38,7 +39,7 @@ protected: //~~~~~~~~~~~| helper function
 
 protected:
 	BaseActorComponent* owner;
-	bool bDynamic;
+	ERigidBodyType   bodyType;
 };
 
 

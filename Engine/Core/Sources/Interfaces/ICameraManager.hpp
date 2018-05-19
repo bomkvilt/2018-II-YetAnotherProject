@@ -5,9 +5,9 @@
 #include "ICameraComponent.hpp"
 
 
-struct ICamaeraManager
+struct ICameraManager
 {
-	~ICamaeraManager() {}
+	~ICameraManager() {}
 
 	virtual void UnregisterCamera(ICameraComponent* camera) = 0;
 	virtual void RegisterCamera	 (ICameraComponent* camera, bool bActivate = true) = 0;

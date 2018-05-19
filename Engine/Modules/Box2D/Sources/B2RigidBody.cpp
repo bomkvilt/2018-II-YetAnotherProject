@@ -11,6 +11,10 @@ RigidBody::RigidBody(FShape shape, BaseActorComponent* owner, float mass, FVecto
 {
 	assert(owner);
 
+	massData.center = b2Vec2_zero;
+	massData.mass   = 0;
+	massData.I      = 0;
+	
 	if (auto* scene = GetPhysicsScene<PhysicsScene>())
 	{
 		b2BodyDef bodyDef;
@@ -32,7 +36,6 @@ RigidBody::~RigidBody()
 	{
 		scene->UnregisterBody(this);
 		scene->world.DestroyBody(rigidBody);
-		rigidBody = nullptr;
 	}
 }
 
@@ -42,7 +45,7 @@ void RigidBody::Update()
 	{
 		rigidBody->SetType(b2_kinematicBody);
 		FTransform transform = owner->GetComponentTransform();
-		rigidBody->SetTransform(
+		rigidBody->SetTransform (
 			b2Vec2() << transform.Location
 			, transform.Rotation.Z
 			);
@@ -52,7 +55,7 @@ void RigidBody::Update()
 
 void RigidBody::Sync()
 {
-	if (owner && rigidBody && bDynamic)
+	if (owner && rigidBody)
 	{
 		FTransform prevTransfotm = owner->GetComponentTransform();
 		FTransform newTransform  = prevTransfotm << rigidBody->GetTransform();
@@ -104,33 +107,6 @@ void RigidBody::AddKineticMomement(const FVector& moment)
 	}
 }
 
-void RigidBody::SetMass(float newMass)
-{
-	bDynamic = newMass;
-	density  = newMass / square;
-	collision.ComputeMass(&massData, density);
-	rigidBody->SetMassData(&massData);
-
-	UpdateState();
-}
-
-void RigidBody::SetInertia(FVector newInertia)
-{
-	bDynamic   = newInertia.Z && bDynamic;
-	massData.I = newInertia.Z;
-	rigidBody->SetMassData(&massData);
-}
-
-float RigidBody::GetMass() const
-{
-	return massData.mass;
-}
-
-FVector RigidBody::GetInertia() const
-{
-	return FVector(0, 0, massData.I);
-}
-
 void RigidBody::SetExtents(FVector newExtents)
 {
 	b2MassData tmpMass;
@@ -151,12 +127,46 @@ void RigidBody::SetExtents(FVector newExtents)
 	}
 
 	fixture = rigidBody->CreateFixture(
-		&collision,
-		density
+		&collision
+		, density
 		);
 	rigidBody->SetMassData(&massData);
 
 	UpdateState();
+}
+
+void RigidBody::SetBodyType(ERigidBodyType newType)
+{
+	bodyType = newType;
+
+	UpdateState();
+}
+
+void RigidBody::SetMass(float newMass)
+{
+	density  = newMass / square;
+	collision.ComputeMass(&massData, density);
+	rigidBody->SetMassData(&massData);
+
+	UpdateState();
+}
+
+void RigidBody::SetInertia(FVector newInertia)
+{
+	massData.I = newInertia.Z;
+	rigidBody->SetMassData(&massData);
+
+	UpdateState();
+}
+
+float RigidBody::GetMass() const
+{
+	return massData.mass;
+}
+
+FVector RigidBody::GetInertia() const
+{
+	return FVector(0, 0, massData.I);
 }
 
 FVector RigidBody::GetVelocity() const
@@ -206,15 +216,21 @@ b2Transform RigidBody::GetTransform() const
 
 void RigidBody::UpdateState()
 {
-	if (bDynamic)
+	if (bodyType != ERigidBodyType::eIgnore && bodyType != ERigidBodyType::eStatic)
 	{
-		rigidBody->SetMassData(&massData);
-		rigidBody->SetType(b2_dynamicBody);
-		rigidBody->SetAwake(true);
+		bodyType = (!massData.mass || !massData.I) 
+			? ERigidBodyType::eKinematic
+			: ERigidBodyType::eDynamic
+			;
 	}
-	else
-	{
-		rigidBody->SetType(b2_kinematicBody);
-		rigidBody->SetAwake(true);
+
+	auto data = fixture->GetFilterData();
+	switch (bodyType) {
+	case ERigidBodyType::eStatic:	 data.categoryBits = 1; data.maskBits = 1; rigidBody->SetMassData(&massData); rigidBody->SetType(b2_staticBody   ); break;
+	case ERigidBodyType::eKinematic: data.categoryBits = 1; data.maskBits = 1; rigidBody->SetMassData(&massData); rigidBody->SetType(b2_kinematicBody); break;
+	case ERigidBodyType::eDynamic:   data.categoryBits = 1; data.maskBits = 1; rigidBody->SetMassData(&massData); rigidBody->SetType(b2_dynamicBody  ); break;
+	case ERigidBodyType::eIgnore:    data.categoryBits = 1; data.maskBits = 0; rigidBody->SetMassData(&massData); rigidBody->SetType(b2_staticBody   ); break;
+	default: throw std::runtime_error("unknown dody type");
 	}
+	fixture->SetFilterData(data);
 }

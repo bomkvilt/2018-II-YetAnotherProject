@@ -1,4 +1,5 @@
 #include "BaseActorComponent.hpp"
+#include "Actor.hpp"
 
 #include "Injection/DependencyInjectionManager.hpp"
 
@@ -14,7 +15,9 @@ BaseActorComponent::BaseActorComponent()
 	
 	, facade(DependencyInjectionManager::MakeFacade(this))
 	, rigidBody(nullptr)
-{}
+{
+	PrimatyTick.actor = nullptr;
+}
 
 void BaseActorComponent::AddForce          (const FVector& force  , ESpaceType space) { if (rigidBody) rigidBody->AddForce          (SpaceToWorld(force  , space)); }
 void BaseActorComponent::AddTorque         (const FVector& torque , ESpaceType space) { if (rigidBody) rigidBody->AddTorque         (SpaceToWorld(torque , space)); }
@@ -108,6 +111,15 @@ void BaseActorComponent::AddComponentRotation(FQuat delta, ESpaceType space, boo
 	AddTransform(FTransform(delta), space, bExcludePhysics, bUpdateBody);
 }
 
+void BaseActorComponent::SetOwner(Actor* newOwner) 
+{
+	UnregisterTick(PrimatyTick);
+	
+	owner = newOwner; 
+	PrimatyTick.actor = owner;
+	RegisterTick(PrimatyTick);
+}
+
 void BaseActorComponent::AttachTo(BaseActorComponent* newParent)
 {
 	if (world) 
@@ -149,25 +161,9 @@ bool BaseActorComponent::IsDynamic() const
 {
 	if (rigidBody)
 	{
-		return rigidBody->IsDinamic();
+		return rigidBody->GetBodyType() == ERigidBodyType::eDynamic;
 	}
 	return false;
-}
-
-std::vector<BaseActorComponent*>& BaseActorComponent::GetSubcomponents()
-{
-	return subcomponents;
-	// std::vector<BaseActorComponent*> components;
-	// Internal_GetSubcomponents(components);
-	// return components;
-}
-
-const std::vector<BaseActorComponent*>& BaseActorComponent::GetSubcomponents() const
-{
-	return subcomponents;
-	// std::vector<const BaseActorComponent*> components;
-	// Internal_GetSubcomponents(components);
-	// return components;
 }
 
 FVector BaseActorComponent::SpaceToWorld(const FVector& v, ESpaceType space) const
@@ -231,32 +227,6 @@ void BaseActorComponent::RemoveSubcomponent(BaseActorComponent* child)
 			subcomponents.erase(pos);
 			OnSubcomponentDetached(child);
 		}
-	}
-}
-
-void BaseActorComponent::Internal_GetSubcomponents(std::vector<BaseActorComponent*>& components)
-{
-	for (auto comp : subcomponents)
-	{
-		if (!IsValid(comp))			continue;
-		if (comp->owner != owner)	continue;
-
-		components.emplace_back(comp);
-
-		comp->Internal_GetSubcomponents(components);
-	}
-}
-
-void BaseActorComponent::Internal_GetSubcomponents(std::vector<const BaseActorComponent*>& components) const
-{
-	for (auto comp : subcomponents)
-	{
-		if (!IsValid(comp))			continue;
-		if (comp->owner != owner)	continue;
-
-		components.emplace_back(comp);
-
-		comp->Internal_GetSubcomponents(components);
 	}
 }
 

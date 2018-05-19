@@ -48,13 +48,6 @@ protected:	//~~~~~~~~~~~~~~~|
 		, float FallAngle
 		, float DeltaSeconds
 		);
-	
-	FVector GetNormalTorque() const;
-	FVector GetNormalForce () const;
-
-	FVector ClampControl(FVector Control);
-	FVector TrimControl (FVector Control);
-
 };
 
 #endif // !MOVEMENT_STABILISATION_HPP

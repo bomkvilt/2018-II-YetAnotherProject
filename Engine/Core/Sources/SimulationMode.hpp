@@ -48,7 +48,6 @@ public:
 	void SetDeltaTime(float delta);
 
 protected:
-
 	/// >> tick
 	bool bStop;
 	/// << 

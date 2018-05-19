@@ -1,6 +1,10 @@
 #pragma once
+#ifndef OBJECT_BASE
+#define OBJECT_BASE
 
+#include <mutex>
 #include <string>
+
 #include "Common.hpp"
 #include "ObjectCreator.hpp"
 #include "Reflection/Archived.hpp"
@@ -76,3 +80,5 @@ public: //~~~~~~~~~~~~~~| Creation functions
 		return ObjectCreator::CreateAvatar<_T>(name, world.get(), AttachToController ? playerController : nullptr);
 	}
 };
+
+#endif // !OBJECT_BASE

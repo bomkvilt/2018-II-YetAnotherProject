@@ -16,7 +16,7 @@
  *	. on update event sync place a scene camera to required location
  *	. in case of the camera is removed the lates becomes an active one
  */
-class CameraManager : public ICamaeraManager
+class CameraManager : public ICameraManager
 {
 public:
 	CameraManager();
