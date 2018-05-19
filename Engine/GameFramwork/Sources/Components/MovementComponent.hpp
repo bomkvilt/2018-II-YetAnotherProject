@@ -6,19 +6,6 @@
 #include "MovementComponentUtiles/MovementStabilisation.hpp"
 
 
-struct FMovementImpactPoint 
-{
-public:
-	/// << override
-	bool bOverride     = 0;
-	bool bShouldColide = 0;
-	/// >> override
-	float   Radius   = 0.1f;
-	FVector Location = FVector::ZeroVector;
-};
-
-
-
 class MovementComponent : public ActorModule
 {
 	GENERATED_BODY(MovementComponent, ActorModule);
@@ -58,10 +45,6 @@ protected:	//~~~~~| Secondary Ticks |
 
 	FTickFunction prePhysicsTick;
 	FTickFunction postPhysicsTick;
-
-protected:	//~~~~~| Impact Points |
-
-	std::vector<FMovementImpactPoint> Points;
 
 protected:	//~~~~~~~~~~~~~~~| >> Heplers
 

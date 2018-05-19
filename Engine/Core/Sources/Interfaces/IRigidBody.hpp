@@ -8,6 +8,14 @@ class BaseActorComponent;
 class World;
 
 
+enum class ERigidBodyType
+{
+	  eStatic    // Satic object
+	, eKinematic // Ignores forces
+	, eDynamic	 // Dynamic objetc
+	, eIgnore	 // Slip physics
+};
+
 
 
 struct IRigidBody
@@ -30,24 +38,25 @@ public: //~~~~~~~~~~~~~~|
 	virtual       BaseActorComponent* GetOwner()         = 0;
 	virtual void  SetOwner(BaseActorComponent* newOwner) = 0;
 	/// mass
-	virtual float   GetMass    () const             = 0;
-	virtual FVector GetInertia () const             = 0;
+	virtual float   GetMass    ()             const = 0;
+	virtual FVector GetInertia ()             const = 0;
 	virtual void    SetMass    (float   newMass   ) = 0;
 	virtual void    SetInertia (FVector newInertia) = 0;
 	/// extents
 	virtual void    SetExtents(FVector newExtents) = 0;
-	/// bDynamic
-	virtual bool    IsDinamic() const = 0;
 	
 	//virtual bool    GetProcessed
 	//virtual void    SetProcessed() const = 0;
 	
 	/// velocity
-	virtual FVector GetVelocity() const = 0;
+	virtual FVector GetVelocity()                     const = 0;
 	virtual void    SetVelocity(const FVector& newVelocity) = 0;
 	/// omega
-	virtual FVector GetOmega() const = 0;
+	virtual FVector GetOmega()                  const = 0;
 	virtual void    SetOmega(const FVector& newOmega) = 0;
+	///body type
+	virtual ERigidBodyType GetBodyType()       const = 0;
+	virtual void SetBodyType(ERigidBodyType newType) = 0;
 };
 
 

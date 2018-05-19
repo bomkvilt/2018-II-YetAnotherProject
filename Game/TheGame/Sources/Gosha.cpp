@@ -124,6 +124,7 @@ void Gosha::AttachBlock(Block* block)
 	attachedBlock = block;
 
 	attachedBlock->AttachTo(this);
+	attachedBlock->GetRootComponent()->GetRigidBody()->SetBodyType(ERigidBodyType::eIgnore);
 	attachedBlock->SetRelativeLocation(FVector2(0, 2.1f));
 	
 	std::cout << "attached " << (attachedBlock->GetRootComponent()->IsDynamic() ? "Y" : "N") << std::endl;
@@ -132,6 +133,7 @@ void Gosha::AttachBlock(Block* block)
 void Gosha::DetachBlock()
 {
 	attachedBlock->Detach();
+	attachedBlock->GetRootComponent()->GetRigidBody()->SetBodyType(ERigidBodyType::eKinematic);
 	attachedBlock->SetComponentLocation(GetComponentLocation() + FVector2(4, -1));
 	attachedBlock = nullptr;
 

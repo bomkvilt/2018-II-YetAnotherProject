@@ -30,17 +30,24 @@ bool TaskBacket::AddTask(IRunable* newTask)
 
 bool TaskBacket::MarkAsDone(IRunable* doneTask)
 {
-	assert(doneTask);
-
-	{LOCK(mutex_processingTasks);
-		processingTasks.erase(doneTask);
+	{LOCK_N(lock, mutex_processingTasks);
+		if (doneTask)
+		{
+			processingTasks.erase(doneTask);
+		}
 
 		if (processingTasks.size()) return false;
 
 		if (TRY_LOCK(mutex_storedTasks)) 
 		{
 			bComplitted = !storedTasks.size();
-			UNLOCK(mutex_storedTasks);
+			UNLOCK(mutex_storedTasks); // try_lock is not a raii
+			
+			if (bComplitted)
+			{
+				UNLOCK(lock); // of a non-released mutex
+				convar_complitted.notify_all();
+			}
 			return bComplitted;
 		} 
 		else return false;
@@ -52,7 +59,7 @@ bool TaskBacket::HaveUnstartedTasks()
 	LOCK(mutex_storedTasks);
 	return storedTasks.size();
 }
-
+ 
 bool TaskBacket::IsCompleted()
 {
 	return bComplitted;
@@ -60,12 +67,11 @@ bool TaskBacket::IsCompleted()
 
 IRunable* TaskBacket::GetTask()
 {
-	IRunable* task;
+	IRunable* task = nullptr;
 	
-	{LOCK_N(lock, mutex_storedTasks);
+	{LOCK(mutex_storedTasks);
 		if (!storedTasks.size()) 
 		{
-			UNLOCK(lock);
 			return nullptr;
 		}
 		task = storedTasks.front();
@@ -73,7 +79,6 @@ IRunable* TaskBacket::GetTask()
 		
 		{LOCK(mutex_processingTasks);
 			processingTasks.emplace(task);
-			UNLOCK(lock);
 		}
 	}
 	return task;
@@ -81,9 +86,13 @@ IRunable* TaskBacket::GetTask()
 
 void TaskBacket::Wait()
 {
-	while (!bComplitted)
+	if (!bComplitted)
 	{
-		std::this_thread::sleep_for(std::chrono::microseconds(50));
+		LOCK_N(lock, mutex_complitted);
+		convar_complitted.wait(lock, [&]()->bool
+		{
+			return bComplitted;
+		});
 	}
 }
 
@@ -103,7 +112,7 @@ std::mutex ThreadPool::mutex_noTasks;
 std::mutex ThreadPool::mutex_threads;
 std::condition_variable ThreadPool::convar_noTasks;
 
-std::atomic<size_t>	ThreadPool::maxThreadCount = 2;
+std::atomic<size_t>	ThreadPool::maxThreadCount = 1;
 std::atomic<bool>   ThreadPool::bProcessBacket = false;
 
 
@@ -142,9 +151,15 @@ ThreadTask ThreadPool::GetRunTask(Thread* thread, IRunable* complittedTask)
 {
 	if (!thread) return ThreadTask::NextLoop;
 	
-	ThreadTask result = bProcessBacket
+	ThreadTask result = ThreadTask::NoTasksFound;
+	
+	do
+	{
+		result = bProcessBacket
 			? GetRunTask_backet(thread, complittedTask)
 			: GetRunTask_common(thread, complittedTask);
+	}
+	while (result == ThreadTask::NextLoop);
 
 	if (result == ThreadTask::NoTasksFound)
 	{
@@ -212,9 +227,9 @@ ThreadTask ThreadPool::GetRunTask_backet(Thread* thread, IRunable* complittedTas
 {
 	LOCK(mutex_backets);
 
-	bool bDone = complittedTask
-		? backets.front()->MarkAsDone(complittedTask)
-		: backets.front()->IsCompleted();
+	if (!bProcessBacket) return ThreadTask::NextLoop;
+
+	bool bDone = backets.front()->MarkAsDone(complittedTask);
 
 	if (!bDone) // try to get a new task
 	{ 
@@ -223,9 +238,9 @@ ThreadTask ThreadPool::GetRunTask_backet(Thread* thread, IRunable* complittedTas
 			return ThreadTask(newTask);
 		}
 		if (backets.front()->HaveUnstartedTasks())
-		{   // here we have to symulate a
+		{   // here we have to simulate a
 			// @AddTask method to unlock
-			// a weighting thread
+			// an awaiting thread
 			convar_noTasks.notify_one();
 		}
 		return ThreadTask::NextLoop;

@@ -2,6 +2,7 @@
 #include "Actor.hpp"
 #include "Threading/ThreadPool.hpp"
 #include "Injection/DependencyInjectionManager.hpp"
+#include "Threading/ObjectLocker.hpp"
 
 #include <algorithm>
 
@@ -32,21 +33,30 @@ void World::OnSimulationStop()
 
 void World::DoTick(float DeltaTime, ETickType type)
 {
-	//TaskBacket backet;
+	TaskBacket backet;
 
-	for (auto* tick : tickFunctions[type])
+	for (auto& ticks : tickFunctions[type])
 	{
-		if ( IsValid(tick->GetTarget()) ) 
+		auto* actor = ticks.first;
+		if (!IsValid(actor)) continue;
+		
+		backet.AddTask(new Runable([&, actor]()
 		{
-		//	backet.AddTask(new Runable([=]()
-		//	{
-				(*tick)(DeltaTime, type);
-		//	}
-		//	));
-		}
+			ObjectLocker locker(actor);
+
+			auto& ticks = tickFunctions[type][actor];
+			for (auto* tick : ticks)
+			{
+				if (IsValid(tick->GetTarget()))
+				{
+					(*tick)(DeltaTime, type);
+				}
+			}
+		} 
+		));
 	}
-	//ThreadPool::AddTaskBacket(backet);
-	//backet.Wait();
+	ThreadPool::AddTaskBacket(backet);
+	backet.Wait();
 
 
 	if (scene && type == ETickType::eInPhysics)
@@ -59,15 +69,27 @@ void World::DoTick(float DeltaTime, ETickType type)
 void World::RegisterTickFunction(ITickFunction& Tick)
 {
 	ETickType type = Tick.GetTickType();
+	auto* target = Tick.GetTarget();
+	auto* object = Tick.GetActor();
+	auto* actor  = dynamic_cast<Actor*>(object);
 
-	tickFunctions[type].emplace(&Tick);
+	if (IsValid(target) && actor)
+	{
+		tickFunctions[type][actor].emplace(&Tick);
+	}
 }
 
 void World::UnregisterTickFunction(ITickFunction& Tick)
 {
 	ETickType type = Tick.GetTickType();
+	auto* target = Tick.GetTarget();
+	auto* object = Tick.GetActor();
+	auto* actor  = dynamic_cast<Actor*>(object);
 
-	tickFunctions[type].erase(&Tick);
+	if (IsValid(target) && actor)
+	{
+		tickFunctions[type][actor].erase(&Tick);
+	}
 }
 
 void World::DestroyObject(Object* object)
@@ -81,15 +103,9 @@ void World::DestroyObject(Object* object)
 	objects.erase(object->GetOUID());
 }
 
-bool World::IsValid(Object* base) const
+bool World::IsValid(ObjectBase* base) const
 {
 	return base && objects.count(base->GetOUID());
-}
-
-void World::UpdateNameToUnique(std::string& name)
-{
-	size_t index = names[name]++;
-	name += "_" + std::to_string(index);
 }
 
 /*******************************************************************************
@@ -104,8 +120,8 @@ World::SceneIterator::SceneIterator(BaseActorComponent* root)
 }
 
 BaseActorComponent* World::SceneIterator::operator->()
-{ 
-	return CurrNode(); 
+{
+	return CurrNode();
 }
 
 BaseActorComponent& World::SceneIterator::operator*()
@@ -114,22 +130,22 @@ BaseActorComponent& World::SceneIterator::operator*()
 }
 
 World::SceneIterator* World::SceneIterator::operator++()
-{ 
-	Move(); 
-	return this; 
+{
+	Move();
+	return this;
 }
 
 bool World::SceneIterator::operator==(const SceneIterator& r) const
 {
-	size_t size_l =   indices.size();
+	size_t size_l = indices.size();
 	size_t size_r = r.indices.size();
 	if (size_r != size_l) return false;
-	
+
 	bool result = true;
 	for (size_t itr = 0; itr < size_l && result; ++itr)
 	{
 		result &= indices._Get_container()[itr] == r.indices._Get_container()[itr];
-		result &= path   ._Get_container()[itr] == r.path   ._Get_container()[itr];
+		result &= path._Get_container()[itr] == r.path._Get_container()[itr];
 	}
 	return result;
 }
@@ -173,7 +189,7 @@ size_t World::SceneIterator::MaxIndex()
 void World::SceneIterator::Move()
 {
 	auto* node = CurrNode();
-	path   .push(node);
+	path.push(node);
 	indices.push(0);
 
 	while (path.size())
@@ -181,7 +197,7 @@ void World::SceneIterator::Move()
 		size_t index = CurrIndex();
 		if (index == MaxIndex())
 		{
-			path   .pop();
+			path.pop();
 			indices.pop();
 			if (path.size())
 			{

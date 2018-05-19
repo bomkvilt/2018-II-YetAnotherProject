@@ -18,14 +18,14 @@ Viewer::Viewer(PlayerController* controller, SHARED(FEngineConfig) config)
 	// init the window
 	window.create(
 		sf::VideoMode (
-			static_cast<int>(config->viewer.ScreenSize.X), 
-			static_cast<int>(config->viewer.ScreenSize.Y)
+			static_cast<int>(config->frontend.ScreenSize.X), 
+			static_cast<int>(config->frontend.ScreenSize.Y)
 			), 
-		config->viewer.title
+		config->frontend.title
 		);
 	window.setPosition(sf::Vector2i (
-		static_cast<int>(config->viewer.WindowPosition.X),
-		static_cast<int>(config->viewer.WindowPosition.Y)
+		static_cast<int>(config->frontend.WindowPosition.X),
+		static_cast<int>(config->frontend.WindowPosition.Y)
 		));
 
 	// flip y axis

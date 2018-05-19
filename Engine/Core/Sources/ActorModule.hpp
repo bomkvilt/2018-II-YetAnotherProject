@@ -8,6 +8,18 @@
 class ActorModule : public Object
 { 
 	GENERATED_BODY(ActorModule, Object)
+
+public:
+	ActorModule();
+
+public:
+	/// owner
+	      Actor* GetOwner()        { return owner; }
+	const Actor* GetOwner() const  { return owner; }
+	void SetOwner(Actor* newOwner);
+
+protected:
+	Actor* owner;
 };
 
 

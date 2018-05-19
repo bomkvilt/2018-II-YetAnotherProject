@@ -1,7 +1,11 @@
 #include "Actor.hpp"
 
-Actor::Actor() : rootComponent(nullptr)
-{}
+Actor::Actor() 
+	: rootComponent(nullptr)
+	, lock(_lock)
+{
+	lock.unlock();
+}
 
 
 //~~~~~~~~~~~~~~~~~~~~~~| << proxi functions

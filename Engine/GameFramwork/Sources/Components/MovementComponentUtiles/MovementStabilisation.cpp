@@ -71,23 +71,3 @@ FVector FMovementStabilisation::StabilisationFunction(
 
 	return Clamp(factor, -1, 1);
 }
-
-FVector FMovementStabilisation::GetNormalTorque() const
-{
-	return FVector();
-}
-
-FVector FMovementStabilisation::GetNormalForce() const
-{
-	return FVector();
-}
-
-FVector FMovementStabilisation::ClampControl(FVector Control)
-{
-	return FVector();
-}
-
-FVector FMovementStabilisation::TrimControl(FVector Control)
-{
-	return FVector();
-}

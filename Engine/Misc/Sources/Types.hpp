@@ -62,7 +62,8 @@ struct ITickFunction
 {
 	virtual void operator()(float DeltaTime, ETickType type) = 0;
 
-	virtual Object*   GetTarget()	const = 0;
+	virtual Object*   GetTarget()   const = 0;
+	virtual Object*   GetActor()    const = 0;
 	virtual ETickType GetTickType() const = 0;
 };
 
@@ -76,8 +77,9 @@ struct ITickFunction
  */
 struct FTickFunction : public ITickFunction
 {
-	ETickType tickType;
-	Object*	  target;
+	ETickType tickType = ETickType::eMAX;
+	Object*	  target   = nullptr;
+	Object*   actor    = nullptr;
 
 	std::function<void(float, ETickType)> function;
 
@@ -85,15 +87,18 @@ public:
 
 	virtual void operator()(float DeltaTime, ETickType type) override;
 
-	virtual Object*		GetTarget()	  const override;
-	virtual ETickType   GetTickType() const override;
+	virtual Object*	  GetTarget()	const override;
+	virtual Object*   GetActor()    const override;
+	virtual ETickType GetTickType() const override;
 
 public:
 	
-	template<class _Fx, class _T>
-	void BindFunction(_T* newTarget, _Fx func)
+	template<class _Fx, class _T, class _A>
+	void BindFunction(_T* newTarget, _A* newActor, _Fx func)
 	{
 		target = newTarget;
+		actor  = newActor;
+
 		function = std::function<void(float, ETickType)>(std::bind(
 			func, newTarget, 
 			std::placeholders::_1, 

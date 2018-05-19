@@ -19,7 +19,7 @@ class CameraComponent;
 /** The class controls an assigned avatars
  */
 class PlayerController : public BasePlayerController
-	, public ICamaeraManager
+	, public ICameraManager
 {
 	GENERATED_BODY(PlayerController, BasePlayerController)
 

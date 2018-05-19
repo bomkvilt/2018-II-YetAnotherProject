@@ -45,8 +45,7 @@ public: //~~~~~~~~~~~~~~| Construction
 	{
 		// make the name unique
 		auto* initialiser = ThreadContext::TopInitialiser();
-		assert(initialiser);  auto* name = initialiser->name;
-		assert(name       );  UpdateNameToUnique(*name);
+		assert(initialiser);
 
 		// create a new uid
 		OUID newOUID = lastOUID++;
@@ -75,7 +74,7 @@ public: //~~~~~~~~~~~~~~| Construction
 
 public:
 
-	bool IsValid(Object* base) const;
+	bool IsValid(ObjectBase* base) const;
 
 public: //~~~~~~~~~~~~~~| 
 
@@ -86,10 +85,6 @@ public: //~~~~~~~~~~~~~~|
 	      IPhysicsScene* GetPhysicsScene()       { return scene.get(); }
 	const IPhysicsScene* GetPhysicsScene() const { return scene.get(); }
 
-
-protected:
-
-	void UpdateNameToUnique(std::string& name);
 
 protected:
 
@@ -107,20 +102,19 @@ protected:
 	/// >> indices
 	OUID lastOUID;
 	
-	std::unordered_set<Object*>      objects_set;
-	std::unordered_map<std::string, Index> names;
+	std::unordered_set<Object*> objects_set;
 
 	std::unordered_map< OUID
 		, UNIQUE(ObjectBase)
 		, std::hash<size_t>
-	> objects;
+		> objects;
 	/// <<
 
 	/// >> tick functions
 	std::array< 
-		std::unordered_set< ITickFunction* >, 
+		std::unordered_map<class Actor*, std::unordered_set<ITickFunction*>>,
 		ETickType::eMAX
-	> tickFunctions;
+		> tickFunctions;
 	/// <<
 
 public: //~~~~~~~~~~~~~~| Iteration

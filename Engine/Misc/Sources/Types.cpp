@@ -11,6 +11,11 @@ Object* FTickFunction::GetTarget() const
 	return target;
 }
 
+Object* FTickFunction::GetActor() const
+{
+	return actor;
+}
+
 ETickType FTickFunction::GetTickType() const
 {
 	return tickType;

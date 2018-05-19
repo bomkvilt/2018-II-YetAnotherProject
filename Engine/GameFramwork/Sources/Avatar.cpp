@@ -7,5 +7,6 @@ Avatar::Avatar()
 	{
 		controller = dynamic_cast<PlayerController*>(init->controller);
 	}
+
 	movement = CreateSubModule<AvatarMovementComponent>("Movement");
 }

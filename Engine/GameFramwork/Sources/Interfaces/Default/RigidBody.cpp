@@ -3,7 +3,8 @@
 
 
 FRigidBody::FRigidBody(BaseActorComponent* owner)
-	: owner(owner)
+	: bodyType(ERigidBodyType::eDynamic)
+	, owner(owner)
 {}
 
 World * FRigidBody::GetWorld()

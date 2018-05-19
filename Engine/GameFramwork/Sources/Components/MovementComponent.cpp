@@ -1,13 +1,13 @@
 #include "MovementComponent.hpp"
-
+#include "Actor.hpp"
 
 MovementComponent::MovementComponent()
 	: updatedComponent(nullptr)
 {
-	prePhysicsTick.BindFunction(this, &MovementComponent::PrePhysicsTick);
-	prePhysicsTick.tickType = ETickType::ePrePhysics;
+	prePhysicsTick .BindFunction(this, owner, &MovementComponent::PrePhysicsTick );
+	postPhysicsTick.BindFunction(this, owner, &MovementComponent::PostPhysicsTick);
 
-	postPhysicsTick.BindFunction(this, &MovementComponent::PostPhysicsTick);
+	prePhysicsTick .tickType = ETickType::ePrePhysics;
 	postPhysicsTick.tickType = ETickType::ePostPhysics;
 
 	stabilisation.SetStates(&states);

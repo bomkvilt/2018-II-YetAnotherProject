@@ -72,7 +72,7 @@ void Pendulum::Tick(float DeltaTime, ETickType type)
 	auto cr = pendulum->GetComponentRotation();
 	auto delta = ~cr * tr;
 	auto z = delta.GetEulerAngles().Z;
-
+	
 	const float control = pid.GetValue(z, dt);
 	const float M0 = 100;
 	const float M = M0 * control;
