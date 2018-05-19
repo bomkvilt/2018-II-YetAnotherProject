@@ -5,27 +5,35 @@
 
 RigidBody::RigidBody(FShape shape, BaseActorComponent* owner, float mass, FVector inertia)
 	: FRigidBody(owner)
-	, fixture(nullptr)
+	, rigidBody(nullptr)
+	, fixture_r(nullptr)
+	, fixture_s(nullptr)
 	, density(0)
-	, square(0)
+	, square (0)
 {
 	assert(owner);
 
 	massData.center = b2Vec2_zero;
-	massData.mass   = 0;
-	massData.I      = 0;
+	massData.mass = 0;
+	massData.I = 0;
 	
 	if (auto* scene = GetPhysicsScene<PhysicsScene>())
 	{
+		// rigind body and sensor
 		b2BodyDef bodyDef;
 		bodyDef.position.Set(0,0);
 		rigidBody = scene->world.CreateBody(&bodyDef);
 
+		// set them up
 		shapeType = shape.type;
 		SetExtents(shape.extents);
 		SetInertia(inertia);
 		SetMass(mass);
+
+		// update collision states
+		UpdateCollision();
 		
+		// register self
 		scene->RegisterBody(this);
 	}
 }
@@ -44,12 +52,15 @@ void RigidBody::Update()
 	if (owner && rigidBody)
 	{
 		rigidBody->SetType(b2_kinematicBody);
+
 		FTransform transform = owner->GetComponentTransform();
+
 		rigidBody->SetTransform (
-			b2Vec2() << transform.Location
-			, transform.Rotation.Z
+			b2Vec2() << transform.Location, 
+			transform.Rotation.Z 
 			);
-		UpdateState();
+
+		UpdateBody();
 	}
 }
 
@@ -111,35 +122,40 @@ void RigidBody::SetExtents(FVector newExtents)
 {
 	b2MassData tmpMass;
 
-	switch (shapeType) 
-	{
+	// set new shape size and get new square
+	switch (shapeType) {
 	case EShapeType::eBox: 
 		collision.SetAsBox(newExtents.X, newExtents.Y);
 		collision.ComputeMass(&tmpMass, 1);
 		square = tmpMass.mass;
 		break;
-	default: assert(false);
+	default: throw std::runtime_error("Unsupported shape type");
 	}
+	
+	if (fixture_s) rigidBody->DestroyFixture(fixture_s);
+	if (fixture_r) rigidBody->DestroyFixture(fixture_r);
 
-	if (fixture)
-	{
-		rigidBody->DestroyFixture(fixture);
-	}
-
-	fixture = rigidBody->CreateFixture(
-		&collision
-		, density
-		);
+	b2FixtureDef def;
+	def.shape   = &collision;
+	def.density = density;
+	/// rigid body
+	fixture_r = rigidBody->CreateFixture(&def);
 	rigidBody->SetMassData(&massData);
+	/// sensor
+	def.isSensor = true; // make the sensor
+	def.density  = 0;	 // not  affecting
+	def.friction = 0;	 // the  body
+	fixture_s = rigidBody->CreateFixture(&def);
 
-	UpdateState();
+	UpdateBody();
+	UpdateCollision();
 }
 
 void RigidBody::SetBodyType(ERigidBodyType newType)
 {
 	bodyType = newType;
 
-	UpdateState();
+	UpdateBody();
 }
 
 void RigidBody::SetMass(float newMass)
@@ -148,7 +164,7 @@ void RigidBody::SetMass(float newMass)
 	collision.ComputeMass(&massData, density);
 	rigidBody->SetMassData(&massData);
 
-	UpdateState();
+	UpdateBody();
 }
 
 void RigidBody::SetInertia(FVector newInertia)
@@ -156,7 +172,7 @@ void RigidBody::SetInertia(FVector newInertia)
 	massData.I = newInertia.Z;
 	rigidBody->SetMassData(&massData);
 
-	UpdateState();
+	UpdateBody();
 }
 
 float RigidBody::GetMass() const
@@ -167,23 +183,6 @@ float RigidBody::GetMass() const
 FVector RigidBody::GetInertia() const
 {
 	return FVector(0, 0, massData.I);
-}
-
-FVector RigidBody::GetVelocity() const
-{
-	if (rigidBody)
-	{
-		return FVector() << rigidBody->GetLinearVelocity();
-	}
-	return FVector::ZeroVector;
-}
-
-void RigidBody::SetVelocity(const FVector& newVelocity)
-{
-	if (rigidBody)
-	{
-		rigidBody->SetLinearVelocity(b2Vec2() << newVelocity);
-	}
 }
 
 FVector RigidBody::GetOmega() const
@@ -205,6 +204,29 @@ void RigidBody::SetOmega(const FVector& newOmega)
 	}
 }
 
+FVector RigidBody::GetVelocity() const
+{
+	if (rigidBody)
+	{
+		return FVector() << rigidBody->GetLinearVelocity();
+	}
+	return FVector::ZeroVector;
+}
+
+void RigidBody::SetVelocity(const FVector& newVelocity)
+{
+	if (rigidBody)
+	{
+		rigidBody->SetLinearVelocity(b2Vec2() << newVelocity);
+	}
+}
+
+void RigidBody::SetCollisionRules(const FCollisionRules& newRules)
+{
+	collisionRules = newRules;
+	UpdateCollision();
+}
+
 b2Transform RigidBody::GetTransform() const
 {
 	if (owner)
@@ -214,9 +236,9 @@ b2Transform RigidBody::GetTransform() const
 	return b2Transform();
 }
 
-void RigidBody::UpdateState()
+void RigidBody::UpdateBody()
 {
-	if (bodyType != ERigidBodyType::eIgnore && bodyType != ERigidBodyType::eStatic)
+	if (bodyType != ERigidBodyType::eStatic)
 	{
 		bodyType = (!massData.mass || !massData.I) 
 			? ERigidBodyType::eKinematic
@@ -224,13 +246,42 @@ void RigidBody::UpdateState()
 			;
 	}
 
-	auto data = fixture->GetFilterData();
-	switch (bodyType) {
-	case ERigidBodyType::eStatic:	 data.categoryBits = 1; data.maskBits = 1; rigidBody->SetMassData(&massData); rigidBody->SetType(b2_staticBody   ); break;
-	case ERigidBodyType::eKinematic: data.categoryBits = 1; data.maskBits = 1; rigidBody->SetMassData(&massData); rigidBody->SetType(b2_kinematicBody); break;
-	case ERigidBodyType::eDynamic:   data.categoryBits = 1; data.maskBits = 1; rigidBody->SetMassData(&massData); rigidBody->SetType(b2_dynamicBody  ); break;
-	case ERigidBodyType::eIgnore:    data.categoryBits = 1; data.maskBits = 0; rigidBody->SetMassData(&massData); rigidBody->SetType(b2_staticBody   ); break;
-	default: throw std::runtime_error("unknown dody type");
+	rigidBody->SetMassData(&massData);
+
+	switch (bodyType) 
+	{
+	case ERigidBodyType::eStatic:	 rigidBody->SetType(b2_staticBody   ); break;
+	case ERigidBodyType::eKinematic: rigidBody->SetType(b2_kinematicBody); break;
+	case ERigidBodyType::eDynamic:   rigidBody->SetType(b2_dynamicBody  ); break;
+	default: throw std::runtime_error("unknown body type");
 	}
-	fixture->SetFilterData(data);
+}
+
+void RigidBody::UpdateCollision()
+{
+	auto filter_r = fixture_r->GetFilterData();
+	auto filter_s = fixture_s->GetFilterData();
+
+	filter_r.categoryBits = 1 << collisionRules.category;
+	filter_s.categoryBits = 1 << collisionRules.category;
+
+	for (int i = 0; i < FCollisionRules::maxCategoryCount; ++i)
+	{
+		SetupCollision(i, filter_r, filter_s);
+	}
+
+	fixture_r->SetFilterData(filter_r);
+	fixture_s->SetFilterData(filter_s);
+}
+
+void RigidBody::SetupCollision(int bit, b2Filter& filter_r, b2Filter& filter_s)
+{
+	auto type = collisionRules.rules[bit];
+	switch (type)
+	{
+	case ECollisiontype::eCollide: filter_r.maskBits |=  (1 << bit); filter_s.maskBits &= ~(1 << bit); break;
+	case ECollisiontype::eOverlap: filter_r.maskBits &= ~(1 << bit); filter_s.maskBits |=  (1 << bit); break;
+	case ECollisiontype::eIgnore : filter_r.maskBits &= ~(1 << bit); filter_s.maskBits &= ~(1 << bit); break;
+	default: throw std::runtime_error("unsupported value");
+	}
 }

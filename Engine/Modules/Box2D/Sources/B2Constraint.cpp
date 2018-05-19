@@ -122,7 +122,6 @@ b2Joint* Constraint::MakeConstraint(RigidBody* parent, RigidBody* child)
 	}
 	else if (!bRot && bX && !bY)
 	{
-		std::cout << "X" << std::endl;
 		b2PrismaticJointDef def;
 		def.bodyA = parent->rigidBody;
 		def.bodyB = child ->rigidBody;
@@ -140,7 +139,6 @@ b2Joint* Constraint::MakeConstraint(RigidBody* parent, RigidBody* child)
 	}
 	else if (!bRot && !bX && bY)
 	{
-		std::cout << "Y" << std::endl;
 		b2PrismaticJointDef def;
 		def.bodyA = parent->rigidBody;
 		def.bodyB = child ->rigidBody;
