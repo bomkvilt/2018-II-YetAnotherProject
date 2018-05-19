@@ -11,18 +11,19 @@
 
 #include "Blocks/Block.hpp"
 
-
-class Gosha : public Avatar
+#include "HealthSystem\Health.hpp"
+class Gosha : public Avatar, public IDamageable
 {
 	GENERATED_BODY(Gosha, Avatar);
 
 public:
-	Gosha();
 
+	Gosha();
+	virtual void ApplyDamage(IDamage* damage) override;
 	virtual void OnBeginPlay() override;
 
 	void SetupInput(EventBinder* binder);
-
+	
 protected:
 	void Move(float value);
 	void Jump(EKeyAction);
@@ -32,10 +33,11 @@ protected:
 	BoxColision* body;
 	SpriteComponent* sprite;
 	CameraComponent* camera;
+	HealthModule* health;
 
 protected:
 	Block* contactedBlock;
-
+	
 	Block* attachedBlock;
 
 protected:

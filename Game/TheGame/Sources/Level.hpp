@@ -4,11 +4,11 @@
 
 #include "Traps/Wall.hpp"
 #include "Traps/Teleport.hpp"
+#include "Traps/Killer.hpp"
 
 #include "Blocks/Block.hpp"
 #include "Coin.hpp"
 #include "Box.hpp"
-
 
 class Level : public Actor
 {
@@ -29,6 +29,7 @@ public:
 		MakeWall(FVector2( 20, 0.04f));
 
 		MakeBlock(FVector2(30, 0.2f));
+		MakeKiller(FVector2(3, 0.2f));
 	}
 
 protected:
@@ -77,6 +78,14 @@ protected:
 		block->AttachTo(this);
 		block->SetRelativeLocation(location);
 		return block;
+	}
+
+	Killer* MakeKiller(FVector2 location)
+	{
+		auto* killer = CreateActor<Killer>("killer");
+		killer->AttachTo(this);
+		killer->SetRelativeLocation(location);
+		return killer;
 	}
 };
 
