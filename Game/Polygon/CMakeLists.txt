@@ -1,0 +1,6 @@
+DEFINE_UNIT(Polygon)
+SET(CODE		"Sources"	)
+SET(TEST    	"Tests" 	)
+SET(CATEGORY	"Project"	)
+SET(MODULES 	 Misc Engine Core Components OSG Box2D ComponentVisualisers GameFramwork)
+MAKE_APP()

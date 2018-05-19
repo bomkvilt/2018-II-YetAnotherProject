@@ -1,5 +1,6 @@
 #ifndef COLOR_HPP
 #define COLOR_HPP
+#pragma once
 
 #include <assert.h>
 #include <string>

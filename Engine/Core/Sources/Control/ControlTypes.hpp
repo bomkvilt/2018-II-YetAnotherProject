@@ -1,5 +1,6 @@
 #ifndef CONTROL_TYPES_HPP
 #define CONTROL_TYPES_HPP
+#pragma once
 
 #include <string>
 #include <vector>

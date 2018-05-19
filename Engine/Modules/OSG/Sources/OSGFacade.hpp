@@ -2,8 +2,7 @@
 
 #include <memory>
 
-#include "Misc.hpp"
-#include "Types.hpp"
+#include "Common.hpp"
 #include "Interfaces/IFacade.hpp"
 
 #include <osg/ref_ptr>
@@ -23,7 +22,7 @@
 class Facade : public IFacade
 {
 public:
-	Facade(ActorComponent* owner);
+	Facade(BaseActorComponent* owner);
 
 public:
 

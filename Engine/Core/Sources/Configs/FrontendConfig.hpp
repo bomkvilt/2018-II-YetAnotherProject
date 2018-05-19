@@ -3,10 +3,12 @@
 #define FRONTEND_CONFIG_HPP
 
 #include "Reflection/Archived.hpp"
+#include "Common.hpp"
 
-struct FViewerConfig : public Archived
+
+struct FFrontendConfig : public Archived
 {
-	GENERATED_ARCHIVATION_BODY(FViewerConfig, Archived)
+	GENERATED_CONFIG_BODY(FFrontendConfig, Archived)
 		ARCHIVE_MEMBER("", title         )
 		ARCHIVE_MEMBER("", ScreenSize    )
 		ARCHIVE_MEMBER("", WindowPosition)

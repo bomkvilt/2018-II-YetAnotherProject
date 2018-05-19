@@ -17,7 +17,7 @@ bool IsCategory(const std::string& str)
 	{
 		return str[0] == CAUGORY_PREFIX;
 	}
-	throw std::runtime_error("enpty name is inawalible");
+	throw std::runtime_error("enpty name is unavailable");
 }
 
 bool IsPlane(const std::string& str)
@@ -27,7 +27,7 @@ bool IsPlane(const std::string& str)
 		return *str. begin() != '{'
 		  || *++str.rbegin() != '}';
 	}
-	throw std::runtime_error("enpty name is inawalible");
+	throw std::runtime_error("enpty name is unavailable");
 }
 
 std::string ShieldCategory(const std::string name)
@@ -117,6 +117,8 @@ Archiver::Archiver()
 
 void Archiver::Constract(const std::string& json)
 {
+	if (json == "") return;
+
 	std::stringstream ss(json);
 	
 	pt::ptree tree;

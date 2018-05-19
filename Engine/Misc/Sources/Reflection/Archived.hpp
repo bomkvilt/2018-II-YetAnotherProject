@@ -169,6 +169,13 @@ struct String2Type<_T, true, true>
 	}
 
 
+#define GENERATED_CONFIG_BODY(CLASS, SUPER) \
+	GENERATED_BODY(CLASS, SUPER)            \
+	static const CLASS StaticClass;         \
+	ARCHIVATION_BEGIN()
+
+#define GENERATED_CONFIG_CPP(CLASS)    \
+	const CLASS CLASS::StaticClass;
 
 #define GENERATED_ARCHIVATION_BODY(CLASS, SUPER) \
 	GENERATED_BODY(CLASS, SUPER)                 \

@@ -9,7 +9,7 @@ MACRO(__SETUP_SOURCE)
 	file(GLOB_RECURSE SOURCES "${SOURCES_DIRS}/*.cpp")
 	file(GLOB_RECURSE HEADERS "${HEADERS_DIRS}/*.hpp")
 	
-	# add the files into project's code
+	# add the files into a project's code
 	source_group(TREE ${PROJECT_SOURCE_DIR}/${SOURCES_DIRS} PREFIX "Source Files" FILES ${SOURCES})
 	source_group(TREE ${PROJECT_SOURCE_DIR}/${HEADERS_DIRS} PREFIX "Header Files" FILES ${HEADERS})
 ENDMACRO()

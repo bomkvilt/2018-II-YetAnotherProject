@@ -1,9 +1,8 @@
 #ifndef BASE_PLAYER_CONTROLLER_HPP
 #define BASE_PLAYER_CONTROLLER_HPP
+#pragma once
 
-#include "Misc.hpp"
-#include "Types.hpp"
-#include "Reflection/Archived.hpp"
+#include "Common.hpp"
 
 class World;
 class Avatar;

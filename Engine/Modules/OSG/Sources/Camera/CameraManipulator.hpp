@@ -1,5 +1,6 @@
 #ifndef CAMERA_MANIPULATOR_HPP
 #define CAMERA_MANIPULATOR_HPP
+#pragma once
 
 #include <osgGA/CameraManipulator>
 

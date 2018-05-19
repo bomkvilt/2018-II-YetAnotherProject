@@ -1,15 +1,16 @@
 #ifndef COMPONENT_VISUALISER_HPP
 #define COMPONENT_VISUALISER_HPP
+#pragma once
 
 #include "ComponentVisualiserHelper.hpp"
-#include "ActorComponent.hpp"
+#include "BaseActorComponent.hpp"
 
 
 class ComponentVisualiser
 {
 public:
 
-	virtual void Visualize(ActorComponent* component, ComponentVisualiserHelper& helper) = 0;
+	virtual void Visualize(BaseActorComponent* component, ComponentVisualiserHelper& helper) = 0;
 };
 
 

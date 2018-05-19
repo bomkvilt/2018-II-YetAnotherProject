@@ -1,8 +1,8 @@
 #ifndef COMPONENT_VISUALISER_HELPER_HPP
 #define COMPONENT_VISUALISER_HELPER_HPP
+#pragma once
 
-#include <assert.h>
-#include "Types.hpp"
+#include "Common.hpp"
 #include "Interfaces/IViewer.hpp"
 
 

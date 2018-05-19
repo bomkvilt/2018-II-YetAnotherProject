@@ -1,10 +1,9 @@
 #ifndef GAME_MODE_HPP
 #define GAME_MODE_HPP
+#pragma once
 
-#include <memory>
-
-#include "Misc.hpp"
 #include "ObjectCreator.hpp"
+#include "Common.hpp"
 #include "World.hpp"
 
 class SimulationMode;
@@ -17,8 +16,8 @@ public:
 	GameMode();
 	
 	virtual void OnConstructed()  {}
-	virtual void OnBeginPlay()	  {}
-	virtual void OnEndPlay()	  {}
+	virtual void OnBeginPlay();
+	virtual void OnEndPlay();
 	virtual void OnStartDestroy() {}
 
 public:
@@ -27,9 +26,9 @@ public:
 
 protected:
 	/// >>
-	UNIQUE(World)     world;
-	SimulationMode*   simulationMode;
-	PlayerController* playerController;
+	UNIQUE(World)         world;
+	SimulationMode*       simulationMode;
+	BasePlayerController* playerController;
 	/// << 
 
 public: //~~~~~~~~~~~~~~| Creation functions
@@ -41,9 +40,15 @@ public: //~~~~~~~~~~~~~~| Creation functions
 	}
 
 	template<class _T>
-	_T* CreateActor(std::string name,  bool AttachToController = false)
+	_T* CreateActor(std::string name)
 	{
-		return ObjectCreator::CreateActor<_T>(name, world.get(), AttachToController ? playerController : nullptr);
+		return ObjectCreator::CreateActor<_T>(name, world.get());
+	}
+
+	template<class _T>
+	_T* CreateAvatar(std::string name,  bool AttachToController = false)
+	{
+		return ObjectCreator::CreateAvatar<_T>(name, world.get(), AttachToController ? playerController : nullptr);
 	}
 };
 

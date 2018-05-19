@@ -1,15 +1,14 @@
+#pragma once
 #ifndef SIMULATION_MODE_HPP
 #define SIMULATION_MODE_HPP
 
-#include <memory>
-#include "Misc.hpp"
-#include "Types.hpp"
+#include "Common.hpp"
 
 #include "Configs/EngineConfig.hpp"
 #include "Injection/ISimulationFabric.hpp"
 
 class GameMode;
-class PlayerController;
+class BasePlayerController;
 
 
 /** A class handling a symualtion
@@ -49,7 +48,6 @@ public:
 	void SetDeltaTime(float delta);
 
 protected:
-
 	/// >> tick
 	bool bStop;
 	/// << 
@@ -62,7 +60,7 @@ protected:
 	/// >>
 	SHARED(FEngineConfig)         config;
 	UNIQUE(ISimulationModeFabric) fabric;
-	UNIQUE(PlayerController) controller;
+	UNIQUE(BasePlayerController) controller;
 	UNIQUE(GameMode) gameMode;
 	/// <<
 };

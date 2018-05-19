@@ -3,11 +3,11 @@
 #define BOX_COLLISION_VISUALISER_HPP
 
 #include "ComponentVisualiser.hpp"
-#include "BoxColision.hpp"
+#include "Components/BoxColision.hpp"
 
 class BoxColisionVisualiser : public ComponentVisualiser
 {
-	virtual void Visualize(ActorComponent* component, ComponentVisualiserHelper& helper) override
+	virtual void Visualize(BaseActorComponent* component, ComponentVisualiserHelper& helper) override
 	{
 		if (auto* box = dynamic_cast<BoxColision*>(component))
 		{

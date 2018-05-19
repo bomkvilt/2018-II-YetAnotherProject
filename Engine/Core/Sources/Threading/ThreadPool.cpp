@@ -2,8 +2,11 @@
 
 #include <assert.h>
 
-#define LOCK(MUTEX) std::unique_lock<std::mutex> lock
+#define LOCK_N(NAME, MUTEX) std::unique_lock<std::mutex> lock(MUTEX);
+#define LOCK(MUTEX)	        LOCK_N(__lock__, MUTEX)
 
+#define TRY_LOCK(MUTEX)     MUTEX.try_lock()
+#define UNLOCK(MUTEX)       MUTEX.unlock()
 /********************************************************************
 *							TaskBacket
 ********************************************************************/
@@ -13,17 +16,13 @@ TaskBacket::TaskBacket()
 	bComplitted = true;
 }
 
-TaskBacket::~TaskBacket()
-{
-}
-
 bool TaskBacket::AddTask(IRunable* newTask)
 {
 	if (!newTask) return false;
 
 	bComplitted = false;
 
-	{ LOCK(mutex_storedTasks);
+	{LOCK(mutex_storedTasks);
 		storedTasks.emplace_back(newTask);
 	}
 	return true;
@@ -31,27 +30,36 @@ bool TaskBacket::AddTask(IRunable* newTask)
 
 bool TaskBacket::MarkAsDone(IRunable* doneTask)
 {
-	assert(doneTask);
-
-	{ LOCK(mutex_processingTasks);
-		processingTasks.erase(doneTask);
+	{LOCK_N(lock, mutex_processingTasks);
+		if (doneTask)
+		{
+			processingTasks.erase(doneTask);
+		}
 
 		if (processingTasks.size()) return false;
 
-		if (mutex_storedTasks.try_lock()) 
+		if (TRY_LOCK(mutex_storedTasks)) 
 		{
-			bool bDone = !storedTasks.size();
-
-			mutex_storedTasks.unlock();
-
-			bComplitted = bDone;
-
-			return bDone;
+			bComplitted = !storedTasks.size();
+			UNLOCK(mutex_storedTasks); // try_lock is not a raii
+			
+			if (bComplitted)
+			{
+				UNLOCK(lock); // of a non-released mutex
+				convar_complitted.notify_all();
+			}
+			return bComplitted;
 		} 
 		else return false;
 	}
 }
 
+bool TaskBacket::HaveUnstartedTasks()
+{
+	LOCK(mutex_storedTasks);
+	return storedTasks.size();
+}
+ 
 bool TaskBacket::IsCompleted()
 {
 	return bComplitted;
@@ -59,20 +67,18 @@ bool TaskBacket::IsCompleted()
 
 IRunable* TaskBacket::GetTask()
 {
-	IRunable* task;
+	IRunable* task = nullptr;
 	
-	{ mutex_storedTasks.lock();
+	{LOCK(mutex_storedTasks);
 		if (!storedTasks.size()) 
 		{
-			mutex_storedTasks.unlock();
 			return nullptr;
 		}
 		task = storedTasks.front();
 		storedTasks.pop_front();
 		
-		{ LOCK(mutex_processingTasks);
+		{LOCK(mutex_processingTasks);
 			processingTasks.emplace(task);
-			mutex_storedTasks.unlock();
 		}
 	}
 	return task;
@@ -80,9 +86,13 @@ IRunable* TaskBacket::GetTask()
 
 void TaskBacket::Wait()
 {
-	while (!bComplitted)
+	if (!bComplitted)
 	{
-		std::this_thread::sleep_for(std::chrono::microseconds(300));
+		LOCK_N(lock, mutex_complitted);
+		convar_complitted.wait(lock, [&]()->bool
+		{
+			return bComplitted;
+		});
 	}
 }
 
@@ -90,50 +100,38 @@ void TaskBacket::Wait()
 *							ThreadPool
 ********************************************************************/
 
-std::deque<IRunable*>   ThreadPool::tasks			= std::deque<IRunable*>();
-std::deque<IRunable*>   ThreadPool::tasks_exclusive = std::deque<IRunable*>();	
-std::deque<TaskBacket*> ThreadPool::backets			= std::deque<TaskBacket*>();
-
-
-std::unordered_set<Thread*> ThreadPool::threads			  = std::unordered_set<Thread*>();
-std::unordered_set<Thread*> ThreadPool::threads_exclusive = std::unordered_set<Thread*>();
+std::deque<IRunable*>       ThreadPool::tasks   = std::deque<IRunable  *>();
+std::deque<TaskBacket*>     ThreadPool::backets = std::deque<TaskBacket*>();
+std::unordered_set<Thread*> ThreadPool::threads = std::unordered_set<Thread*>();
 
 std::unordered_map<Thread*, UNIQUE(Thread)> ThreadPool::allThreads;
 
+std::mutex ThreadPool::mutex_tasks  ;
+std::mutex ThreadPool::mutex_backets;
+std::mutex ThreadPool::mutex_noTasks;
+std::mutex ThreadPool::mutex_threads;
+std::condition_variable ThreadPool::convar_noTasks;
 
 std::atomic<size_t>	ThreadPool::maxThreadCount = 1;
 std::atomic<bool>   ThreadPool::bProcessBacket = false;
 
 
 
-bool ThreadPool::AddTask(IRunable* task, bool bExlusiveThread)
+bool ThreadPool::AddTask(IRunable* task)
 {
 	if (!task) return false;
+ 
+	{LOCK(mutex_tasks);
+		tasks.emplace_back(task);
+	}
+	{LOCK(mutex_threads);
+		while(NewThreadRequired())
+		{
+			CreateThread();
+		}
+	}
+	convar_noTasks.notify_one();
 
-	if (!bExlusiveThread) 
-	{ 
-		{ LOCK(mutex_tasks);
-			tasks.emplace_back(task);
-		}
-		{ LOCK(mutex_threads);
-			if (NewThreadRequired(bExlusiveThread))
-			{
-				CreateThread(bExlusiveThread);
-			}
-		}
-	}
-	else
-	{
-		{ LOCK(mutex_tasks_exclusive);
-			tasks_exclusive.emplace_back(task);
-		}
-		{ LOCK(mutex_threads_exclusive);
-			if (NewThreadRequired(bExlusiveThread))
-			{
-				CreateThread(bExlusiveThread);
-			}
-		}
-	}
 	return true;
 }
 
@@ -141,39 +139,38 @@ bool ThreadPool::AddTaskBacket(TaskBacket& backet)
 {
 	if (backet.IsCompleted()) return true;
 
-	{ LOCK(mutex_backets);  
+	{LOCK(mutex_backets); 
 		backets.emplace_back(&backet);
 	}
-	AddTask(new BacketRunable(), false);
+	AddTask(new BacketRunable());
 	
 	return true;
 }
 
 ThreadTask ThreadPool::GetRunTask(Thread* thread, IRunable* complittedTask)
 {
-	if (!thread) return ThreadTask();
-
-	bool bExclusive = false;
-	ThreadTask result;
-
-	{ LOCK(mutex_threads_exclusive);
-		if (threads_exclusive.count(thread))
-		{
-			result = GetRunTask_exclusive(thread, complittedTask);
-			bExclusive = true;
-		}
-	}
-
-	if (!bExclusive)
+	if (!thread) return ThreadTask::NextLoop;
+	
+	ThreadTask result = ThreadTask::NoTasksFound;
+	
+	do
 	{
-		if (bProcessBacket)
+		result = bProcessBacket
+			? GetRunTask_backet(thread, complittedTask)
+			: GetRunTask_common(thread, complittedTask);
+	}
+	while (result == ThreadTask::NextLoop);
+
+	if (result == ThreadTask::NoTasksFound)
+	{
+		LOCK_N(lock, mutex_noTasks);
+		convar_noTasks.wait(lock, [&]()
 		{
-			result = GetRunTask_backet(thread, complittedTask);
-		}
-		else
-		{
-			result = GetRunTask_common(thread, complittedTask);
-		}
+			result = bProcessBacket
+				? GetRunTask_backet(thread, complittedTask)
+				: GetRunTask_common(thread, complittedTask);
+			return result != ThreadTask::NoTasksFound;
+		});
 	}
 
 	if (complittedTask)
@@ -183,156 +180,107 @@ ThreadTask ThreadPool::GetRunTask(Thread* thread, IRunable* complittedTask)
 
 	if (result == ThreadTask::ShouldDie)
 	{
-		DeleteThread(bExclusive, thread);
+		DeleteThread(thread);
 	}
-
+	
 	return result;
+}
+
+void ThreadPool::SetMaxThreadCount(size_t newCount) 
+{ 
+	maxThreadCount = newCount; 
+}
+
+size_t ThreadPool::GetMaxThreadCount() 
+{ 
+	return maxThreadCount; 
 }
 
 ThreadTask ThreadPool::GetRunTask_common(Thread* thread, IRunable* complittedTask)
 {
-	ThreadTask result = ThreadTask::NextLoop;
+	LOCK(mutex_tasks);
 
-	{ LOCK(mutex_tasks);
-		if (ShouldDie(thread))
-		{
-			result = ThreadTask::ShouldDie;
-		}
-		else if (tasks.size())
-		{	// get new task
-			result.task = tasks.front();
-			result.bDie = false;
-			tasks.pop_front();
-
-			// start process a backet
-			if (dynamic_cast<BacketRunable*>(result.task))
-			{
-				delete result.task;
-				bProcessBacket = true;
-
-				result = ThreadTask::NextLoop;
-			}
-		}
-		else 
-		{
-			result = ThreadTask::NextLoop;
-		}
+	if (ShouldDie(thread))
+	{
+		return ThreadTask::ShouldDie;
 	}
+	if (tasks.size())
+	{	
+		auto* task = tasks.front();
+		tasks.pop_front();
 
-	return result;
+		if (dynamic_cast<BacketRunable*>(task))
+		{
+			delete task;
+			bProcessBacket = true;
+			return ThreadTask::NextLoop;
+		}
+		else return ThreadTask(task);
+	}
+	else // no elements inside
+	{
+		return ThreadTask::NoTasksFound;
+	}
 }
 
 ThreadTask ThreadPool::GetRunTask_backet(Thread* thread, IRunable* complittedTask)
 {
-	ThreadTask result = ThreadTask::NextLoop;
+	LOCK(mutex_backets);
 
-	{ LOCK(mutex_backets);
-		bool bDone = false;
-		if (complittedTask)
-		{ 
-			bDone = backets.front()->MarkAsDone(complittedTask);
-		}
-		else
+	if (!bProcessBacket) return ThreadTask::NextLoop;
+
+	bool bDone = backets.front()->MarkAsDone(complittedTask);
+
+	if (!bDone) // try to get a new task
+	{ 
+		if (IRunable* newTask = backets.front()->GetTask())
 		{
-			bDone = backets.front()->IsCompleted();
+			return ThreadTask(newTask);
 		}
-
-		if (!bDone) // try to get a new task
-		{ 
-			IRunable* newTask = backets.front()->GetTask();
-			if (newTask)
-			{
-				result.task = newTask;
-				result.bDie = false;
-			}
-			else 
-			{
-				result = ThreadTask::NextLoop;
-			}
+		if (backets.front()->HaveUnstartedTasks())
+		{   // here we have to simulate a
+			// @AddTask method to unlock
+			// an awaiting thread
+			convar_noTasks.notify_one();
 		}
-
-		if (bDone) // the lates task is done
-		{ 
-			bProcessBacket = false;
-			backets.pop_front();
-
-			result = ShouldDie(thread)
-				? ThreadTask::ShouldDie
-				: ThreadTask::NextLoop;
-		}
+		return ThreadTask::NextLoop;
 	}
+	else // the lates task is done
+	{ 
+		bProcessBacket = false;
+		backets.pop_front();
 
-	return result;
-}
-
-ThreadTask ThreadPool::GetRunTask_exclusive(Thread* thread, IRunable* complittedTask)
-{
-	ThreadTask result = ThreadTask::NextLoop;
-
-	{ LOCK(mutex_tasks_exclusive);
-		if (tasks_exclusive.size())
-		{ 
-			result.task = tasks_exclusive.front();
-			result.bDie = false;
-			tasks_exclusive.pop_front();
-
-			return result;
-		}
-	}
-
-	{ LOCK(mutex_threads);
-		threads_exclusive.erase(thread);
-		threads.emplace(thread);
-		return result;
+		return ShouldDie(thread) 
+			? ThreadTask::ShouldDie
+			: ThreadTask::NextLoop;
 	}
 }
 
 bool ThreadPool::ShouldDie(Thread* thread)
-{
+{ 
+	LOCK(mutex_threads);
 	return threads.size() > maxThreadCount;
 }
 
-bool ThreadPool::NewThreadRequired(bool bExlusive)
+bool ThreadPool::NewThreadRequired()
 {
-	if (!bExlusive)
-	{
-		return threads.size() < maxThreadCount;
-	}
-	else
-	{
-		return true;
-	}
+	return threads.size() < maxThreadCount;
 }
 
-void ThreadPool::CreateThread(bool bExlusive)
+void ThreadPool::CreateThread()
 {
-	UNIQUE(Thread) newThread = Thread::Get();
-	
+	auto    newThread  = Thread::Get();
 	Thread* thread_ptr = newThread.get();
 
 	allThreads[thread_ptr] = std::move(newThread);
-
-	if (!bExlusive)
-	{
-		threads.emplace(thread_ptr);
-	}
-	else
-	{
-		threads_exclusive.emplace(thread_ptr);
-	}
-
+	threads.emplace(thread_ptr);
+	
 	thread_ptr->Run();
 }
 
-void ThreadPool::DeleteThread(bool bExlusive, Thread* thread)
+void ThreadPool::DeleteThread(Thread* thread)
 {
-	if (!bExlusive)
-	{
-		threads.erase(thread);
-	}
-	else
-	{
-		threads_exclusive.erase(thread);
-	}
+	LOCK(mutex_threads);
+	threads.erase(thread);
 	allThreads.erase(thread);
 }

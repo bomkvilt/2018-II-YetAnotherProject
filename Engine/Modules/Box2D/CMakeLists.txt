@@ -1,0 +1,12 @@
+set(BOX2D_ROOT ${3rdParty}/Box2D)
+set(BOX2D_STATIC_LIBRARIES true )
+find_package(Box2D	REQUIRED)
+
+DEFINE_UNIT(Box2D)
+SET(PUBLIC_INCLUDES  ${BOX2D_INCLUDE_DIR})
+SET(PUBLIC_LIBRARIES ${BOX2D_LIBRARY}    )
+SET(CODE        "Sources"	    )
+SET(TEST        "Tests" 	    )
+SET(CATEGORY    "Engine/Modules")
+SET(MODULES      Misc Core GameFramwork)
+MAKE_MODULE()

@@ -6,31 +6,30 @@
 
 
 #include "World.hpp"
-#include "ActorComponent.hpp"
+#include "BaseActorComponent.hpp"
 
 #include "Control/EventHandlers.hpp"
 #include "Camera/CameraManipulator.hpp"
 
-#include "ComponentVisualisers.hpp"
-
+#include "ComponentVisualisersModule.hpp"
 
 
 Viewer::Viewer(PlayerController* controller, SHARED(FEngineConfig) config)
-	: IViewer(controller, config)
+	: FViewer(controller, config)
 	, window(nullptr)
 {
 	// setup windows
 	window.reset(new osgWidget::WindowManager(
 		&viewer, 
-		config->viewer.ScreenSize.X,
-		config->viewer.ScreenSize.Y
+		config->frontend.ScreenSize.X,
+		config->frontend.ScreenSize.Y
 		));
 	window->setPointerFocusMode(osgWidget::WindowManager::PFM_SLOPPY);
-	window->setName(config->viewer.title);
+	window->setName(config->frontend.title);
 
 	viewer.setUpViewInWindow(
-		config->viewer.WindowPosition.X,
-		config->viewer.WindowPosition.Y,
+		config->frontend.WindowPosition.X,
+		config->frontend.WindowPosition.Y,
 		static_cast<int>(window->getWidth ()),
 		static_cast<int>(window->getHeight())
 		);

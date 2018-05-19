@@ -9,13 +9,16 @@
 
 struct FEngineConfig : public Archived
 {
-	GENERATED_ARCHIVATION_BODY(FEngineConfig, Archived)
-		ARCHIVE_MEMBER("", viewer    )
-		ARCHIVE_MEMBER("", simulation)
+	GENERATED_CONFIG_BODY(FEngineConfig, Archived)
+		ARCHIVE_MEMBER("", frontend      )
+		ARCHIVE_MEMBER("", simulation    )
+		ARCHIVE_MEMBER("", countOfThreads)
 		ARCHIVATION_END()
 public:
-	FViewerConfig     viewer;
+	FFrontendConfig   frontend;
 	FSimulationConfig simulation;
+
+	size_t countOfThreads = 1;
 };
 
 

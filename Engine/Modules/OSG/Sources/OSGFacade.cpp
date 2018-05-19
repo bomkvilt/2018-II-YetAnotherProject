@@ -1,8 +1,8 @@
 #include "OSGFacade.hpp"
-#include "ActorComponent.hpp"
+#include "BaseActorComponent.hpp"
 
 
-Facade::Facade(ActorComponent* owner)
+Facade::Facade(BaseActorComponent* owner)
 	: IFacade(owner)
 	, rootOffset(new osg::PositionAttitudeTransform)
 	, mesh		(new osg::Geode)

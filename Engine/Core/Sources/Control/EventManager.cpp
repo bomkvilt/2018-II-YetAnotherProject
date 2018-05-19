@@ -89,7 +89,7 @@ void EventManager::ProcessActions(EventBinder& binder)
 		key.action = binded.type == BA_Pressed
 			? EKeyAction::BA_Pressed
 			: EKeyAction::BA_Released;
-		if (key) continue;
+		if (!key) continue;
 
 		action_map[key] = binded.calback;
 	}

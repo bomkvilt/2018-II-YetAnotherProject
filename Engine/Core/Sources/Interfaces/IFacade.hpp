@@ -1,13 +1,14 @@
+#pragma once
 #ifndef IFACADE_HPP
 #define IFACADE_HPP
 
-class ActorComponent;
+class BaseActorComponent;
 
 class IFacade
 {
 public:
 
-	IFacade(ActorComponent* owner)
+	IFacade(BaseActorComponent* owner)
 		: owner(owner)
 	{}
 	virtual ~IFacade() = default;
@@ -21,7 +22,7 @@ public:
 
 protected:
 	
-	ActorComponent* owner;
+	BaseActorComponent* owner;
 };
 
 #endif // !IFACADE_HPP

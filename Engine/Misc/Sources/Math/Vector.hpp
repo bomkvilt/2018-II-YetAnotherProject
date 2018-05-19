@@ -33,6 +33,8 @@ public:
 	      float& operator[](int i);
 	const float& operator[](int i) const;
 
+	FVector Sign() const;
+
 public: //~~~~~~~~~~~~~~| vector - vector
 
 	FVector operator+(const FVector& r) const;

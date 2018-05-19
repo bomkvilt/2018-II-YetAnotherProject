@@ -1,15 +1,15 @@
 #pragma once
+#ifndef OBJECT_BASE
+#define OBJECT_BASE
 
+#include <mutex>
 #include <string>
 
-#include "Misc.hpp"
-#include "Types.hpp"
-
+#include "Common.hpp"
 #include "ObjectCreator.hpp"
 #include "Reflection/Archived.hpp"
 
 class World;
-
 
 
 class ObjectBase : public Archived
@@ -17,8 +17,8 @@ class ObjectBase : public Archived
 	GENERATED_BODY(ObjectBase, Archived);
 
 	friend class ObjectCreator;
-public:
 
+public:
 	ObjectBase();
 	virtual ~ObjectBase();
 
@@ -69,8 +69,16 @@ public: //~~~~~~~~~~~~~~| Creation functions
 	}
 
 	template<class _T>
-	_T* CreateActor(std::string name,  bool AttachToController = false)
+	_T* CreateActor(std::string name)
 	{
-		return ObjectCreator::CreateActor<_T>(name, world, AttachToController ? playerController : nullptr);
+		return ObjectCreator::CreateActor<_T>(name, world.get());
+	}
+
+	template<class _T>
+	_T* CreateAvatar(std::string name,  bool AttachToController = false)
+	{
+		return ObjectCreator::CreateAvatar<_T>(name, world.get(), AttachToController ? playerController : nullptr);
 	}
 };
+
+#endif // !OBJECT_BASE
