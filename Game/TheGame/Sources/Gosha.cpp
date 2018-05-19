@@ -40,6 +40,16 @@ Gosha::Gosha()
 	camera->AddComponentRotation(FQuat  (0, 90, 0), eLocal );
 	camera->SetAutoregister(true);
 	camera->SetRenderSize(80);
+
+	health = CreateSubModule<HealthModule>("Health");
+}
+
+void Gosha::ApplyDamage(IDamage * damage)
+{
+	if (health) {
+		health->ApplyDamage(damage);
+		std::cout << "getdamage"<<std::endl;
+	}
 }
 
 void Gosha::OnBeginPlay()
