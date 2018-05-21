@@ -18,10 +18,13 @@ public:
 	Level()
 	{
 		MakeFloor({5 , 0}, {30, 0.1f});
-		MakeFloor({60, 0}, {20, 0.1f});
+		MakeFloor({60, 5}, {20, 0.1f});
+
+		MakeFloor({ -40 , 0 }, { 4, 0.1f });
 
 		MakeCatcher({0,-10}, {60, 1});
 
+		
 		MakeTeleport(FVector2(-20, 0.1f), FVector2(22,33));
 
 		MakeWall(FVector2(-10, 0.04f));
@@ -29,6 +32,7 @@ public:
 		MakeWall(FVector2( 20, 0.04f));
 
 		MakeBlock(FVector2(30, 0.2f));
+		MakeBlock(FVector2(-40, 0.2f));
 	}
 
 protected:
