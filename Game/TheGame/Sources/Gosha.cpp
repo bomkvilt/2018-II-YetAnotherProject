@@ -39,7 +39,7 @@ Gosha::Gosha()
 	camera->AddComponentLocation(FVector(0, 0, 80), eParent);
 	camera->AddComponentRotation(FQuat  (0, 90, 0), eLocal );
 	camera->SetAutoregister(true);
-	camera->SetRenderSize(80);
+	camera->SetRenderSize(40);
 }
 
 void Gosha::OnBeginPlay()
@@ -119,12 +119,14 @@ void Gosha::Keep(EKeyAction)
 	}
 }
 
+#include "Presets/CollisionPresets.hpp"
+
 void Gosha::AttachBlock(Block* block)
 {	
 	attachedBlock = block;
 
 	attachedBlock->AttachTo(this);
-	attachedBlock->GetRootComponent()->GetRigidBody()->SetBodyType(ERigidBodyType::eIgnore);
+	attachedBlock->GetRootComponent()->SetCollisionRules(CollisionPresets::Get()[eCT_Ignore]);
 	attachedBlock->SetRelativeLocation(FVector2(0, 2.1f));
 	
 	std::cout << "attached " << (attachedBlock->GetRootComponent()->IsDynamic() ? "Y" : "N") << std::endl;
@@ -133,7 +135,7 @@ void Gosha::AttachBlock(Block* block)
 void Gosha::DetachBlock()
 {
 	attachedBlock->Detach();
-	attachedBlock->GetRootComponent()->GetRigidBody()->SetBodyType(ERigidBodyType::eKinematic);
+	attachedBlock->GetRootComponent()->SetCollisionRules(CollisionPresets::Get()[eCT_Block]);
 	attachedBlock->SetComponentLocation(GetComponentLocation() + FVector2(4, -1));
 	attachedBlock = nullptr;
 

@@ -10,10 +10,39 @@ class World;
 
 enum class ERigidBodyType
 {
-	  eStatic    // Satic object
-	, eKinematic // Ignores forces
-	, eDynamic	 // Dynamic objetc
-	, eIgnore	 // Slip physics
+	  eStatic    // translation
+	, eKinematic // translation + velocity
+	, eDynamic   // translation + velocity + forces
+};
+
+
+/** 
+ * collisionType(BodyA, BodyB) = max(type_A, type_B);
+ */
+enum ECollisionMode
+{
+	  eCollide = 0 // 
+	, eOverlap = 1 // 
+	, eIgnore  = 2 // 
+};
+
+
+struct FCollisionRules 
+{
+	using Rules = std::unordered_map<int, ECollisionMode>;
+
+	static const int maxCategoryCount = 16;
+
+public:
+	int category;
+	ECollisionMode rules[maxCategoryCount];
+
+public:
+	FCollisionRules()
+		: category(0)
+	{
+		memset(rules, 0, maxCategoryCount * sizeof(int));
+	}
 };
 
 
@@ -32,31 +61,36 @@ public: //~~~~~~~~~~~~~~| force / impulce
 	virtual void AddImpulce        (const FVector& impulce) = 0;
 	virtual void AddKineticMomement(const FVector& moment ) = 0;
 
-public: //~~~~~~~~~~~~~~| 
+public: //~~~~~~~~~~~~~~| owner
 	/// owner
 	virtual const BaseActorComponent* GetOwner() const   = 0;
 	virtual       BaseActorComponent* GetOwner()         = 0;
 	virtual void  SetOwner(BaseActorComponent* newOwner) = 0;
+
+public: //~~~~~~~~~~~~~~| shape
 	/// mass
 	virtual float   GetMass    ()             const = 0;
 	virtual FVector GetInertia ()             const = 0;
 	virtual void    SetMass    (float   newMass   ) = 0;
 	virtual void    SetInertia (FVector newInertia) = 0;
 	/// extents
-	virtual void    SetExtents(FVector newExtents) = 0;
-	
-	//virtual bool    GetProcessed
-	//virtual void    SetProcessed() const = 0;
-	
+	virtual void    SetExtents (FVector newExtents) = 0;
+
+public: //~~~~~~~~~~~~~~| velocity
 	/// velocity
 	virtual FVector GetVelocity()                     const = 0;
 	virtual void    SetVelocity(const FVector& newVelocity) = 0;
 	/// omega
 	virtual FVector GetOmega()                  const = 0;
 	virtual void    SetOmega(const FVector& newOmega) = 0;
+
+public: //~~~~~~~~~~~~~~| body
 	///body type
 	virtual ERigidBodyType GetBodyType()       const = 0;
 	virtual void SetBodyType(ERigidBodyType newType) = 0;
+	///collision
+	virtual FCollisionRules GetCollisionRules()               const = 0;
+	virtual void SetCollisionRules(const FCollisionRules& newRules) = 0;
 };
 
 

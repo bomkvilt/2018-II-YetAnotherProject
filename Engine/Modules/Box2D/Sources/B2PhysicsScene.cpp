@@ -53,7 +53,7 @@ void PhysicsScene::ProcessCollisions()
 	{
 		auto contact = pair2.second;
 		
-		if (body2body.count(contact.body ) 
+		if (body2body.count(contact.body ) // if the bodies are registered
 		 && body2body.count(contact.other))
 		{
 			RigidBody* target = body2body[contact.body ];
@@ -82,7 +82,7 @@ void PhysicsScene::ProcessCollisions()
 				}
 			}
 		}
-		assert(false);
+		else throw std::runtime_error("Unregistered body is used");
 	}
 
 	// OnCollisionEnd
@@ -114,7 +114,7 @@ void PhysicsScene::ProcessCollisions()
 				}
 			}
 		}
-		assert(false);
+		else throw std::runtime_error("Unregistered body is used");
 	}
 
 	contactListener.Flush();

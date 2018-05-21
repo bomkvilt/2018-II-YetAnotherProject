@@ -39,8 +39,16 @@ public:
 	virtual void    SetVelocity(const FVector& newVelocity) override;
 
 public:
+	virtual void SetCollisionRules(const FCollisionRules& newRules) override;
+
+public:
 	b2Transform GetTransform() const;
-	void UpdateState();
+	
+	void UpdateBody();
+	void UpdateCollision();
+
+protected:
+	void SetupCollision(int bit, b2Filter& filter_r, b2Filter& filter_s);
 
 public:
 	float          density;   // helper << 
@@ -48,8 +56,10 @@ public:
 	EShapeType     shapeType; // helper << collision shape type
 	b2MassData     massData;  // helper << 
 	b2PolygonShape collision; // helper << TODO:: make b2Shape
+
 	b2Body*        rigidBody; //        << NOTE:: the object creates in a scene
-	b2Fixture*     fixture;   //        << 
+	b2Fixture*     fixture_r; //        <<
+	b2Fixture*     fixture_s; //        << 
 };
 
 

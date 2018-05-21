@@ -20,7 +20,8 @@ public: //~~~~~~~~~~~~~~| interface realisation
 	virtual void SetOwner(BaseActorComponent* newOwner) override { owner = newOwner; }
 
 	// body type
-	virtual ERigidBodyType GetBodyType() const override { return bodyType; }
+	virtual ERigidBodyType GetBodyType()        const override { return bodyType;       }
+	virtual FCollisionRules GetCollisionRules() const override { return collisionRules; }
 	/// >>
 
 protected: //~~~~~~~~~~~| helper function
@@ -38,8 +39,9 @@ protected: //~~~~~~~~~~~| helper function
 	World* GetWorld();
 
 protected:
+	ERigidBodyType bodyType;
 	BaseActorComponent* owner;
-	ERigidBodyType   bodyType;
+	FCollisionRules collisionRules;
 };
 
 

@@ -9,11 +9,6 @@ struct IWorldObject
 {
 	virtual ~IWorldObject() {}
 
-	/** NOTE:
-	* @param bExcludePhysics - if true child dynamic object won't be updated
-	* @param bUpdateBody     - if true - update a rigid body
-	*/
-
 	/// transform
 
 	virtual FTransform GetComponentTransform() const = 0;

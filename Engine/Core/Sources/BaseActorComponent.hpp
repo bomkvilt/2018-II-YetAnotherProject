@@ -43,11 +43,14 @@ public: //~~~~~~~~~~~~~~| Physics
 	FVector GetVelocity() const;
 	FVector GetOmega()    const;
 
-	float GetMass() const;
+	float GetMass()       const;
 	void SetMass(float newMass);
 
-	FVector GetInertia() const;
+	FVector GetInertia()          const;
 	void SetInertia(FVector newInertia);
+
+	FCollisionRules GetCollisionRules()               const;
+	void SetCollisionRules(const FCollisionRules& newRules);
 
 public: //~~~~~~~~~~~~~~| Position
 	/** NOTE:

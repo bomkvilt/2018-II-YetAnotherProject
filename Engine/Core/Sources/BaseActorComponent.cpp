@@ -32,6 +32,23 @@ FVector BaseActorComponent::GetInertia () const { if (rigidBody) return rigidBod
 void BaseActorComponent::SetMass   (float newMass     ) { if (rigidBody) rigidBody->SetMass   (newMass   ); }
 void BaseActorComponent::SetInertia(FVector newInertia) { if (rigidBody) rigidBody->SetInertia(newInertia); }
 
+FCollisionRules BaseActorComponent::GetCollisionRules() const
+{
+	if (rigidBody)
+	{
+		return rigidBody->GetCollisionRules();
+	}
+	return FCollisionRules();
+}
+
+void BaseActorComponent::SetCollisionRules(const FCollisionRules& newRules)
+{
+	if (rigidBody)
+	{
+		rigidBody->SetCollisionRules(newRules);
+	}
+}
+
 
 void BaseActorComponent::SetComponentTransform(FTransform newTransform, bool bExcludePhysics, bool bUpdateBody)
 {
