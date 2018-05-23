@@ -17,18 +17,23 @@ class Level : public Actor
 public:
 	Level()
 	{
+		
 		MakeFloor({5 , 0}, {30, 0.1f});
-		MakeFloor({60, 0}, {20, 0.1f});
+		MakeFloor({60, 5}, {20, 0.1f});
+
+		MakeFloor({ -40 , 0 }, { 4, 0.1f });
 
 		MakeCatcher({0,-10}, {60, 1});
 
+		
 		MakeTeleport(FVector2(-20, 0.1f), FVector2(22,33));
 
 		MakeWall(FVector2(-10, 0.04f));
 		MakeWall(FVector2( 5 , 0.04f));
 		MakeWall(FVector2( 20, 0.04f));
-
+		MakeBox(FVector2(60, 7.5f));
 		MakeBlock(FVector2(30, 0.2f));
+		MakeBlock(FVector2(-40, 0.2f));
 	}
 
 protected:
@@ -77,6 +82,13 @@ protected:
 		block->AttachTo(this);
 		block->SetRelativeLocation(location);
 		return block;
+	}
+	Box* MakeBox(FVector2 location)
+	{
+		auto* box = CreateActor<Box>("box");
+		box->AttachTo(this);
+		box->SetRelativeLocation(location);
+		return box;
 	}
 };
 
