@@ -1,4 +1,5 @@
 #include "Engine.hpp"
+#include "Threading/ThreadPool.hpp"
 #include "Modules/ModuleManager.hpp"
 #include "ComponentVisualisersModule.hpp"
 #include "Reflection/Archiver.hpp"
@@ -15,6 +16,8 @@ namespace thread = std::this_thread;
 Engine::Engine()
 	: config(new FEngineConfig())
 {
+	ThreadPool::SetMaxThreadCount(config->countOfThreads);
+
 	// load engine modules
 	auto& manager = ModuleManager::Get();
 	manager.SetConfig(config);
@@ -89,6 +92,8 @@ void Engine::SetPathToConfig(const std::string& path)
 		Archiver ar;
 		ar.Constract(data);
 		config->__Archive(ar, false);
+
+		ThreadPool::SetMaxThreadCount(config->countOfThreads);
 	}
 }
 

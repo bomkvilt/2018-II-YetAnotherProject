@@ -7,12 +7,15 @@
 #include <unordered_set>
 
 #include "ObjectBase.hpp"
+
+#include "Interfaces/IPhysicsScene.hpp"
+
 #include "Threading/Initialiser.hpp"
 
 
 class Actor;
 class Object;
-class ActorComponent;
+class BaseActorComponent;
 
 
 /** 
@@ -37,8 +40,8 @@ public: //~~~~~~~~~~~~~~| Tick
 
 public: //~~~~~~~~~~~~~~| Construction
 
-	template<class _T>
-	_T* CreateObject() //TODO:: make a review
+	template<class _T, typename... Args>
+	_T* CreateObject(Args&... args) //TODO:: make a review
 	{
 		// make the name unique
 		auto* initialiser = ThreadContext::TopInitialiser();
@@ -50,7 +53,7 @@ public: //~~~~~~~~~~~~~~| Construction
 		initialiser->ouid = newOUID;
 
 		// create a new object
-		auto base = UNIQUE(ObjectBase)(new _T);
+		auto base = std::make_unique<_T>(args...);
 
 		auto* pointer_base = base.get();
 		auto* pointer = static_cast<_T*>(pointer_base);
@@ -76,8 +79,13 @@ public:
 
 public: //~~~~~~~~~~~~~~| 
 
-		  ActorComponent* GetSceneRoot()		{ return sceneRoot; }
-	const ActorComponent* GetSceneRoot() const	{ return sceneRoot; }
+
+		  BaseActorComponent* GetSceneRoot()		{ return sceneRoot; }
+	const BaseActorComponent* GetSceneRoot() const	{ return sceneRoot; }
+
+	      IPhysicsScene* GetPhysicsScene()       { return scene.get(); }
+	const IPhysicsScene* GetPhysicsScene() const { return scene.get(); }
+
 
 protected:
 
@@ -90,7 +98,10 @@ protected:
 	/// << 
 
 	/// >> scene
-	ActorComponent* sceneRoot;
+
+	BaseActorComponent*   sceneRoot;
+	UNIQUE(IPhysicsScene) scene;
+
 	/// <<
 
 	/// >> indices
@@ -117,27 +128,27 @@ public: //~~~~~~~~~~~~~~| Iteration
 	class SceneIterator
 	{
 	public:
-		SceneIterator(ActorComponent* root);
+		SceneIterator(BaseActorComponent* root);
 
-		ActorComponent* operator->();
-		ActorComponent& operator* ();
+		BaseActorComponent* operator->();
+		BaseActorComponent& operator* ();
 		SceneIterator*  operator++();
 		bool operator==(const SceneIterator& r) const;
 		bool operator!=(const SceneIterator& r) const;
 
 	private:
 
-		ActorComponent* PrevNode();
-		ActorComponent* CurrNode();
-		ActorComponent* Brunch(size_t node);
-		std::vector<ActorComponent*>& CurrLine();
+		BaseActorComponent* PrevNode();
+		BaseActorComponent* CurrNode();
+		BaseActorComponent* Brunch(size_t node);
+		std::vector<BaseActorComponent*>& CurrLine();
 
 		size_t CurrIndex();
 		size_t MaxIndex();
 		void Move();
 		
 		std::stack<size_t> indices;
-		std::stack<ActorComponent*> path;
+		std::stack<BaseActorComponent*> path;
 	};
 
 	SceneIterator begin() { return SceneIterator(sceneRoot); }

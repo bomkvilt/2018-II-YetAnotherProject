@@ -9,8 +9,10 @@
 World::World()
 	: SimulationState(eUnstarted)
 {
+	scene = DependencyInjectionManager::MakeScene();
+
 	// to make a scene root it's enough to use the function
-	sceneRoot = ObjectCreator::CreateObject<ActorComponent>(std::string("scene Root"), this);
+	sceneRoot = ObjectCreator::CreateObject<BaseActorComponent>(std::string("scene Root"), this);
 }
 
 World::~World()
@@ -45,6 +47,13 @@ void World::DoTick(float DeltaTime, ETickType type)
 	}
 	//ThreadPool::AddTaskBacket(backet);
 	//backet.Wait();
+
+
+	if (scene && type == ETickType::eInPhysics)
+	{
+		scene->Update(DeltaTime);
+	}
+
 }
 
 void World::RegisterTickFunction(ITickFunction& Tick)
@@ -87,19 +96,19 @@ void World::UpdateNameToUnique(std::string& name)
 *								Scene Iterator
 *******************************************************************************/
 
-World::SceneIterator::SceneIterator(ActorComponent* root)
+World::SceneIterator::SceneIterator(BaseActorComponent* root)
 {
 	if (!root) return;
 	path.push(root);
 	indices.push(0);
 }
 
-ActorComponent* World::SceneIterator::operator->()
+BaseActorComponent* World::SceneIterator::operator->()
 { 
 	return CurrNode(); 
 }
 
-ActorComponent& World::SceneIterator::operator*()
+BaseActorComponent& World::SceneIterator::operator*()
 {
 	return *CurrNode();
 }
@@ -131,22 +140,22 @@ bool World::SceneIterator::operator!=(const SceneIterator & r) const
 }
 
 
-ActorComponent* World::SceneIterator::PrevNode()
+BaseActorComponent* World::SceneIterator::PrevNode()
 {
 	return path.top();
 }
 
-ActorComponent* World::SceneIterator::CurrNode()
+BaseActorComponent* World::SceneIterator::CurrNode()
 {
 	return Brunch(CurrIndex());
 }
 
-ActorComponent* World::SceneIterator::Brunch(size_t node)
+BaseActorComponent* World::SceneIterator::Brunch(size_t node)
 {
 	return CurrLine()[node];
 }
 
-std::vector<ActorComponent*>& World::SceneIterator::CurrLine()
+std::vector<BaseActorComponent*>& World::SceneIterator::CurrLine()
 {
 	return PrevNode()->GetSubcomponents();
 }

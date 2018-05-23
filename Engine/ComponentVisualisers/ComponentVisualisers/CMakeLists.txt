@@ -1,6 +1,0 @@
-DEFINE_UNIT(ComponentVisualisers)
-SET(CODE		"Sources"	)
-SET(TEST    	"Tests" 	)
-SET(CATEGORY	"Engine"	)
-SET(MODULES 	 Misc Core Components )
-MAKE_MODULE()

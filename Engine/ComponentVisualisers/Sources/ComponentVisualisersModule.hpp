@@ -1,5 +1,6 @@
 #ifndef COMPONENT_VISUALISERS_HPP
 #define COMPONENT_VISUALISERS_HPP
+#pragma once
 
 #include <memory>
 #include <string>
@@ -10,7 +11,7 @@
 #include "Misc.hpp"
 
 #include "ComponentVisualiser.hpp"
-class ActorComponent;
+class BaseActorComponent;
 
 
 class ComponentVisualisersModule : public IModule
@@ -19,14 +20,16 @@ class ComponentVisualisersModule : public IModule
 
 public:
 	static ComponentVisualisersModule& Get();
-
-	ComponentVisualisersModule(SHARED(FEngineConfig)& config);
+	ComponentVisualisersModule::ComponentVisualisersModule(SHARED(FEngineConfig)& config)
+		: IModule(config)
+	{}
 	virtual void OnLoaded() override;
 	virtual void OnUnload() override;
 
+
 public:
 	// request a visualisation for the component
-	void Visualise(ActorComponent* component, IViewer* viewer);
+	void Visualise(BaseActorComponent* component, IViewer* viewer);
 
 	// add visualiser for the component
 	void AddVisualiser   (const std::string& className, UNIQUE(ComponentVisualiser) visualiser);

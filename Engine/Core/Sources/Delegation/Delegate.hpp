@@ -1,6 +1,6 @@
+#pragma once
 #ifndef DELEGATE_HPP
 #define DELEGATE_HPP
-
 
 #include <vector>
 #include <functional>

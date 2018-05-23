@@ -5,6 +5,7 @@
 #include "Reflection/Archived.hpp"
 #include "Common.hpp"
 
+
 struct FViewerConfig : public Archived
 {
 	GENERATED_ARCHIVATION_BODY(FViewerConfig, Archived)

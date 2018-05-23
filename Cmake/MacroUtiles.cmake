@@ -9,7 +9,7 @@ MACRO(__SETUP_SOURCE)
 	file(GLOB_RECURSE SOURCES "${SOURCES_DIRS}/*.cpp")
 	file(GLOB_RECURSE HEADERS "${HEADERS_DIRS}/*.hpp")
 	
-	# add the files into project's code
+	# add the files into a project's code
 	source_group(TREE ${PROJECT_SOURCE_DIR}/${SOURCES_DIRS} PREFIX "Source Files" FILES ${SOURCES})
 	source_group(TREE ${PROJECT_SOURCE_DIR}/${HEADERS_DIRS} PREFIX "Header Files" FILES ${HEADERS})
 ENDMACRO()
@@ -52,6 +52,12 @@ MACRO(__SETUP_FOLDER)
 	SET_TARGET_PROPERTIES(${TARGET} PROPERTIES FOLDER "${CATEGORY}")
 ENDMACRO()
 
+# setup project properties
+#
+MACRO(__SETUP_PROPERTIES)
+	SET_TARGET_PROPERTIES(${TARGET} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${ENGINE_ROOT})
+ENDMACRO()
+
 # add module meta into a global space
 #
 MACRO(__DEFINE_MODULE)
@@ -67,6 +73,8 @@ ENDMACRO()
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 MACRO(INIT_PROJECT ENGINE PROJECT)
+	SET(ENGINE_ROOT ${PROJECT_SOURCE_DIR})
+
 	SUBDIRS(${ENGINE} )
 	SUBDIRS(${PROJECT})
 ENDMACRO()
@@ -124,6 +132,7 @@ MACRO(MAKE_APP)
 		${SOURCES}
 		${INCLUDES}
 		)
+	__SETUP_PROPERTIES()
 	__SETUP_LINKS()
 	__SETUP_FOLDER()
 	__DEFINE_MODULE()

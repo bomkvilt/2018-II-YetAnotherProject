@@ -1,0 +1,20 @@
+{
+    "viewer": {
+        "title": "Default",
+        "ScreenSize": {
+            "X": "1200",
+            "Y": "800"
+        },
+        "WindowPosition": {
+            "X": "700",
+            "Y": "200"
+        }
+    },
+    "countOfThreads": "1",
+    "simulation": {
+        "stepTime": "0.0333333"
+    },
+    "resource": {
+        "pathToResources": "Resources"
+    }
+}

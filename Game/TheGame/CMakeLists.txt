@@ -1,0 +1,6 @@
+DEFINE_UNIT(TheGame)
+SET(CODE		"Sources"	)
+SET(TEST    	"Tests" 	)
+SET(CATEGORY	"Project"	)
+SET(MODULES 	 Misc Engine Core SFML Box2D ComponentVisualisers GameFramwork)
+MAKE_APP()

@@ -1,6 +1,0 @@
-DEFINE_UNIT(Components)	
-SET(CODE		"Sources"	)
-SET(TEST    	"Tests" 	)
-SET(CATEGORY	"Engine"	)
-SET(MODULES 	 Misc Core  )
-MAKE_MODULE()

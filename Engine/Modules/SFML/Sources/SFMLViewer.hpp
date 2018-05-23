@@ -3,14 +3,14 @@
 
 
 #include "Control/EventHandlers.hpp"
-#include "Interfaces/Default/Viewer.hpp"
+#include "Interfaces\Default\Viewer.hpp"
 #include "Misc.hpp"
 #include <memory>
 #include "SFML/Graphics.hpp"
 #include "SFML/System.hpp"
 #include "SFML/Window.hpp"
 #include "SFMLFacade.hpp"
-
+#include <map>
 
 
 class Viewer : public FViewer
@@ -24,9 +24,17 @@ public:
 
 protected:
 	Facade* GetRootFacade();
-	MouseHandler mouseHandler;
+
+	sf::Sprite GetAlligned(sf::Sprite sprite);
+
+protected:
+	MouseHandler    mouseHandler;
 	KeyboardHandler keyboardHandler;
+
 	sf::RenderWindow window;
+	SHARED(RTexture) emptyTexture;
+
+	std::multimap<float, sf::Sprite> myMultimap;
 };
 
 

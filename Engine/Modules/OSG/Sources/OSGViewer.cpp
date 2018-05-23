@@ -6,7 +6,7 @@
 
 
 #include "World.hpp"
-#include "ActorComponent.hpp"
+#include "BaseActorComponent.hpp"
 
 #include "Control/EventHandlers.hpp"
 #include "Camera/CameraManipulator.hpp"
@@ -14,9 +14,8 @@
 #include "ComponentVisualisersModule.hpp"
 
 
-
 Viewer::Viewer(PlayerController* controller, SHARED(FEngineConfig) config)
-	: IViewer(controller, config)
+	: FViewer(controller, config)
 	, window(nullptr)
 {
 	// setup windows

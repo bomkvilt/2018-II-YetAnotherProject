@@ -4,7 +4,7 @@
 
 #include "Common.hpp"
 
-class ActorComponent;
+class BaseActorComponent;
 class World;
 
 
@@ -26,9 +26,9 @@ public: //~~~~~~~~~~~~~~| force / impulce
 
 public: //~~~~~~~~~~~~~~| 
 	/// owner
-	virtual const ActorComponent* GetOwner() const   = 0;
-	virtual       ActorComponent* GetOwner()         = 0;
-	virtual void  SetOwner(ActorComponent* newOwner) = 0;
+	virtual const BaseActorComponent* GetOwner() const   = 0;
+	virtual       BaseActorComponent* GetOwner()         = 0;
+	virtual void  SetOwner(BaseActorComponent* newOwner) = 0;
 	/// mass
 	virtual float   GetMass    () const             = 0;
 	virtual FVector GetInertia () const             = 0;
@@ -38,6 +38,9 @@ public: //~~~~~~~~~~~~~~|
 	virtual void    SetExtents(FVector newExtents) = 0;
 	/// bDynamic
 	virtual bool    IsDinamic() const = 0;
+	
+	//virtual bool    GetProcessed
+	//virtual void    SetProcessed() const = 0;
 	
 	/// velocity
 	virtual FVector GetVelocity() const = 0;

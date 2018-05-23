@@ -84,12 +84,21 @@ const float& FVector::operator[](int i) const
 	return const_cast<FVector&>(*this)[i];
 }
 
+FVector FVector::Sign() const
+{
+	return FVector(
+		X > 0 ? 1.f : X < 0 ? -1.f : 0,
+		Y > 0 ? 1.f : Y < 0 ? -1.f : 0,
+		Z > 0 ? 1.f : Z < 0 ? -1.f : 0
+	);
+}
+
 // FVector - FVector
 
-FVector FVector::operator+(const FVector& r) const {             return FVector(OPERATION_LIST(+, r)); }
-FVector FVector::operator-(const FVector& r) const {             return FVector(OPERATION_LIST(-, r)); }
-FVector FVector::operator*(const FVector& r) const {             return FVector(OPERATION_LIST(*, r)); }
-FVector FVector::operator/(const FVector& r) const { NO_ZERO(r); return FVector(OPERATION_LIST(/, r)); }
+FVector FVector::operator+(const FVector& r) const { return FVector(OPERATION_LIST(+, r)); }
+FVector FVector::operator-(const FVector& r) const { return FVector(OPERATION_LIST(-, r)); }
+FVector FVector::operator*(const FVector& r) const { return FVector(OPERATION_LIST(*, r)); }
+FVector FVector::operator/(const FVector& r) const { return FVector(OPERATION_LIST(/, r)); }
 FVector FVector::operator^(const FVector& r) const
 {
 	return FVector(
@@ -98,10 +107,10 @@ FVector FVector::operator^(const FVector& r) const
 		X * r.Y - r.X * Y);
 }
 
-FVector& FVector::operator+=(const FVector& r) {             OPERATION(+=, r); return *this; }
-FVector& FVector::operator-=(const FVector& r) {             OPERATION(-=, r); return *this; }
-FVector& FVector::operator*=(const FVector& r) {             OPERATION(*=, r); return *this; }
-FVector& FVector::operator/=(const FVector& r) { NO_ZERO(r); OPERATION(/=, r); return *this; }
+FVector& FVector::operator+=(const FVector& r) { OPERATION(+=, r); return *this; }
+FVector& FVector::operator-=(const FVector& r) { OPERATION(-=, r); return *this; }
+FVector& FVector::operator*=(const FVector& r) { OPERATION(*=, r); return *this; }
+FVector& FVector::operator/=(const FVector& r) { OPERATION(/=, r); return *this; }
 FVector& FVector::operator^=(const FVector& r)
 {
 	X = Y * r.Z - r.Y * Z;
@@ -112,15 +121,15 @@ FVector& FVector::operator^=(const FVector& r)
 
 // FVector - Scalar
 
-FVector FVector::operator+(float r) const {            return FVector(OPERATION_LIST_FLOAT(+, r)); }
-FVector FVector::operator-(float r) const {            return FVector(OPERATION_LIST_FLOAT(-, r)); }
-FVector FVector::operator*(float r) const {            return FVector(OPERATION_LIST_FLOAT(*, r)); }
-FVector FVector::operator/(float r) const { assert(r); return FVector(OPERATION_LIST_FLOAT(/, r)); }
+FVector FVector::operator+(float r) const { return FVector(OPERATION_LIST_FLOAT(+, r)); }
+FVector FVector::operator-(float r) const { return FVector(OPERATION_LIST_FLOAT(-, r)); }
+FVector FVector::operator*(float r) const { return FVector(OPERATION_LIST_FLOAT(*, r)); }
+FVector FVector::operator/(float r) const { return FVector(OPERATION_LIST_FLOAT(/, r)); }
 
-FVector& FVector::operator+=(float r) {             OPERATION_FLOAT(+=, r) return *this; }
-FVector& FVector::operator-=(float r) {             OPERATION_FLOAT(+=, r) return *this; }
-FVector& FVector::operator*=(float r) {             OPERATION_FLOAT(+=, r) return *this; }
-FVector& FVector::operator/=(float r) { assert(r);  OPERATION_FLOAT(+=, r) return *this; }
+FVector& FVector::operator+=(float r) { OPERATION_FLOAT(+=, r) return *this; }
+FVector& FVector::operator-=(float r) { OPERATION_FLOAT(+=, r) return *this; }
+FVector& FVector::operator*=(float r) { OPERATION_FLOAT(+=, r) return *this; }
+FVector& FVector::operator/=(float r) { OPERATION_FLOAT(+=, r) return *this; }
 
 // Misc
 

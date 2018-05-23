@@ -1,6 +1,7 @@
 #pragma once
 #ifndef CORE_TYPES_HPP
 #define CORE_TYPES_HPP
+#pragma once
 
 #include <assert.h>
 #include <functional>
@@ -162,6 +163,189 @@ public:
 
 	EShapeType type;
 	FVector extents;
+};
+
+
+/*******************************************************************************
+*								constraint types
+*******************************************************************************/
+
+enum EAxisType
+{
+	  eX   = 0
+	, eY   = 1
+	, eZ   = 2
+	, AXT_MAX = 3
+};
+
+enum EAngleType
+{
+	  ePitch = 1
+	, eRoll  = 0
+	, eYaw   = 2
+	, AGT_MAX   = 3
+};
+
+
+struct FConstraintType
+{
+	struct FAxisConstaint
+	{
+		float min = 0; // minimal value 
+		float max = 0; // maximal value
+		bool  bAcive = true; // is the constraint active
+	};
+
+public: //~~~~~~~~~~~~~~| constraints
+
+	std::array<FAxisConstaint, EAngleType::AGT_MAX> rotation;
+	std::array<FAxisConstaint, EAxisType ::AXT_MAX> movement;
+
+public: //~~~~~~~~~~~~~~| constructors
+
+	FConstraintType() = default;
+
+	// 3 - sphere
+	static FConstraintType MakeSphere()
+	{
+		FConstraintType res;
+		res.RotationConstaraint(ePitch, false);
+		res.RotationConstaraint(eYaw  , false);
+		res.RotationConstaraint(eRoll , false);
+		return res;
+	}
+
+	// 3 - movement
+	static FConstraintType MakeMovement()
+	{
+		FConstraintType res;
+		res.MovementConstarint(eX, false);
+		res.MovementConstarint(eY, false);
+		res.MovementConstarint(eZ, false);
+		return res;
+	}
+
+	// 4 - cylinder
+	static FConstraintType MakeCylinder(EAxisType axis)
+	{
+		FConstraintType res;
+		EAngleType angle = (EAngleType)axis;
+		res.MovementConstarint (axis , false);
+		res.RotationConstaraint(angle, false);
+		return res;
+	}
+
+	// 5 - rotation
+	static FConstraintType MakeRotation(EAngleType angle)
+	{
+		FConstraintType res;
+		res.RotationConstaraint(angle, false);
+		return res;
+	}
+
+	// 5 - axis
+	static FConstraintType MakeAxis(EAxisType axis)
+	{
+		FConstraintType res;
+		res.MovementConstarint(axis, false);
+		return res;
+	}
+
+	// 6 - seal
+	static FConstraintType MakeSeal()
+	{
+		FConstraintType res;
+		res.MovementConstarint(eX, false);
+		res.MovementConstarint(eY, false);
+		res.MovementConstarint(eZ, false);
+
+		res.RotationConstaraint(ePitch, false);
+		res.RotationConstaraint(eYaw  , false);
+		res.RotationConstaraint(eRoll , false);
+		return res;
+	}
+
+public:
+
+	void SetRotation(EAngleType angle, float min, float max)
+	{
+		rotation[angle].bAcive = true;
+		rotation[angle].max = max;
+		rotation[angle].min = min;
+	}
+	void RotationConstaraint(EAngleType angle, bool state)
+	{
+		rotation[angle].bAcive = state;
+	}
+
+	void SetMovement(EAxisType axis, float min, float max)
+	{
+		movement[axis].bAcive = true;
+		movement[axis].max = max;
+		movement[axis].min = min;
+	}
+	void MovementConstarint(EAxisType axis, bool state)
+	{
+		movement[axis].bAcive = state;
+	}
+
+public:
+
+	FVector GetAngularLower() const
+	{
+		FVector values;
+		for (int i = 0; i < EAngleType::AGT_MAX; ++i)
+		{
+			values[i] = rotation[i].min;
+		}
+		return values;
+	}
+
+	FVector GetAngularUpper() const
+	{
+		FVector values;
+		for (int i = 0; i < EAngleType::AGT_MAX; ++i)
+		{
+			values[i] = rotation[i].max;
+		}
+		return values;
+	}
+
+	FVector GetLinearLower() const
+	{
+		FVector values;
+		for (int i = 0; i < EAxisType::AXT_MAX; ++i)
+		{
+			values[i] = movement[i].min;
+		}
+		return values;
+	}
+
+	FVector GetLinearUpper() const
+	{
+		FVector values;
+		for (int i = 0; i < EAxisType::AXT_MAX; ++i)
+		{
+			values[i] = movement[i].max;
+		}
+		return values;
+	}
+};
+
+
+/*******************************************************************************
+*								Collision types
+*******************************************************************************/
+
+struct FHit
+{
+	class Actor* actor = nullptr;
+	class Actor* other = nullptr;
+	class BaseActorComponent* component      = nullptr;
+	class BaseActorComponent* otherComponent = nullptr;
+
+	FVector Location;
+	FVector HitNormal;
 };
 
 

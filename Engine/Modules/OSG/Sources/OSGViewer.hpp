@@ -1,16 +1,14 @@
 #ifndef OSG_VIEWER_HPP
 #define OSG_VIEWER_HPP
+#pragma once
 
 #include <osgWidget/WindowManager>
 #include <osgViewer/Viewer>
 
-#include "Interfaces/IViewer.hpp"
-#include "Misc.hpp"
-#include <memory>
-
+#include "Interfaces/Default/Viewer.hpp"
 #include "OSGFacade.hpp"
 
-class Viewer : public IViewer
+class Viewer : public FViewer
 {
 public:
 	Viewer(PlayerController* controller, SHARED(FEngineConfig) config);

@@ -8,8 +8,6 @@ find_package(SFML 2 REQUIRED
 	window 
 	system 
 	audio )
-
-message(>> ${SFML_DEPENDENCIES})
 	
 DEFINE_UNIT(SFML)
 SET(PUBLIC_INCLUDES
@@ -22,5 +20,5 @@ SET(PUBLIC_LIBRARIES
 SET(CODE		"Sources"	)
 SET(TEST    	"Tests" 	)
 SET(CATEGORY	"Engine/Modules"	)
-SET(MODULES 	 Misc Core Components ComponentVisualisers )
+SET(MODULES 	 Misc Core GameFramwork ComponentVisualisers Resources)
 MAKE_MODULE()
